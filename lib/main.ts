@@ -1,43 +1,138 @@
-import {StageInterface} from "./interfaces/stage.interface";
+import moment from 'moment-timezone';
 
+import {StageInterface} from "./interfaces/stage.interface";
+import {PipelineError} from "./errors/pipeline.error";
+
+/**
+ * PipelineBuilder
+ */
 export class PipelineBuilder {
+    /**
+     * pipelineName
+     * @private
+     */
     private readonly pipelineName: string;
-    private pipelineBuilt: StageInterface[];
+    /**
+     * StageList
+     * @private
+     */
+    private stageList: StageInterface[];
+    /**
+     * debugBuild
+     * @private
+     */
     private debugBuild: {
         status: boolean;
         historyList: {
+            date: string;
             action: string;
-            value: any;
-            pipeline: StageInterface[];
+            value?: any;
+            stageAdded?: StageInterface;
+            pipeline?: StageInterface[];
         }[]
     };
 
-    constructor(pipelineName: string, debug = false) {
+    /**
+     * constructor
+     * @param pipelineName
+     * @param debug
+     */
+    constructor(
+        pipelineName: string,
+        debug = false
+    ) {
         this.pipelineName = pipelineName;
-        this.debugBuild.status = debug;
-        this.pipelineBuilt = [];
+        this.stageList = [];
+
+        this.saveActionToDebugHistoryList('constructor', null, { pipelineName, debug });
     }
 
-    public readonly getName = () => this.pipelineName;
-    public readonly showDebug = () => this.debugBuild.status = true;
-    public readonly hideDebug = () => this.debugBuild.status = false;
-    public readonly reset = () => this.pipelineBuilt = [];
+    /**
+     * saveActionToDebugHistoryList
+     * @param action
+     * @param stageAdded
+     * @param argList
+     * @private
+     */
+    private saveActionToDebugHistoryList(action: string, stageAdded = null, ...argList: any[]): void {
+        const historyBundle = { date: this.getDate(), action, pipeline: this.stageList };
+        if (this.stageList.length) historyBundle['pipeline'] = this.stageList;
+        if (stageAdded) historyBundle['stageAdded'] = stageAdded;
+        if (argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
 
+        if (this.debugBuild) this.debugBuild.historyList.push(historyBundle);
+        else {
+            this.debugBuild = {
+                status: argList[0].debug,
+                historyList: [historyBundle]
+            }
+        }
+
+        this.log('saveToDebugActionList', historyBundle);
+    }
+
+    /**
+     * Get the list of all actions stored in the debug history list
+     */
+    public readonly getDebugActionList = () => {
+        this.log('getDebugActionList', this.debugBuild.historyList);
+        return this.debugBuild.historyList;
+    }
+
+    /**
+     * getName
+     */
+    public readonly getName = () => {
+        this.saveActionToDebugHistoryList('getName', null, { pipelineName: this.pipelineName });
+        return this.pipelineName;
+    }
+    /**
+     * enableDebug
+     */
+    public readonly enableDebug = () => {
+        this.debugBuild.status = true;
+        this.saveActionToDebugHistoryList('enableDebug', null, { debugBuildStatus: this.debugBuild.status });
+        return this.debugBuild.status;
+    }
+    /**
+     * disableDebug
+     */
+    public readonly disableDebug = () => {
+        this.debugBuild.status = false;
+        this.saveActionToDebugHistoryList('disableDebug', null, { debugBuildStatus: this.debugBuild.status });
+        return this.debugBuild.status;
+    }
+    /**
+     * reset
+     */
+    public readonly resetPipeline = () => {
+        this.stageList = [];
+        this.saveActionToDebugHistoryList('resetPipeline');
+        return this.stageList;
+    }
+
+    /**
+     * addStage
+     * @param stageType
+     * @param stageValue
+     */
     public readonly addStage = (
         stageType: 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
         stageValue: any
     ) => {
-        this.pipelineBuilt.push(this.newObject('$' + stageType, stageValue) as StageInterface);
+        const newStageToAdd = this.createObject('$' + stageType, stageValue) as StageInterface;
+        this.stageList.push(newStageToAdd);
+
+        this.saveActionToDebugHistoryList('addStage', newStageToAdd, { stageType, stageValue });
         return this;
     }
 
-    private
-
+    /**
+     * getPipeline
+     */
     public readonly getPipeline = () => {
-        if (!this.pipelineBuilt) throw new Error('Error, ' + this.pipelineName + ' pipeline does not exist!');
-        console.log('PipelineBuilder - ' + this.pipelineName + ':\n', JSON.stringify(this.pipelineBuilt));
-
-        return this.verifyPipelineValidity([...this.pipelineBuilt]);
+        this.saveActionToDebugHistoryList('getPipeline');
+        return this.verifyPipelineValidity([...this.stageList]);
     }
 
     /**
@@ -46,10 +141,22 @@ export class PipelineBuilder {
      * @param pipelineBuilt
      */
     private verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
-        if (!pipelineBuilt.length) throw new Error('Error, ' + this.pipelineName + ' pipeline is empty!');
-        // TODO stage validity
+        this.log('verifyPipelineValidity of - ' + this.pipelineName + ':\n', JSON.stringify(this.stageList));
+        if (!pipelineBuilt.length) throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
+        pipelineBuilt.forEach(s => this.isValidStage(s));
         // TODO stage order
         return pipelineBuilt;
+    }
+
+    private isValidStage(stageToValidate: StageInterface) {
+        const stageType = Object.keys(stageToValidate)[0].replace('$', '');
+
+        switch (stageType) {
+            default: {
+                this.saveActionToDebugHistoryList('isValidStage Error', null, { stageType, message: 'the type of stage is not yet treated.' }, { stageToValidate }, );
+                throw new PipelineError('the type of stage is not yet treated.');
+            }
+        }
     }
 
     // Utils
@@ -58,10 +165,21 @@ export class PipelineBuilder {
      * @param key
      * @param value
      */
-    private readonly newObject = (key: string, value: any) => {
-        const newObject = {};
-        newObject[key] = value;
-        return newObject;
+    private createObject = (key: string, value: any) => {
+        const object = {};
+        object[key] = value;
+        return object;
+    }
+
+    private getDate = () => moment().tz('Europe/Paris').format();
+
+    private log(...messageList: any[]) {
+        if (this.debugBuild.status) {
+            console.info(
+                this.getDate() + ':\n',
+                ...messageList
+            );
+        }
     }
 }
 
