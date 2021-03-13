@@ -4,7 +4,7 @@
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "main.js",
   "scripts": {
-    "test": "jest test/*.js"
+    "test": "jest (.*/)*.test.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/MikeDev75015/mongodb-pipeline-builder/issues"
   },
-  "homepage": "https://github.com/MikeDev75015/mongodb-pipeline-builder#readme"
+  "homepage": "https://github.com/MikeDev75015/mongodb-pipeline-builder#readme",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
 }
