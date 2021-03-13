@@ -1,10 +1,10 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest test/*.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
     "constructor",
     "aggregate"
   ],
-  "author": "mikeonline75@gmail.com",
+  "author": "MIKEONLINE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MikeDev75015/mongodb-pipeline-builder/issues"
