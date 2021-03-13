@@ -1,0 +1,1 @@
+`mongodb-pipeline-builder` is a pipeline builder for the aggregate method of a mongoDB collection. It will simplify pipelines by making them more readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them.
