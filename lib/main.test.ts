@@ -62,7 +62,7 @@ describe('should create a new pipeline builder object', () => {
                     'should not add the stage to the pipeline if its type is invalid or not yet treated',
                     'toto',
                     RegexMatch('$name', /toto/g),
-                    { $toto: RegexMatch('$name', /toto/g) },
+                    { $toto: RegexMatch('$name', /(toto)/g) },
                     '1) the toto stage type is invalid or not yet treated.'
                 ],
             ])('%s', (
