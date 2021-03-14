@@ -4,6 +4,9 @@ import {
     LookupEqualityPayloadInterface
 } from "../interfaces";
 
+/**
+ * pipelineHelpers
+ */
 const pipelineHelpers = {
     /**
      * Lookup Description
@@ -55,5 +58,9 @@ const pipelineHelpers = {
         };
     }
 }
+
+/**
+ * Helpers Export
+ */
 export const
     Lookup = pipelineHelpers.Lookup;

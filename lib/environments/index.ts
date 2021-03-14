@@ -1,5 +1,8 @@
 require ('custom-env').env(true);
 
+/**
+ * Environment Variables Exports
+ */
 export const { APP_ENV, LOGS_ENABLED,  BDD_USER, BDD_PASS, BDD_CLUSTER, BDD_BASE } = process.env;
 
 console.log(

@@ -6,6 +6,9 @@ import {
 } from "./interfaces";
 import { PipelineError } from "./errors";
 import { LOGS_ENABLED } from './';
+import { getStageTypeValueFor } from "./interfaces/stage-type.interface";
+
+
 /**
  * PipelineBuilder
  */
@@ -45,7 +48,7 @@ export class PipelineBuilder {
     constructor(
         pipelineName: string,
         logsEnabled: boolean = undefined,
-        debug = false
+        debug: boolean = false
     ) {
         this.pipelineName = pipelineName;
         this.stageList = [];
@@ -63,18 +66,17 @@ export class PipelineBuilder {
      * @param argList
      * @private
      */
-    private saveActionToDebugHistoryList(action: string, stageAdded = undefined, ...argList: any[]): void {
+    private saveActionToDebugHistoryList(action: string, ...argList: any[]): void {
         if (this.debugBuild && !this.debugBuild.status) return;
 
         const historyBundle = { date: this.getCurrentDate(), action, pipeline: this.stageList };
         if (this.stageList.length) historyBundle['pipeline'] = this.stageList;
-        if (stageAdded) historyBundle['stageAdded'] = stageAdded;
         if (argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
 
         if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
         else {
             this.debugBuild = {
-                status: argList[0].debug,
+                status: argList[0] ? argList[0].debug : false,
                 historyList: [historyBundle]
             }
         }
@@ -94,7 +96,7 @@ export class PipelineBuilder {
      * getName
      */
     public readonly getName = () => {
-        this.saveActionToDebugHistoryList('getName', null, { pipelineName: this.pipelineName });
+        this.saveActionToDebugHistoryList('getName', { pipelineName: this.pipelineName });
         return this.pipelineName;
     }
     /**
@@ -102,7 +104,7 @@ export class PipelineBuilder {
      */
     public readonly enableDebug = () => {
         this.debugBuild.status = true;
-        this.saveActionToDebugHistoryList('enableDebug', null, { debugBuildStatus: this.debugBuild.status });
+        this.saveActionToDebugHistoryList('enableDebug', { debugBuildStatus: this.debugBuild.status });
         return this.debugBuild.status;
     }
     /**
@@ -110,7 +112,7 @@ export class PipelineBuilder {
      */
     public readonly disableDebug = () => {
         this.debugBuild.status = false;
-        this.saveActionToDebugHistoryList('disableDebug', null, { debugBuildStatus: this.debugBuild.status });
+        this.saveActionToDebugHistoryList('disableDebug', { debugBuildStatus: this.debugBuild.status });
         return this.debugBuild.status;
     }
     /**
@@ -124,17 +126,23 @@ export class PipelineBuilder {
 
     /**
      * addStage
-     * @param stageType
+     * @param stageTypeLabel
      * @param stageValue
      */
     public readonly addStage = (
-        stageType: 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+        stageTypeLabel: string,
         stageValue: any
     ) => {
-        const newStageToAdd = this.createObject('$' + stageType, stageValue) as StageInterface;
+        const stageTypeValue = getStageTypeValueFor(stageTypeLabel);
+        if (!stageTypeValue && this.debugBuild.status) {
+            this.saveActionToDebugHistoryList('getStageTypeValueFor', { stageTypeLabel, stageValue });
+            throw new PipelineError('Impossible to add the stage, the stage name is not valid!');
+        }
+
+        const newStageToAdd = this.createObject(stageTypeValue ? stageTypeValue : '$' + stageTypeLabel, stageValue) as StageInterface;
         this.stageList.push(newStageToAdd);
 
-        this.saveActionToDebugHistoryList('addStage', newStageToAdd, { stageType, stageValue });
+        this.saveActionToDebugHistoryList('addStage', newStageToAdd, { stageTypeLabel: stageTypeLabel, stageValue });
         return this;
     }
 
@@ -171,6 +179,11 @@ export class PipelineBuilder {
         return pipelineBuilt;
     }
 
+    /**
+     * isValidStage
+     * @param stageToValidate
+     * @private
+     */
     private isValidStage(stageToValidate: StageInterface): null | StageErrorInterface {
         const stageType = Object.keys(stageToValidate)[0].replace('$', '');
 

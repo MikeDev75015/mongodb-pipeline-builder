@@ -1,4 +1,13 @@
+/**
+ * interface ProjectStageInterface
+ */
 export interface ProjectStageInterface {
+    /**
+     * type
+     */
     type: 'only' | 'ignore';
-    list: string[];
+    /**
+     * list
+     */
+    list: any[];
 }
