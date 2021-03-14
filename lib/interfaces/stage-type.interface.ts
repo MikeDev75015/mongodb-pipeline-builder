@@ -1,3 +1,8 @@
+/**
+ * Aggregation Pipeline Stages.*
+ * In the db.collection.aggregate method and db.aggregate method, pipeline stages appear in an array. Documents pass
+ * through the stages in sequence.
+ */
 export enum StageTypeEnum {
     /**
      * Adds new fields to documents. Similar to $project, $addFields reshapes each document in the stream; specifically,
@@ -169,10 +174,48 @@ export enum StageTypeEnum {
     unwind = '$unwind',
 }
 
+/**
+ * getStageTypeValueFor
+ * @param label
+ */
 export const getStageTypeValueFor = (label: string) => {
     return StageTypeEnum[label];
 };
 
-export const getStageTypeLabelFor = (value: string) => {
+/*export const getStageTypeLabelFor = (value: string) => {
     return Object.keys(StageTypeEnum).find(key => StageTypeEnum[key] === value);
-};
+};*/
+
+
+/*
+'addFields' |
+'bucket' |
+'bucketAuto' |
+'collStats' |
+'count' |
+'facet' |
+'geoNear' |
+'graphLookup' |
+'group' |
+'indexStats' |
+'limit' |
+'listSessions' |
+'lookup' |
+'match' |
+'merge' |
+'out' |
+'planCacheStats' |
+'project' |
+'redact' |
+'replaceRoot' |
+'replaceWith' |
+'sample' |
+'search' |
+'set' |
+'skip' |
+'sort' |
+'sortByCount' |
+'unionWith' |
+'unset' |
+'unwind'
+*/

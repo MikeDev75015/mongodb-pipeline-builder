@@ -130,7 +130,7 @@ export class PipelineBuilder {
      * @param stageValue
      */
     public readonly addStage = (
-        stageTypeLabel: string,
+        stageTypeLabel: 'addFields' | 'bucket' | 'bucketAuto' | 'collStats' | 'count' | 'facet' | 'geoNear' | 'graphLookup' | 'group' | 'indexStats' | 'limit' | 'listSessions' | 'lookup' | 'match' | 'merge' | 'out' | 'planCacheStats' | 'project' | 'redact' | 'replaceRoot' | 'replaceWith' | 'sample' | 'search' | 'set' | 'skip' | 'sort' | 'sortByCount' | 'unionWith' | 'unset' | 'unwind',
         stageValue: any
     ) => {
         const stageTypeValue = getStageTypeValueFor(stageTypeLabel);
@@ -187,7 +187,9 @@ export class PipelineBuilder {
     private isValidStage(stageToValidate: StageInterface): null | StageErrorInterface {
         const stageType = Object.keys(stageToValidate)[0].replace('$', '');
 
-        const treatedStageList = ['addFields', 'match', 'lookup', 'project', 'unset', 'sort', 'count', 'skip', 'limit'];
+        const treatedStageList = [
+            'addFields', 'bucket', 'bucketAuto', 'collStats', 'count', 'facet', 'geoNear', 'graphLookup', 'group', 'indexStats', 'limit', 'listSessions', 'lookup', 'match', 'merge', 'out', 'planCacheStats', 'project', 'redact', 'replaceRoot', 'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount', 'unionWith', 'unset', 'unwind'
+        ];
         switch (treatedStageList.includes(stageType)) {
             case true: return null;
             default: {
