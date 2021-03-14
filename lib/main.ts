@@ -1,12 +1,20 @@
 import moment from 'moment-timezone';
-
-import {StageInterface} from "./interfaces/stage.interface";
-import {PipelineError} from "./errors/pipeline.error";
-
+import {
+    DebugBuildInterface,
+    StageErrorInterface,
+    StageInterface
+} from "./interfaces";
+import { PipelineError } from "./errors";
+import { LOGS_ENABLED } from './';
 /**
  * PipelineBuilder
  */
 export class PipelineBuilder {
+    /**
+     * logsEnabled
+     * @private
+     */
+    private readonly logsEnabled: boolean;
     /**
      * pipelineName
      * @private
@@ -21,28 +29,29 @@ export class PipelineBuilder {
      * debugBuild
      * @private
      */
-    private debugBuild: {
-        status: boolean;
-        historyList: {
-            date: string;
-            action: string;
-            value?: any;
-            stageAdded?: StageInterface;
-            pipeline?: StageInterface[];
-        }[]
-    };
+    private debugBuild: DebugBuildInterface;
+    /**
+     * stageErrorList
+     * @private
+     */
+    private stageErrorList: StageErrorInterface[];
 
     /**
      * constructor
      * @param pipelineName
+     * @param logsEnabled
      * @param debug
      */
     constructor(
         pipelineName: string,
+        logsEnabled: boolean = undefined,
         debug = false
     ) {
         this.pipelineName = pipelineName;
         this.stageList = [];
+        this.logsEnabled = logsEnabled !== undefined
+            ? logsEnabled
+            : (LOGS_ENABLED === 'true');
 
         this.saveActionToDebugHistoryList('constructor', null, { pipelineName, debug });
     }
@@ -54,13 +63,15 @@ export class PipelineBuilder {
      * @param argList
      * @private
      */
-    private saveActionToDebugHistoryList(action: string, stageAdded = null, ...argList: any[]): void {
-        const historyBundle = { date: this.getDate(), action, pipeline: this.stageList };
+    private saveActionToDebugHistoryList(action: string, stageAdded = undefined, ...argList: any[]): void {
+        if (this.debugBuild && !this.debugBuild.status) return;
+
+        const historyBundle = { date: this.getCurrentDate(), action, pipeline: this.stageList };
         if (this.stageList.length) historyBundle['pipeline'] = this.stageList;
         if (stageAdded) historyBundle['stageAdded'] = stageAdded;
         if (argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
 
-        if (this.debugBuild) this.debugBuild.historyList.push(historyBundle);
+        if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
         else {
             this.debugBuild = {
                 status: argList[0].debug,
@@ -68,14 +79,14 @@ export class PipelineBuilder {
             }
         }
 
-        this.log('saveToDebugActionList', historyBundle);
+        this.log('info', 'saveToDebugActionList', historyBundle);
     }
 
     /**
      * Get the list of all actions stored in the debug history list
      */
     public readonly getDebugActionList = () => {
-        this.log('getDebugActionList', this.debugBuild.historyList);
+        this.log('info', 'getDebugActionList', this.debugBuild.historyList);
         return this.debugBuild.historyList;
     }
 
@@ -137,24 +148,43 @@ export class PipelineBuilder {
 
     /**
      * verifyPipelineValidity
-     * @param pipelineName
      * @param pipelineBuilt
      */
     private verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
-        this.log('verifyPipelineValidity of - ' + this.pipelineName + ':\n', JSON.stringify(this.stageList));
+        this.log('info', 'verifyPipelineValidity of ' + this.pipelineName + ' pipeline:\n', JSON.stringify(this.stageList));
         if (!pipelineBuilt.length) throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
-        pipelineBuilt.forEach(s => this.isValidStage(s));
-        // TODO stage order
+
+        this.stageErrorList = pipelineBuilt.map(
+            s => this.isValidStage(s)
+        ).filter(error => error);
+
+        // TODO verify stage order
+        if (this.stageErrorList.length) {
+            const errorMessage = this.stageErrorList.map(
+                (e, i) => (i + 1) + ') ' + e.message
+            ).join('\n');
+            this.log('error', errorMessage, 'stageErrorList', this.stageErrorList);
+
+            this.saveActionToDebugHistoryList('stageErrorList', null, { errorMessage });
+            throw new PipelineError(errorMessage);
+        }
         return pipelineBuilt;
     }
 
-    private isValidStage(stageToValidate: StageInterface) {
+    private isValidStage(stageToValidate: StageInterface): null | StageErrorInterface {
         const stageType = Object.keys(stageToValidate)[0].replace('$', '');
 
-        switch (stageType) {
+        const treatedStageList = ['addFields', 'match', 'lookup', 'project', 'unset', 'sort', 'count', 'skip', 'limit'];
+        switch (treatedStageList.includes(stageType)) {
+            case true: return null;
             default: {
-                this.saveActionToDebugHistoryList('isValidStage Error', null, { stageType, message: 'the type of stage is not yet treated.' }, { stageToValidate }, );
-                throw new PipelineError('the type of stage is not yet treated.');
+                this.saveActionToDebugHistoryList(
+                    'Stage Error',
+                    null,
+                    { stageType, message: 'this pipeline stage type is invalid or not yet treated.' },
+                    { invalidStage: stageToValidate }
+                );
+                return { stageType, message: 'the ' + stageType + ' stage type is invalid or not yet treated.' };
             }
         }
     }
@@ -171,12 +201,24 @@ export class PipelineBuilder {
         return object;
     }
 
-    private getDate = () => moment().tz('Europe/Paris').format();
+    /**
+     * getCurrentDate
+     */
+    private getCurrentDate = () => moment().tz('Europe/Paris').format();
 
-    private log(...messageList: any[]) {
-        if (this.debugBuild.status) {
-            console.info(
-                this.getDate() + ':\n',
+    /**
+     * log
+     * @param type
+     * @param messageList
+     * @private
+     */
+    private log(
+        type: 'info' | 'warn' | 'error',
+        ...messageList: any[]
+    ) {
+        if (this.logsEnabled) {
+            console[type](
+                this.getCurrentDate() + ':\n',
                 ...messageList
             );
         }
