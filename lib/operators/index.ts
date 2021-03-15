@@ -705,8 +705,25 @@ export const DateFromString = (
         onNull: onNull
     }
 });
-export const DateToParts = () => ({  });
-export const DateToString = () => ({  });
+
+
+export const DateToParts = (dateExpression, timezone?, iso8601 = false) => ({
+    $dateToParts: {
+        'date' : dateExpression,
+        'timezone' : timezone,
+        'iso8601' : iso8601
+    }
+});
+export const DateToString = (
+    dateExpression, formatString = '%Y-%m-%dT%H:%M:%S.%LZ', timezone?, onNull?
+) => ({
+    $dateToString: {
+        date: dateExpression,
+        format: formatString,
+        timezone: timezone,
+        onNull: onNull
+    }
+});
 export const DayOfMonth = () => ({  });
 export const DayOfWeek = () => ({  });
 export const DayOfYear = () => ({  });
