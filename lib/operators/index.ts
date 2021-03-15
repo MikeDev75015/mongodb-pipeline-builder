@@ -1,18 +1,4 @@
 /**
- * pipelineOperators
- */
-const pipelineOperators = {
-    /**
-     * Concat description
-     */
-    // Concat: (...arrayList[]) => ({ $concat: [ ...arrayList ] }),
-    /**
-     * NotEqual description
-     */
-    // NotEqual: (a, b) => ({ $ne: [a, b] }),
-};
-
-/**
  * Pipeline operators exports
  */
 /**
