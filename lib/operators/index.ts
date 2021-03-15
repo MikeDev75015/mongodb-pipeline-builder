@@ -5,11 +5,11 @@ const pipelineOperators = {
     /**
      * Concat description
      */
-    // Concat: (...arrayList: any[]) => ({ $concat: [ ...arrayList ] }),
+    // Concat: (...arrayList[]) => ({ $concat: [ ...arrayList ] }),
     /**
      * NotEqual description
      */
-    // NotEqual: (a: any, b: any) => ({ $ne: [a, b] }),
+    // NotEqual: (a, b) => ({ $ne: [a, b] }),
 };
 
 /**
@@ -21,14 +21,14 @@ const pipelineOperators = {
  * @param expression
  * @constructor
  */
-export const Expr = (expression: any) => ({ $expr: expression });
+export const Expr = (expression) => ({ $expr: expression });
 /**
  * Returns all documents whose specified field contains the searched value.
  * @param fieldName
  * @param searchedValue
  * @constructor
  */
-export const Field = (fieldName: string, searchedValue: any) => {
+export const Field = (fieldName: string, searchedValue) => {
     const newObject = {};
     newObject[fieldName] = searchedValue;
     return newObject;
@@ -162,7 +162,7 @@ export const Trunc = (num: number, place?: number) => ({ $trunc : [ num, place ]
  * @param index can be any valid expression that resolves to an integer:
  * @constructor
  */
-export const ArrayElemAt = (array: any, index: number) => ({ $arrayElemAt: [ array, index ] });
+export const ArrayElemAt = (array, index: number) => ({ $arrayElemAt: [ array, index ] });
 /**
  * Converts an array into a single document; the array must be either:
  * - An array of two-element arrays where the first element is the field name, and the second element is the field value:
@@ -176,16 +176,16 @@ export const ArrayElemAt = (array: any, index: number) => ({ $arrayElemAt: [ arr
  * contains “k” and “v” fields.
  * @constructor
  */
-export const ArrayToObject = (literal: boolean, array: any) => literal
+export const ArrayToObject = (literal: boolean, array) => literal
     ? ({ $arrayToObject: { $literal: array } })
     : ({ $arrayToObject: array });
 /**
  * Concatenates arrays to return the concatenated array.
  * If any argument resolves to a value of null or refers to a field that is missing, $concatArrays returns null.
- * @param arrayOfArray can be any valid expression as long as they resolve to an array.
+ * @param arrayOfArrays can be any valid expression as long as they resolve to an array.
  * @constructor
  */
-export const ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOfArrays });
+export const ConcatArrays = (...arrayOfArrays) => ({ $concatArrays: arrayOfArrays });
 /**
  * Selects a subset of an array to return based on the specified condition. Returns an array with only those elements
  * that match the condition. The returned elements are in the original order.
@@ -197,20 +197,20 @@ export const ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOf
  * variable name specified in as.
  * @constructor
  */
-export const Filter = (array: any, as: string = 'this', condition: boolean) => ({ $filter: { input: array, as: as, cond: condition } });
+export const Filter = (array, as = 'this', condition: boolean) => ({ $filter: { input: array, as: as, cond: condition } });
 /**
  * Returns the first element in an array.
  * @param array
  * @constructor
  */
-export const First = (array: any) => ({ $first: array });
+export const First = (array) => ({ $first: array });
 /**
  * Returns a boolean indicating whether a specified value is in an array.
  * @param elementToFind can be any valid expression.
  * @param array can be any valid expression that resolves to an array.
  * @constructor
  */
-export const In = (elementToFind: any, array: any) => ({ $in: [ elementToFind, array ] });
+export const In = (elementToFind, array) => ({ $in: [ elementToFind, array ] });
 /**
  * Searches an array for an occurrence of a specified value and returns the array index (zero-based) of the first
  * occurrence. If the value is not found, returns -1. If the array expression resolves to a value of null or refers to a
@@ -227,20 +227,22 @@ export const In = (elementToFind: any, array: any) => ({ $in: [ elementToFind, a
  * value as the <start> index value instead of the <end> value.
  * @constructor
  */
-export const IndexOfArray = (array: any, elementToFind: any, startIndex = 0, endIndex?: number) => ({ $indexOfArray: [ array, elementToFind, startIndex, (endIndex ? endIndex : { $size: array }) ] });
+export const IndexOfArray = (array, elementToFind, startIndex = 0, endIndex?: number) => ({
+    $indexOfArray: [ array, elementToFind, startIndex, (endIndex ? endIndex : { $size: array }) ]
+});
 /**
  * Determines if the operand is an array. Returns a boolean.
  * @param elementToVerify can be any valid expression.
  * @constructor
  */
-export const IsArray = (elementToVerify: any) => ({ $isArray: elementToVerify });
+export const IsArray = (elementToVerify) => ({ $isArray: elementToVerify });
 /**
  * Returns the last element in an array. The $last operator is an alias for the following $arrayElemAt expression:
  * { $arrayElemAt: [ array, -1 ] }
  * @param array can be any valid expression as long as it resolves to an array, null, or missing.
  * @constructor
  */
-export const Last = (array: any) => ({ $last: array });
+export const Last = (array) => ({ $last: array });
 /**
  * Applies an expression to each item in an array and returns an array with the applied results.
  * @param array can be any expression that resolves to an array.
@@ -250,7 +252,7 @@ export const Last = (array: any) => ({ $last: array });
  * element individually with the variable name specified in as.
  * @constructor
  */
-export const Map = (array: any, as: string = 'this', apply: any) => ({ $map: { input: array, as: as, in: apply } });
+export const Map = (array, as: string = 'this', apply) => ({ $map: { input: array, as: as, in: apply } });
 /**
  * Converts a document to an array. The return array contains an element for each field/value pair in the original
  * document. Each element in the return array is a document that contains two fields k and v:
@@ -261,7 +263,7 @@ export const Map = (array: any, as: string = 'this', apply: any) => ({ $map: { i
  * $objectToArray does not recursively apply to the embedded document fields.
  * @constructor
  */
-export const ObjectToArray = (object: any) => ({ $objectToArray: object });
+export const ObjectToArray = (object) => ({ $objectToArray: object });
 /**
  * Returns an array whose elements are a generated sequence of numbers. $range generates the sequence from the specified
  * starting number by successively incrementing the starting number by the specified step value up to but not including
@@ -273,7 +275,9 @@ export const ObjectToArray = (object: any) => ({ $objectToArray: object });
  * non-zero integer. Defaults to 1.
  * @constructor
  */
-export const Range = (startIndex: number, endIndex: number, step = 1) => ({ $range: [ startIndex, endIndex, step ] });
+export const Range = (startIndex: number, endIndex: number, step = 1) => ({
+    $range: [ startIndex, endIndex, step ]
+});
 /**
  * Applies an expression to each element in an array and combines them into a single value. If input resolves to an
  * empty array, $reduce returns initialValue. During evaluation of the in expression, two variables will be available:
@@ -288,7 +292,7 @@ export const Range = (startIndex: number, endIndex: number, step = 1) => ({ $ran
  * right-to-left.
  * @constructor
  */
-export const Reduce = (array: any, initialValue: any, apply: any) => ({
+export const Reduce = (array, initialValue, apply) => ({
     $reduce: { input: array, initialValue: initialValue, in: apply }
 });
 /**
@@ -296,13 +300,13 @@ export const Reduce = (array: any, initialValue: any, apply: any) => ({
  * @param array can be any valid expression as long as it resolves to an array.
  * @constructor
  */
-export const ReverseArray = (array: any) => ({ $reverseArray: array });
+export const ReverseArray = (array) => ({ $reverseArray: array });
 /**
  * Counts and returns the total number of items in an array.
  * @param array can be any expression as long as it resolves to an array.
  * @constructor
  */
-export const Size = (array: any) => ({ $size: array });
+export const Size = (array) => ({ $size: array });
 /**
  * Returns a subset of an array.
  * @param array can be any valid expression as long as it resolves to an array.
@@ -316,7 +320,7 @@ export const Size = (array: any) => ({ $size: array });
  * from the position. If negative, $slice returns up to the last n elements in the array.
  * @constructor
  */
-export const Slice = (array: any, position = 0, numberOfElement: number) => ({
+export const Slice = (array, position = 0, numberOfElement: number) => ({
     $slice: [ array, position, numberOfElement ]
 });
 /**
@@ -334,7 +338,7 @@ export const Slice = (array: any, position = 0, numberOfElement: number) => ({
  * must specify a default for each input array or else $zip will return an error.
  * @constructor
  */
-export const Zip = (arrayOfArrays: any, longestLength = false, defaultArray?: any) => ({
+export const Zip = (arrayOfArrays, longestLength = false, defaultArray?) => ({
     $zip: {
         inputs: arrayOfArrays,
         useLongestLength: longestLength,
@@ -344,7 +348,8 @@ export const Zip = (arrayOfArrays: any, longestLength = false, defaultArray?: an
 
 // Boolean Expression Operators
 // Boolean expressions evaluate their argument expressions as booleans and return a boolean as the result.
-// In addition to the false boolean value, Boolean expression evaluates as false the following: null, 0, and undefined values. The Boolean expression evaluates all other values as true, including non-zero numeric values and arrays.
+// In addition to the false boolean value, Boolean expression evaluates as false the following: null, 0, and undefined
+// values. The Boolean expression evaluates all other values as true, including non-zero numeric values and arrays.
 
 /**
  * Evaluates one or more expressions and returns true if all of the expressions are true or if evoked with no argument
@@ -364,7 +369,7 @@ export const And = (...args: any[]) => ({ $and: args });
  * @param expression to evaluate
  * @constructor
  */
-export const Not = (expression: any) => ({ $not: [ expression ] });
+export const Not = (expression) => ({ $not: [ expression ] });
 /**
  * Evaluates one or more expressions and returns true if any of the expressions are true. Otherwise, $or returns false.
  * $or uses short-circuit logic: the operation stops evaluation after encountering the first true expression. In
@@ -377,33 +382,230 @@ export const Or = (...args: any[]) => ({ $or: args });
 
 // Comparison Expression Operators
 // Comparison expressions return a boolean except for $cmp which returns a number.
-// The comparison expressions take two argument expressions and compare both value and type, using the specified BSON comparison order for values of different types.
+// The comparison expressions take two argument expressions and compare both value and type, using the specified BSON
+// comparison order for values of different types.
 
-export const Cmp = () => ({  });
-export const Eq = (a: any, b: any) => ({ $eq: [a, b] });
-export const Gt = () => ({  });
-export const Gte = () => ({  });
-export const Lt = () => ({  });
-export const Lte = () => ({  });
-export const Ne = (a: any, b: any) => ({ $ne: [a, b] });
+/**
+ * Compares two values and returns:
+ * - -1 if the first value is less than the second.
+ * - 1 if the first value is greater than the second.
+ * - 0 if the two values are equivalent.
+ * The $cmp compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const Compare = (a, b) => ({ $cmp: [ a, b ] });
+/**
+ * Compares two values and returns:
+ * - true when the values are equivalent.
+ * - false when the values are not equivalent.
+ * The $eq compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const Equal = (a, b) => ({ $eq: [a, b] });
+/**
+ * Compares two values and returns:
+ * - true when the first value is greater than the second value.
+ * - false when the first value is less than or equivalent to the second value.
+ * The $gt compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const GreaterThan = (a, b) => ({ $gt: [ a, b ] });
+/**
+ * Compares two values and returns:
+ * - true when the first value is greater than or equivalent to the second value.
+ * - false when the first value is less than the second value.
+ * The $gte compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const GreaterThanEqual = (a, b) => ({ $gte: [ a, b ] });
+/**
+ * Compares two values and returns:
+ * - true when the first value is less than the second value.
+ * - false when the first value is greater than or equivalent to the second value.
+ * The $lt compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const LessThan = (a, b) => ({ $lt: [ a, b ] });
+/**
+ * Compares two values and returns:
+ * - true when the first value is less than or equivalent to the second value.
+ * - false when the first value is greater than the second value.
+ * The $lte compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const LessThanEqual = (a, b) => ({ $lte: [a, b] });
+/**
+ * Compares two values and returns:
+ * - true when the values are not equivalent.
+ * - false when the values are equivalent.
+ * The $ne compares both value and type, using the specified BSON comparison order for values of different types.
+ * @param a
+ * @param b
+ * @constructor
+ */
+export const NotEqual = (a, b) => ({ $ne: [a, b] });
 
 // Conditional Expression Operators
 
-export const Cond = () => ({  });
-export const IfNull = () => ({  });
-export const Switch = () => ({  });
+/**
+ * Evaluates a boolean expression to return one of the two specified return expressions.
+ * $cond requires all three arguments (if-then-else) for either syntax.
+ * If the <boolean-expression> evaluates to true, then $cond evaluates and returns the value of the <true-case>
+ * expression. Otherwise, $cond evaluates and returns the value of the <false-case> expression.
+ * The arguments can be any valid expression. For more information on expressions, see Expressions.
+ * @param booleanExpression
+ * @param trueCase
+ * @param falseCase
+ * @constructor
+ */
+export const Cond = (booleanExpression, trueCase, falseCase) => ({
+    $cond: [ booleanExpression, trueCase, falseCase ]
+});
+/**
+ * Evaluates an expression and returns the value of the expression if the expression evaluates to a non-null value. If
+ * the expression evaluates to a null value, including instances of undefined values or missing fields, returns the
+ * value of the replacement expression.
+ * @param value
+ * @param replaceWith
+ * @constructor
+ */
+export const IfNull = (value, replaceWith) => ({ $ifNull: [ value, replaceWith ] });
+/**
+ * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a
+ * specified expression and breaks out of the control flow.
+ * @param branchList
+ * @param defaultCase
+ * @constructor
+ */
+export const Switch = (branchList: { branchCase; thenDo }[], defaultCase) => ({
+    $switch: {
+        branches: branchList,
+        default: defaultCase
+    }
+});
 
 // Custom Aggregation Expression Operators
 
-export const Accumulator = () => ({  });
+/**
+ * Defines a custom accumulator operator. Accumulators are operators that maintain their state (e.g. totals, maximums,
+ * minimums, and related data) as documents progress through the pipeline. Use the $accumulator operator to execute your
+ * own JavaScript functions to implement behavior not supported by the MongoDB Query Language.
+ *
+ * The following steps outline how the $accumulator operator processes documents:
+ * - The operator begins at an initial state, defined by the init function.
+ * - For each document, the operator updates the state based on the accumulate function. The accumulate function’s first
+ * argument is the current state, and additional arguments are be specified in the accumulateArgs array.
+ * - When the operator needs to merge multiple intermediate states, it executes the merge function. For more information
+ * on when the merge function is called, see Merge Two States with $merge.
+ * - If a finalize function has been defined, once all documents have been processed and the state has been updated
+ * accordingly, finalize converts the state to a final output.
+ *
+ * Merge Two States with $merge
+ * As part of its internal operations, the $accumulator operator may need to merge two separate, intermediate states.
+ * The merge function specifies how the operator should merge two states.
+ * For example, $accumulator may need to combine two states when:
+ * - $accumulator is run on a sharded cluster. The operator needs to merge the results from each shard to obtain the
+ * final result.
+ * - A single $accumulator operation exceeds its specified memory limit. If you specify the allowDiskUse option, the
+ * operator stores the in-progress operation on disk and finishes the operation in memory. Once the operation finishes,
+ * the results from disk and memory are merged together using the merge function.
+ * @param initCode is a function used to initialize the state. The init function receives its arguments from the
+ * initArgs array expression. You can specify the function definition as either BSON type Code or String.
+ * @param initArgs Optional. Arguments passed to the init function.
+ * @param accumulateCode is a function used to accumulate documents. The accumulate function receives its arguments from
+ * the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state.
+ * You can specify the function definition as either BSON type Code or String.
+ * @param accumulateArgs are Arguments passed to the accumulate function. You can use accumulateArgs to specify what
+ * field value(s) to pass to the accumulate function.
+ * @param mergeCode is a Function used to merge two internal states. merge must be either a String or Code BSON type.
+ * merge returns the combined result of the two merged states. For information on when the merge function is called,
+ * see Merge Two States with $merge.
+ * @param finalizeCode Optional. Function used to update the result of the accumulation.
+ * @param langCode is the language used in the $accumulator code. Currently, the only supported value for lang is js.
+ * @constructor
+ */
+export const Accumulator = (
+    initCode, initArgs = [], accumulateCode, accumulateArgs, mergeCode, finalizeCode, langCode = 'js'
+) => ({
+    $accumulator: {
+        init: initCode,
+        initArgs: initArgs,        // Optional
+        accumulate: accumulateCode,
+        accumulateArgs: accumulateArgs,
+        merge: mergeCode,
+        finalize: finalizeCode,                    // Optional
+        lang: langCode
+    }
+});
 
-export const Function = () => ({  });
+/**
+ * Defines a custom aggregation function or expression in JavaScript.
+ *
+ * You can use the $function operator to define custom functions to implement behavior not supported by the MongoDB
+ * Query Language.
+ *
+ * IMPORTANT
+ *
+ * Executing JavaScript inside an aggregation expression may decrease performance. Only use the $function operator if
+ * the provided pipeline operators cannot fulfill your application’s needs.
+ *
+ * @param bodyCode
+ * @param array
+ * @param langCode
+ * @constructor
+ */
+export const Function = (bodyCode, array, langCode = 'js') => ({
+    $function: {
+        body: bodyCode,
+        args: array,
+        lang: langCode
+    }
+});
 
 // Data Size Operators
 // The following operators return the size of a data element:
 
-export const BinarySize = () => ({  });
-export const BsonSize = () => ({  });
+/**
+ * Returns the size of a given string or binary data value’s content in bytes.
+ *
+ * The argument for $binarySize must resolve to either:
+ * - A string,
+ * - A binary data value, or
+ * - null.
+ *
+ * If the argument is a string or binary data value, the expression returns the size of the argument in bytes.
+ * If the argument is null, the expression returns null.
+ * If the argument resolves to any other data type, $binarySize errors.
+ *
+ * @param stringOrBinaryData can be any valid expression as long as it resolves to either a string or binary data value.
+ * @constructor
+ */
+export const BinarySize = (stringOrBinaryData) => ({ $binarySize: stringOrBinaryData });
+/**
+ * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON. You can use $bsonSize as
+ * an alternative to the Object.bsonSize() method.
+ *
+ * If the argument is an object, the expression returns the size of the object in bytes when the object is encoded as
+ * BSON.
+ * If the argument is null, the expression returns null.
+ * If the argument resolves to a data type other than an object or null, $bsonSize errors.
+ *
+ * @param object
+ * @constructor
+ */
+export const BsonSize = (object) => ({ $bsonSize: object });
 
 // Date Expression Operators
 // The following operators returns date objects or components of a date object:
