@@ -724,33 +724,33 @@ export const DateToString = (
         onNull: onNull
     }
 });
-export const DayOfMonth = () => ({  });
-export const DayOfWeek = () => ({  });
-export const DayOfYear = () => ({  });
-export const Hour = () => ({  });
-export const IsoDayOfWeek = () => ({  });
-export const IsoWeek = () => ({  });
-export const IsoWeekYear = () => ({  });
-export const Millisecond = () => ({  });
-export const Minute = () => ({  });
-export const Month = () => ({  });
-export const Second = () => ({  });
-export const ToDate = () => ({  });
-export const Week = () => ({  });
-export const Year = () => ({  });
+export const DayOfMonth = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const DayOfWeek = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const DayOfYear = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Hour = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const IsoDayOfWeek = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const IsoWeek = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const IsoWeekYear = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Millisecond = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Minute = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Month = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Second = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const ToDate = (expression) => ({ $toDate: expression });
+export const Week = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
+export const Year = (dateExpression, timezone) => ({ date: dateExpression, timezone: timezone });
 
 // Literal Expression Operator
 
-export const Literal = () => ({  });
+export const Literal = (value) => ({ $literal: value });
 
 // Miscellaneous Operators
 
-export const Rand = () => ({  });
-export const SampleRate = () => ({  });
+export const Rand = () => ({ $rand: {} });
+export const SampleRate = (nonNegativeFloat) => ({ $sampleRate: nonNegativeFloat });
 
 // Object Expression Operators
 
-export const MergeObjects = () => ({  });
+export const MergeObjects = (...documents) => ({ $mergeObjects: documents });
 
 // Set Expression Operators
 // Set expressions performs set operation on arrays, treating arrays as sets.
@@ -760,79 +760,97 @@ export const MergeObjects = () => ({  });
 // If a set contains a nested array element, the set expression does not descend into the nested array but evaluates
 // the array at top-level.
 
-export const AllElementsTrue = () => ({  });
-export const AnyElementTrue = () => ({  });
-export const SetDifference = () => ({  });
-export const SetEquals = () => ({  });
-export const SetIntersection = () => ({  });
-export const SetIsSubset = () => ({  });
-export const SetUnion = () => ({  });
+export const AllElementsTrue = (array) => ({ $allElementsTrue: [ array ] });
+export const AnyElementTrue = (array) => ({ $anyElementTrue: [ array ] });
+export const SetDifference = (array1, array2) => ({ $setDifference: [ array1, array2 ] });
+export const SetEquals = (...arrayOfArrays) => ({ $setEquals: arrayOfArrays });
+export const SetIntersection = (...arrayOfArrays) => ({ $setIntersection: arrayOfArrays });
+export const SetIsSubset = (array1, array2) => ({ $setIsSubset: [ array1, array2 ] });
+export const SetUnion = (...arrayOfArrays) => ({ $setUnion: arrayOfArrays });
 
 // String Expression Operators
 // String expressions, with the exception of $concat, only have a well-defined behavior for strings of ASCII characters.
 
-export const Concat = () => ({  });
-export const IndexOfBytes = () => ({  });
-export const IndexOfCP = () => ({  });
-export const Ltrim = () => ({  });
-
-
-export const RegexFind = () => ({  });
-export const RegexFindAll = () => ({  });
-export const RegexMatch = (input: string, regex: RegExp) => ({ $regexMatch: { input: input, regex: regex } });
-export const ReplaceOne = () => ({  });
-export const ReplaceAll = () => ({  });
-export const Rtrim = () => ({  });
-export const Split = () => ({  });
-export const StrLenBytes = () => ({  });
-export const StrLenCP = () => ({  });
-export const StrCaseCmp = () => ({  });
-export const Substr = () => ({  });
-export const SubstrBytes = () => ({  });
-export const SubstrCP = () => ({  });
-export const ToLower = () => ({  });
-export const ToString = () => ({  });
-export const Trim = () => ({  });
-export const ToUpper = () => ({  });
+export const Concat = (...expressions) => ({ $concat: expressions });
+export const IndexOfBytes = (stringExpression, substringExpression, startIndex, endIndex) => ({
+    $indexOfBytes: [ stringExpression, substringExpression, startIndex, endIndex ]
+});
+export const IndexOfCP = (stringExpression, substringExpression, startIndex, endIndex) => ({
+    $indexOfCP: [ stringExpression, substringExpression, startIndex, endIndex ]
+});
+export const Ltrim = (input, chars) => ({ $ltrim: { input: input,  chars: chars } });
+export const RegexFind = (input, regex) => ({ $regexFind: { input: input , regex: regex } });
+export const RegexFindAll = (input, regex) => ({ $regexFindAll: { input: input , regex: regex } });
+export const RegexMatch = (input, regex: RegExp) => ({ $regexMatch: { input: input, regex: regex } });
+export const ReplaceOne = (input, find, replacement) => ({
+    $replaceOne: { input: input, find: find, replacement: replacement }
+});
+export const ReplaceAll = (input, find, replacement) => ({
+    $replaceAll: { input: input, find: find, replacement: replacement }
+});
+export const Rtrim = (input, chars) => ({ $rtrim: { input: input,  chars: chars } });
+export const Split = (stringExpression, delimiter) => ({ $split: [ stringExpression, delimiter ] });
+export const StrLenBytes = (stringExpression) => ({ $strLenBytes: stringExpression });
+export const StrLenCP = (stringExpression) => ({ $strLenCP: stringExpression });
+export const StrCaseCmp = (expression1, expression2) => ({ $strcasecmp: [ expression1, expression2 ] });
+export const Substr = (stringExpression, startIndex, stringLength) => ({
+    $substr: [ stringExpression, startIndex, stringLength ]
+});
+export const SubstrBytes = (stringExpression, byteIndex, byteCount) => ({
+    $substrBytes: [ stringExpression, byteIndex, byteCount ]
+});
+export const SubstrCP = (stringExpression, codePointIndex, codePointCount) => ({
+    $substrCP: [ stringExpression, codePointIndex, codePointCount ]
+});
+export const ToLower = (expression) => ({ $toLower: expression });
+export const ToString = (expression) => ({ $toString: expression });
+export const Trim = (input, chars) => ({ $trim: { input: input,  chars: chars } });
+export const ToUpper = (expression) => ({ $toUpper: expression });
 
 // Text Expression Operator
 
-export const Meta = () => ({  });
+export const Meta = (metaDataKeyword) => ({ $meta: metaDataKeyword });
 
 // Trigonometry Expression Operators
 // Trigonometry expressions perform trigonometric operations on numbers.
 // Values that represent angles are always input or output in radians. Use $degreesToRadians and $radiansToDegrees
 // to convert between degree and radian measurements.
 
-export const Sin = () => ({  });
-export const Cos = () => ({  });
-export const Tan = () => ({  });
-export const Asin = () => ({  });
-export const Acos = () => ({  });
-export const Atan = () => ({  });
-export const Atan2 = () => ({  });
-export const Asinh = () => ({  });
-export const Acosh = () => ({  });
-export const Atanh = () => ({  });
-export const Sinh = () => ({  });
-export const Cosh = () => ({  });
-export const Tanh = () => ({  });
-export const DegreesToRadians = () => ({  });
-export const RadiansToDegrees = () => ({  });
+export const Sin = (expression) => ({ $sin: expression });
+export const Cos = (expression) => ({ $cos: expression });
+export const Tan = (expression) => ({ $tan: expression });
+export const Asin = (expression) => ({ $asin: expression });
+export const Acos = (expression) => ({ $acos: expression });
+export const Atan = (expression) => ({ $atan: expression });
+export const Atan2 = (expression1, expression2) => ({ $atan2: [ expression1, expression2 ] });
+export const Asinh = (expression) => ({ $asinh: expression });
+export const Acosh = (expression) => ({ $acosh: expression });
+export const Atanh = (expression) => ({ $atanh: expression });
+export const Sinh = (expression) => ({ $sinh: expression });
+export const Cosh = (expression) => ({ $cosh: expression });
+export const Tanh = (expression) => ({ $tanh: expression });
+export const DegreesToRadians = (expression) => ({ $degreesToRadians: expression });
+export const RadiansToDegrees = (expression) => ({ $radiansToDegrees: expression });
 
 // Type Expression Operators
 
-export const Convert = () => ({  });
-
-export const IsNumber = () => ({  });
-
-export const ToBool = () => ({  });
-export const ToDecimal = () => ({  });
-export const ToDouble = () => ({  });
-export const ToInt = () => ({  });
-export const ToLong = () => ({  });
-export const ToObjectId = () => ({  });
-export const Type = () => ({  });
+export const Convert = (input, to, onError?, onNull?) => ({
+    $convert:
+        {
+            input: input,
+            to: to,
+            onError: onError,  // Optional.
+            onNull: onNull    // Optional.
+        }
+});
+export const IsNumber = (expression) => ({ $isNumber: expression });
+export const ToBool = (expression) => ({ $toBool: expression });
+export const ToDecimal = (expression) => ({ $toDecimal: expression });
+export const ToDouble = (expression) => ({ $toDouble: expression });
+export const ToInt = (expression) => ({ $toInt: expression });
+export const ToLong = (expression) => ({ $toLong: expression });
+export const ToObjectId = (expression) => ({ $toObjectId: expression });
+export const Type = (expression) => ({ $type: expression });
 
 // Accumulators ($group)
 // Available for use in the $group stage, accumulators are operators that maintain their state (e.g. totals, maximums,
@@ -841,15 +859,17 @@ export const Type = () => ({  });
 // expression once for each input document, and maintain their stage for the group of documents that share the same
 // group key.
 
-export const AddToSet = () => ({  });
-export const Avg = () => ({  });
-export const Max = () => ({  });
-export const Min = () => ({  });
-export const Push = () => ({  });
-export const StdDevPop = () => ({  });
-export const StdDevSamp = () => ({  });
-export const Sum = () => ({  });
+export const AddToSet = (expression) => ({ $addToSet: expression });
+export const Avg = (expression) => ({ $avg: expression });
+export const Max = (expression) => ({ $max: expression });
+export const Min = (expression) => ({ $min: expression });
+export const Push = (expression) => ({ $push: expression });
+export const StdDevPop = (expression) => ({ $stdDevPop: expression });
+export const StdDevSamp = (expression) => ({ $stdDevSamp: expression });
+export const Sum = (expression) => ({ $sum: expression });
 
 // Variable Expression Operators
 
-export const Let = () => ({  });
+export const Let = (vars, expression) => ({
+    $let: { vars: vars, in: expression }
+});
