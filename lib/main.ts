@@ -62,7 +62,6 @@ export class PipelineBuilder {
     /**
      * saveActionToDebugHistoryList
      * @param action
-     * @param stageAdded
      * @param argList
      * @private
      */
@@ -130,7 +129,10 @@ export class PipelineBuilder {
      * @param stageValue
      */
     public readonly addStage = (
-        stageTypeLabel: 'addFields' | 'bucket' | 'bucketAuto' | 'collStats' | 'count' | 'facet' | 'geoNear' | 'graphLookup' | 'group' | 'indexStats' | 'limit' | 'listSessions' | 'lookup' | 'match' | 'merge' | 'out' | 'planCacheStats' | 'project' | 'redact' | 'replaceRoot' | 'replaceWith' | 'sample' | 'search' | 'set' | 'skip' | 'sort' | 'sortByCount' | 'unionWith' | 'unset' | 'unwind',
+        stageTypeLabel: 'addFields' | 'bucket' | 'bucketAuto' | 'collStats' | 'count' | 'facet' | 'geoNear' |
+            'graphLookup' | 'group' | 'indexStats' | 'limit' | 'listSessions' | 'lookup' | 'match' | 'merge' | 'out' |
+            'planCacheStats' | 'project' | 'redact' | 'replaceRoot' | 'replaceWith' | 'sample' | 'search' | 'set' |
+            'skip' | 'sort' | 'sortByCount' | 'unionWith' | 'unset' | 'unwind',
         stageValue: any
     ) => {
         const stageTypeValue = getStageTypeValueFor(stageTypeLabel);
@@ -188,7 +190,10 @@ export class PipelineBuilder {
         const stageType = Object.keys(stageToValidate)[0].replace('$', '');
 
         const treatedStageList = [
-            'addFields', 'bucket', 'bucketAuto', 'collStats', 'count', 'facet', 'geoNear', 'graphLookup', 'group', 'indexStats', 'limit', 'listSessions', 'lookup', 'match', 'merge', 'out', 'planCacheStats', 'project', 'redact', 'replaceRoot', 'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount', 'unionWith', 'unset', 'unwind'
+            'addFields', 'bucket', 'bucketAuto', 'collStats', 'count', 'facet', 'geoNear', 'graphLookup', 'group',
+            'indexStats', 'limit', 'listSessions', 'lookup', 'match', 'merge', 'out', 'planCacheStats', 'project',
+            'redact', 'replaceRoot', 'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount',
+            'unionWith', 'unset', 'unwind'
         ];
         switch (treatedStageList.includes(stageType)) {
             case true: return null;
