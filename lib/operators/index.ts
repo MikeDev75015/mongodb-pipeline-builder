@@ -7,7 +7,7 @@
  * @param expression
  * @constructor
  */
-export const Expr = (expression) => ({ $expr: expression });
+export const Expression = (expression) => ({ $expr: expression });
 /**
  * Returns all documents whose specified field contains the searched value.
  * @param fieldName
@@ -27,7 +27,7 @@ export const Field = (fieldName: string, searchedValue) => {
  * @param num can be any valid expression as long as it resolves to a number.
  * @constructor
  */
-export const Abs = (num: number) => ({ $abs: num });
+export const Absolute = (num: number) => ({ $abs: num });
 /**
  * Adds numbers to return the sum, or adds numbers and a date to return a new date. If adding numbers and a date, treats
  * the numbers as milliseconds. Accepts any number of argument expressions, but at most, one expression can resolve to a
@@ -54,7 +54,7 @@ export const Divide = (dividend: number, divisor: number) => ({ $divide: [ divid
  * @param exponent can be any valid expression as long as it resolves to a number.
  * @constructor
  */
-export const Exp = (exponent: number) => ({ $exp: exponent });
+export const Exponent = (exponent: number) => ({ $exp: exponent });
 /**
  * Returns the largest integer less than or equal to the specified number.
  * @param num can be any valid expression as long as it resolves to a number.
@@ -66,7 +66,7 @@ export const Floor = (num: number) => ({ $floor: num });
  * @param num can be any valid expression as long as it resolves to a non-negative number.
  * @constructor
  */
-export const Ln = (num: number) => ({ $ln: num });
+export const NaturalLog = (num: number) => ({ $ln: num });
 /**
  * Calculates the log of a number in the specified base.
  * @param num can be any valid expression as long as it resolves to a non-negative number.
