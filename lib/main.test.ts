@@ -1,6 +1,6 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
-import {Equal, Expr, RegexMatch} from "./operators";
+import {Eq, Expr, RegexMatch} from "./operators";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -54,8 +54,8 @@ describe('should create a new pipeline builder object', () => {
                 [
                     'should add a stage to the pipeline',
                     'match',
-                    Expr(Equal('$test', 'test')),
-                    { $match: Expr(Equal('$test', 'test')) },
+                    Expr(Eq('$test', 'test')),
+                    { $match: Expr(Eq('$test', 'test')) },
                     undefined
                 ],
                 [
