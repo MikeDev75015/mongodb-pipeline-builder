@@ -610,8 +610,101 @@ export const BsonSize = (object) => ({ $bsonSize: object });
 // Date Expression Operators
 // The following operators returns date objects or components of a date object:
 
-export const DateFromParts = () => ({  });
-export const DateFromString = () => ({  });
+/**
+ * Constructs and returns a Date object given the date’s constituent properties.
+ *
+ * IMPORTANT
+ * You cannot combine the use of calendar dates and ISO week date fields when constructing your $dateFromParts input
+ * document.
+ *
+ * @param year Required if not using isoWeekYear. Calendar year. Can be any expression that evaluates to a number.
+ * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
+ * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
+ * @param month Optional. Can only be used with year. Can be any expression that evaluates to a number.
+ * Value range: 1-12. if the number specified is outside this range, $dateFromParts incorporates the difference in the
+ * date calculation.
+ * @param day Optional. Can only be used with year. Day of month. Can be any expression that evaluates to a number.
+ * Value range: 1-31. Starting in MongoDB 4.0, if the number specified is outside this range, $dateFromParts
+ * incorporates the difference in the date calculation.
+ * @param isoWeekYear Required if not using year. ISO Week Date Year. Can be any expression that evaluates to a number.
+ * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
+ * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
+ * @param isoWeek Optional. Can only be used with isoWeekYear. Week of year. Can be any expression that evaluates to a
+ * number. Value range: 1-53. If the number specified is outside this range, $dateFromParts incorporates the difference
+ * in the date calculation.
+ * @param isoDayOfWeek Optional. Can only be used with isoWeekYear. Day of week (Monday 1 - Sunday 7). Can be any
+ * expression that evaluates to a number. Value range: 1-7. If the number specified is outside
+ * this range, $dateFromParts incorporates the difference in the date calculation.
+ * @param hour Optional. Can be any expression that evaluates to a number. Value range: 0-23. If the number specified is
+ * outside this range, $dateFromParts incorporates the difference in the date calculation.
+ * @param minute Optional. Can be any expression that evaluates to a number. Value range: 0-59. If the number specified
+ * is outside this range, $dateFromParts incorporates the difference in the date calculation.
+ * @param second Optional. Can be any expression that evaluates to a number. Value range: 0-59. If the number specified
+ * is outside this range, $dateFromParts incorporates the difference in the date calculation.
+ * @param millisecond Optional. Can be any expression that evaluates to a number. Value range: 0-999. If the number
+ * specified is outside this range, $dateFromParts incorporates the difference in the date calculation.
+ * @param timezone Optional. can be any expression that evaluates to a string whose value is either:
+ * - an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or a UTC offset in the form:
+ * +/-[hh]:[mm], e.g. "+04:45", or +/-[hh][mm], e.g. "-0530", or +/-[hh], e.g. "+03".
+ * @constructor
+ */
+export const DateFromParts = (
+    year?, month = 1, day = 1,
+    isoWeekYear?, isoWeek = 1, isoDayOfWeek = 1,
+    hour = 0, minute = 0, second = 0, millisecond = 0, timezone?
+) => year
+    ? ({
+        $dateFromParts : {
+            'year': year, 'month': month, 'day': day,
+            'hour': hour, 'minute': minute, 'second': second,
+            'millisecond': millisecond, 'timezone': timezone
+        }
+    })
+    : ({
+        $dateFromParts : {
+            'isoWeekYear': isoWeekYear, 'isoWeek': isoWeek, 'isoDayOfWeek': isoDayOfWeek,
+            'hour': hour, 'minute': minute, 'second': second,
+            'millisecond': millisecond, 'timezone': timezone
+        }
+    });
+/**
+ * Converts a date/time string to a date object.
+ *
+ * @param dateString The date/time string to convert to a date object. See Date for more information on date/time
+ * formats.
+ *
+ * NOTE
+ * If specifying the timezone option to the operator, do not include time zone information in the dateString.
+ * @param formatString Optional. The date format specification of the dateString. The format can be any expression that
+ * evaluates to a string literal, containing 0 or more format specifiers. For a list of specifiers available
+ * @param timezone Optional. The time zone to use to format the date.
+ *
+ * NOTE
+ * If the dateString argument is formatted like ‘2017-02-08T12:10:40.787Z’, in which the ‘Z’ at the end indicates Zulu
+ * time (UTC time zone), you cannot specify the timezone argument. <timezone> allows for the following options and
+ * expressions that evaluate to them:
+ * - an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or
+ * - a UTC offset in the form: +/-[hh]:[mm], e.g. "+04:45", or +/-[hh][mm], e.g. "-0530", or +/-[hh], e.g. "+03", or
+ * - The strings “Z”, “UTC”, or “GMT”.
+ * @param onError Optional. If $dateFromString encounters an error while parsing the given dateString, it outputs the
+ * result value of the provided onError expression. This result value can be of any type. If you do not specify onError,
+ * $dateFromString throws an error if it cannot parse dateString.
+ * @param onNull Optional. If the dateString provided to $dateFromString is null or missing, it outputs the result value
+ * of the provided onNull expression. This result value can be of any type. If you do not specify onNull and dateString
+ * is null or missing, then $dateFromString outputs null.
+ * @constructor
+ */
+export const DateFromString = (
+    dateString, formatString = '%Y-%m-%dT%H:%M:%S.%LZ', timezone?, onError?, onNull?
+) => ({
+    $dateFromString: {
+        dateString: dateString,
+        format: formatString,
+        timezone: timezone,
+        onError: onError,
+        onNull: onNull
+    }
+});
 export const DateToParts = () => ({  });
 export const DateToString = () => ({  });
 export const DayOfMonth = () => ({  });
