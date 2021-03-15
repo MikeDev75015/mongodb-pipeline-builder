@@ -5,9 +5,10 @@
   "main": "dist/lib/main.js",
   "scripts": {
     "start": "npx tsc && SET NODE_ENV=staging&& node dist/lib/main.js",
-    "start:prod": "npx tsc && SET NODE_ENV=production&& node dist/lib/main.js",
+    "build": "npx tsc && SET NODE_ENV=production",
     "test": "jest --runInBand",
     "test-cov": "jest --runInBand --coverage",
+    "test:ci": "npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib",
     "release": "standard-version",
     "publish-alpha": "git push --follow-tags origin main && npm publish --tag alpha"
@@ -23,7 +24,7 @@
     "constructor",
     "aggregate"
   ],
-  "author": "MIKEONLINE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
+  "author": "Mickaël NODANCHE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MikeDev75015/mongodb-pipeline-builder/issues"
@@ -36,6 +37,7 @@
     "@compodoc/compodoc": "^1.1.11",
     "@types/jest": "^26.0.20",
     "jest": "^26.6.3",
+    "jest-sonar-reporter": "^2.0.0",
     "standard-version": "^9.1.1",
     "ts-node": "^9.1.1",
     "tslint": "^6.1.3",
