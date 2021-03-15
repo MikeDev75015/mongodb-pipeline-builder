@@ -1,6 +1,6 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
-import {Equal, Expr, RegexMatch} from "./operators";
+import { Equal, Expression, RegexMatch } from "./operators";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -54,8 +54,8 @@ describe('should create a new pipeline builder object', () => {
                 [
                     'should add a stage to the pipeline',
                     'match',
-                    Expr(Equal('$test', 'test')),
-                    { $match: Expr(Equal('$test', 'test')) },
+                    Expression(Equal('$test', 'test')),
+                    { $match: Expression(Equal('$test', 'test')) },
                     undefined
                 ],
                 [
@@ -96,6 +96,4 @@ describe('should create a new pipeline builder object', () => {
             ).toThrowError(new PipelineError('Error, ' + pipeLineName + ' pipeline is empty!'));
         });
     });
-
-
 });
