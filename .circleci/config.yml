@@ -67,6 +67,13 @@ commands:
     steps:
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
+  copy-required-files-to-dist-lib:
+    description: "Copy the publish required files to lib directory
+    steps:
+      - *copy-package-json
+      - *copy-readme
+      - *copy-changelog
+      - *copy-npmrc
 
 jobs:
   build:
@@ -105,12 +112,9 @@ jobs:
           at: .
       - set-git-global-user
       - *pre-release
-      - *copy-package-json
-      - *copy-readme
-      - *copy-changelog
-      - *copy-npmrc
-      - *go-to-dist-lib
       - *npm-authenticate
+      - copy-required-files-to-dist-lib
+      - *go-to-dist-lib
       - *npm-publish
 
 workflows:
