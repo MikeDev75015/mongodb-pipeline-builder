@@ -29,24 +29,24 @@ aliases:
       command: 'sudo npm install -g npm@latest'
   - &copy-package-json
     run:
-      name: Copy package.json to dist/lib
-      command: cp -rf package.json dist/lib
+      name: Copy package.json to dist
+      command: cp -rf package.json dist
   - &copy-readme
     run:
-      name: Copy Readme.md to dist/lib
-      command: cp -rf Readme.md dist/lib
+      name: Copy Readme.md to dist
+      command: cp -rf Readme.md dist
   - &copy-changelog
     run:
-      name: Copy CHANGELOG.md to dist/lib
-      command: cp -rf CHANGELOG.md dist/lib
+      name: Copy CHANGELOG.md to dist
+      command: cp -rf CHANGELOG.md dist
   - &copy-npmrc
     run:
-      name: Copy .npmrc to dist/lib
-      command: cp -rf .npmrc dist/lib
-  - &go-to-dist-lib
+      name: Copy .npmrc to dist
+      command: cp -rf .npmrc dist
+  - &go-to-dist
     run:
-      name: Go to dist/lib directory before publish
-      command: cd dist/lib
+      name: Go to dist directory before publish
+      command: cd dist
   - &pre-release
     run:
       name: Create a pre release
@@ -58,15 +58,15 @@ aliases:
   - &npm-publish
     run:
       name: Publish package on npm
-      command: npm run publish --latest
+      command: npm run publish
 
 commands:
-  set-git-global-user:
-    description: "Set your account's default identity"
+  set-git-local-user:
+    description: "Set the account's default identity"
     steps:
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
-  copy-required-files-to-dist-lib:
+  copy-required-files-to-dist:
     description: "Copy the publish required files to lib directory"
     steps:
       - *copy-package-json
@@ -109,11 +109,11 @@ jobs:
       - *install-deps
       - attach_workspace:
           at: .
-      - set-git-global-user
+      - set-git-local-user
       - *pre-release
       - *npm-authenticate
-      - copy-required-files-to-dist-lib
-      - *go-to-dist-lib
+      - copy-required-files-to-dist
+      - *go-to-dist
       - *npm-publish
 
 workflows:
