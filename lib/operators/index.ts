@@ -183,7 +183,7 @@ export const ConcatArrays = (...arrayOfArrays) => ({ $concatArrays: arrayOfArray
  * variable name specified in as.
  * @constructor
  */
-export const Filter = (array, as = 'this', condition: boolean) => ({ $filter: { input: array, as: as, cond: condition } });
+export const Filter = (array, condition: boolean, as = 'this') => ({ $filter: { input: array, as: as, cond: condition } });
 /**
  * Returns the first element in an array.
  * @param array
@@ -238,7 +238,7 @@ export const Last = (array) => ({ $last: array });
  * element individually with the variable name specified in as.
  * @constructor
  */
-export const Map = (array, as: string = 'this', apply) => ({ $map: { input: array, as: as, in: apply } });
+export const Map = (array, apply, as: string = 'this') => ({ $map: { input: array, as: as, in: apply } });
 /**
  * Converts a document to an array. The return array contains an element for each field/value pair in the original
  * document. Each element in the return array is a document that contains two fields k and v:
@@ -306,7 +306,7 @@ export const Size = (array) => ({ $size: array });
  * from the position. If negative, $slice returns up to the last n elements in the array.
  * @constructor
  */
-export const Slice = (array, position = 0, numberOfElement: number) => ({
+export const Slice = (array, numberOfElement: number, position = 0) => ({
     $slice: [ array, position, numberOfElement ]
 });
 /**
@@ -523,7 +523,7 @@ export const Switch = (branchList: { branchCase; thenDo }[], defaultCase) => ({
  * @constructor
  */
 export const Accumulator = (
-    initCode, initArgs = [], accumulateCode, accumulateArgs, mergeCode, finalizeCode, langCode = 'js'
+    initCode, accumulateCode, accumulateArgs, mergeCode, finalizeCode, initArgs = [], langCode = 'js'
 ) => ({
     $accumulator: {
         init: initCode,
@@ -606,51 +606,47 @@ export const BsonSize = (object) => ({ $bsonSize: object });
  * @param year Required if not using isoWeekYear. Calendar year. Can be any expression that evaluates to a number.
  * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
  * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
- * @param month Optional. Can only be used with year. Can be any expression that evaluates to a number.
  * Value range: 1-12. if the number specified is outside this range, $dateFromParts incorporates the difference in the
  * date calculation.
- * @param day Optional. Can only be used with year. Day of month. Can be any expression that evaluates to a number.
  * Value range: 1-31. Starting in MongoDB 4.0, if the number specified is outside this range, $dateFromParts
  * incorporates the difference in the date calculation.
  * @param isoWeekYear Required if not using year. ISO Week Date Year. Can be any expression that evaluates to a number.
  * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
  * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
- * @param isoWeek Optional. Can only be used with isoWeekYear. Week of year. Can be any expression that evaluates to a
  * number. Value range: 1-53. If the number specified is outside this range, $dateFromParts incorporates the difference
  * in the date calculation.
- * @param isoDayOfWeek Optional. Can only be used with isoWeekYear. Day of week (Monday 1 - Sunday 7). Can be any
  * expression that evaluates to a number. Value range: 1-7. If the number specified is outside
  * this range, $dateFromParts incorporates the difference in the date calculation.
- * @param hour Optional. Can be any expression that evaluates to a number. Value range: 0-23. If the number specified is
  * outside this range, $dateFromParts incorporates the difference in the date calculation.
- * @param minute Optional. Can be any expression that evaluates to a number. Value range: 0-59. If the number specified
  * is outside this range, $dateFromParts incorporates the difference in the date calculation.
- * @param second Optional. Can be any expression that evaluates to a number. Value range: 0-59. If the number specified
  * is outside this range, $dateFromParts incorporates the difference in the date calculation.
- * @param millisecond Optional. Can be any expression that evaluates to a number. Value range: 0-999. If the number
  * specified is outside this range, $dateFromParts incorporates the difference in the date calculation.
  * @param timezone Optional. can be any expression that evaluates to a string whose value is either:
  * - an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or a UTC offset in the form:
  * +/-[hh]:[mm], e.g. "+04:45", or +/-[hh][mm], e.g. "-0530", or +/-[hh], e.g. "+03".
+ * @param yearBundle
+ * @param isoWeekYearBundle
+ * @param options
  * @constructor
  */
 export const DateFromParts = (
-    year?, month = 1, day = 1,
-    isoWeekYear?, isoWeek = 1, isoDayOfWeek = 1,
-    hour = 0, minute = 0, second = 0, millisecond = 0, timezone?
+    year?, isoWeekYear?, timezone?,
+    yearBundle = { month: 1, day: 1 },
+    isoWeekYearBundle = { isoWeek: 1, isoDayOfWeek: 1 },
+    options = { hour: 0, minute: 0, second: 0, millisecond: 0 }
 ) => year
     ? ({
         $dateFromParts : {
-            'year': year, 'month': month, 'day': day,
-            'hour': hour, 'minute': minute, 'second': second,
-            'millisecond': millisecond, 'timezone': timezone
+            'year': year, 'month': yearBundle.month, 'day': yearBundle.day,
+            'hour': options.hour, 'minute': options.minute, 'second': options.second,
+            'millisecond': options.millisecond, 'timezone': timezone
         }
     })
     : ({
         $dateFromParts : {
-            'isoWeekYear': isoWeekYear, 'isoWeek': isoWeek, 'isoDayOfWeek': isoDayOfWeek,
-            'hour': hour, 'minute': minute, 'second': second,
-            'millisecond': millisecond, 'timezone': timezone
+            'isoWeekYear': isoWeekYear, 'isoWeek': isoWeekYearBundle.isoWeek, 'isoDayOfWeek': isoWeekYearBundle.isoDayOfWeek,
+            'hour': options.hour, 'minute': options.minute, 'second': options.second,
+            'millisecond': options.millisecond, 'timezone': timezone
         }
     });
 /**

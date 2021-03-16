@@ -56,7 +56,7 @@ export class PipelineBuilder {
             ? logsEnabled
             : (LOGS_ENABLED === 'true');
 
-        this.saveActionToDebugHistoryList('constructor', null, { pipelineName, debug });
+        this.saveActionToDebugHistoryList('constructor', { pipelineName, debug });
     }
 
     /**
@@ -69,8 +69,7 @@ export class PipelineBuilder {
         if (this.debugBuild && !this.debugBuild.status) return;
 
         const historyBundle = { date: this.getCurrentDate(), action, pipeline: this.stageList };
-        if (this.stageList.length) historyBundle['pipeline'] = this.stageList;
-        if (argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
+        if (argList && argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
 
         if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
         else {
@@ -152,7 +151,7 @@ export class PipelineBuilder {
      * getPipeline
      */
     public readonly getPipeline = () => {
-        this.saveActionToDebugHistoryList('getPipeline');
+        this.saveActionToDebugHistoryList('getPipeline', this.pipelineName);
         return this.verifyPipelineValidity([...this.stageList]);
     }
 
@@ -168,14 +167,13 @@ export class PipelineBuilder {
             s => this.isValidStage(s)
         ).filter(error => error);
 
-        // TODO verify stage order
         if (this.stageErrorList.length) {
             const errorMessage = this.stageErrorList.map(
                 (e, i) => (i + 1) + ') ' + e.message
             ).join('\n');
             this.log('error', errorMessage, 'stageErrorList', this.stageErrorList);
 
-            this.saveActionToDebugHistoryList('stageErrorList', null, { errorMessage });
+            this.saveActionToDebugHistoryList('stageErrorList', { errorMessage });
             throw new PipelineError(errorMessage);
         }
         return pipelineBuilt;
@@ -195,18 +193,14 @@ export class PipelineBuilder {
             'redact', 'replaceRoot', 'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount',
             'unionWith', 'unset', 'unwind'
         ];
-        switch (treatedStageList.includes(stageType)) {
-            case true: return null;
-            default: {
-                this.saveActionToDebugHistoryList(
-                    'Stage Error',
-                    null,
-                    { stageType, message: 'this pipeline stage type is invalid or not yet treated.' },
-                    { invalidStage: stageToValidate }
-                );
-                return { stageType, message: 'the ' + stageType + ' stage type is invalid or not yet treated.' };
-            }
-        }
+        if (treatedStageList.includes(stageType)) return null;
+
+        this.saveActionToDebugHistoryList(
+            'Stage Error',
+            { stageType, message: 'this pipeline stage type is invalid or not yet treated.' },
+            { invalidStage: stageToValidate }
+        );
+        return { stageType, message: 'the ' + stageType + ' stage type is invalid or not yet treated.' };
     }
 
     // Utils

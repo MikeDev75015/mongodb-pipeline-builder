@@ -182,10 +182,6 @@ export const getStageTypeValueFor = (label: string) => {
     return StageTypeEnum[label];
 };
 
-/*export const getStageTypeLabelFor = (value: string) => {
-    return Object.keys(StageTypeEnum).find(key => StageTypeEnum[key] === value);
-};*/
-
 
 /*
 'addFields' |
