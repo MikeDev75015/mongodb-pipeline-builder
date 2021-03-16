@@ -10,7 +10,10 @@ import {
 
 
 /**
- * Lookup Description
+ * Performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined”
+ * collection for processing. To each input document, the $lookup stage adds a new array field whose elements are the
+ * matching documents from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
+ *
  * @param payload
  * @constructor
  */
@@ -25,7 +28,13 @@ export const
 
         return lookupConditionStage(payload as LookupConditionPayloadInterface);
     };
-
+/**
+ * Equality Match
+ * To perform an equality match between a field from the input documents with a field from the documents of the “joined”
+ * collection
+ *
+ * @param payload
+ */
 export const lookupEqualityStage = (payload: LookupEqualityPayloadInterface) => {
     const { from, as, localField, foreignField } = payload;
 
@@ -39,7 +48,13 @@ export const lookupEqualityStage = (payload: LookupEqualityPayloadInterface) => 
         as: as
     };
 };
-
+/**
+ * Join Conditions and Uncorrelated Sub-queries
+ * To perform uncorrelated subqueries between two collections as well as allow other join conditions besides a single
+ * equality match
+ *
+ * @param payload
+ */
 export const lookupConditionStage = (payload: LookupConditionPayloadInterface) => {
     const { from, as, sourceList, pipeline, project } = payload;
 
