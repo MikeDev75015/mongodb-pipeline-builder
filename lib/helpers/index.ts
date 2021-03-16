@@ -33,12 +33,10 @@ export const lookupEqualityStage = (payload: LookupEqualityPayloadInterface) => 
         throw new PipelineError('Invalid Lookup Equality Payload, missing "localField" or "foreignField" parameter!');
 
     return {
-        $lookup: {
-            from: from,
-            localField: localField,
-            foreignField: foreignField,
-            as: as
-        }
+        from: from,
+        localField: localField,
+        foreignField: foreignField,
+        as: as
     };
 };
 
@@ -68,14 +66,12 @@ export const lookupConditionStage = (payload: LookupConditionPayloadInterface) =
     }
 
     const lookupStage = {
-        $lookup: {
-            from: from,
-            as: as,
-        }
+        from: from,
+        as: as,
     };
 
-    if (Object.keys(letObject).length) lookupStage.$lookup['let'] = letObject;
-    if (lookupPipeline.length) lookupStage.$lookup['pipeline'] = lookupPipeline;
+    if (Object.keys(letObject).length) lookupStage['let'] = letObject;
+    if (lookupPipeline.length) lookupStage['pipeline'] = lookupPipeline;
 
     return lookupStage;
 };
