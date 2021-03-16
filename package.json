@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/lib/main.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "compodoc": "npx compodoc -p tsconfig.json lib",
     "pre-release": "npm run release -- --prerelease alpha",
     "git-tags": "git push --follow-tags origin main",
-    "publish": "npm publish",
+    "publish": "npm publish --tag alpha",
     "release": "standard-version"
   },
   "repository": {
