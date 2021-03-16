@@ -1,6 +1,8 @@
 version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
+  npm-publisher: uraway/npm-publisher@0.2.0
+
 aliases:
   - &restore-cache
     restore_cache:
@@ -22,6 +24,23 @@ aliases:
     run:
       name: Test
       command: npm run test:ci
+  - &update-npm-version
+    run:
+      name: Update NPM version
+      command: 'sudo npm install -g npm@latest'
+  - &copy-package-json
+    run:
+      name: Copy package.json to dist/lib
+      command: npm run copypackage
+  - &pre-release
+    run:
+      name: Create a pre release
+      command: npm run pre-release
+  - &npm-publish
+    run:
+      name: Publish package on npm
+      command: npm run publish-alpha
+
 
 jobs:
   build:
@@ -29,13 +48,15 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout
-      - run:
-          name: Update NPM version
-          command: 'sudo npm install -g npm@latest'
+      - *update-npm-version
       - *restore-cache
       - *install-deps
       - *save-cache
       - *build-packages
+      - persist_to_workspace:
+          root: .
+          paths:
+            - 'dist'
 
   unit_tests:
     docker:
@@ -43,17 +64,54 @@ jobs:
     steps:
       - checkout
       - *restore-cache
-      - *install-deps
-      - *build-packages
+      #- *install-deps
       - *run-unit-tests
       - sonarcloud/scan
 
+  pre-release:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - attach_workspace:
+          at: .
+      - *copy-package-json
+      - *pre-release
+      - *npm-publish
+
 workflows:
-  version: 2
-  build-and-test:
+  build-and-test-ignore-release:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              ignore:
+                - release
       - unit_tests:
           context: SONARCLOUD
           requires:
             - build
+          filters:
+            branches:
+              ignore:
+                - release
+
+  build-test-and-pre-release-only-release:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - release
+      - unit_tests:
+          context: SONARCLOUD
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - release
+      - pre-release:
+          filters:
+            branches:
+              only:
+                - release
