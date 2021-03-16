@@ -1,4 +1,4 @@
-import * as moment from 'moment-timezone';
+const moment = require('moment-timezone');
 import {
     DebugBuildInterface,
     StageErrorInterface,
@@ -60,7 +60,7 @@ export class PipelineBuilder {
             : (LOGS_ENABLED === 'true');
         this.debugBuild.status = debug;
 
-        this.saveActionToDebugHistoryList('constructor', { pipelineName, debug, logsEnabled });
+        this.saveActionToDebugHistoryList('constructor', { debug, logsEnabled });
     }
 
     /**
@@ -77,7 +77,7 @@ export class PipelineBuilder {
             action: any;
             pipeline: any;
             value?: any;
-        } = { date: this.getCurrentDate(), action, pipeline: this.stageList };
+        } = { date: this.getCurrentDate(), action: this.pipelineName + ' => ' + action, pipeline: this.stageList };
         if (argList && argList.length)
             historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
 
@@ -104,7 +104,7 @@ export class PipelineBuilder {
      * getName
      */
     public readonly getName = () => {
-        this.saveActionToDebugHistoryList('getName', { pipelineName: this.pipelineName });
+        this.saveActionToDebugHistoryList('getName');
         return this.pipelineName;
     }
     /**
@@ -146,14 +146,14 @@ export class PipelineBuilder {
     ) => {
         const stageTypeValue = getStageTypeValueFor(stageTypeLabel);
         if (!stageTypeValue && this.debugBuild.status) {
-            this.saveActionToDebugHistoryList('getStageTypeValueFor', { stageTypeLabel, stageValue });
+            this.saveActionToDebugHistoryList('getStageTypeValueFor', { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
             throw new PipelineError('Impossible to add the stage, the stage name is not valid!');
         }
 
         const newStageToAdd = this.createObject(stageTypeValue ? stageTypeValue : '$' + stageTypeLabel, stageValue) as StageInterface;
         this.stageList.push(newStageToAdd);
 
-        this.saveActionToDebugHistoryList('addStage', newStageToAdd, { stageTypeLabel: stageTypeLabel, stageValue });
+        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
         return this;
     }
 
@@ -161,7 +161,7 @@ export class PipelineBuilder {
      * getPipeline
      */
     public readonly getPipeline = () => {
-        this.saveActionToDebugHistoryList('getPipeline', this.pipelineName);
+        this.saveActionToDebugHistoryList('getPipeline');
         return this.verifyPipelineValidity([...this.stageList]);
     }
 
@@ -208,7 +208,7 @@ export class PipelineBuilder {
         this.saveActionToDebugHistoryList(
             'Stage Error',
             { stageType, message: 'this pipeline stage type is invalid or not yet treated.' },
-            { invalidStage: stageToValidate }
+            { invalidStage: JSON.stringify(stageToValidate) }
         );
         return { stageType, message: 'the ' + stageType + ' stage type is invalid or not yet treated.' };
     }

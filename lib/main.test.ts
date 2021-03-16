@@ -12,7 +12,7 @@ describe('should create a new pipeline builder object', () => {
     describe('pipeline Builder With Debug', () => {
         const pipeLineName = 'builder-test';
         beforeEach(() => {
-            pipelineBuilderWithDebug = new PipelineBuilder(pipeLineName, undefined, true);
+            pipelineBuilderWithDebug = new PipelineBuilder(pipeLineName, true, true);
         });
 
         it('should be defined', () => {
@@ -47,7 +47,7 @@ describe('should create a new pipeline builder object', () => {
             it('should return the action stored in the debug history list at builder initialization', () => {
                 const debugActionList = pipelineBuilderWithDebug.getDebugActionList();
                 expect(debugActionList).toHaveLength(1);
-                expect(debugActionList[0].action).toEqual('constructor');
+                expect(debugActionList[0].action).toEqual(pipelineBuilderWithDebug.getName() + ' => constructor');
             });
         });
 
