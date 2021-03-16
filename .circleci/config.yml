@@ -68,7 +68,7 @@ commands:
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
   copy-required-files-to-dist-lib:
-    description: "Copy the publish required files to lib directory
+    description: "Copy the publish required files to lib directory"
     steps:
       - *copy-package-json
       - *copy-readme
@@ -89,7 +89,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - 'dist'
+            - 'dist/lib'
 
   unit_tests:
     docker:
