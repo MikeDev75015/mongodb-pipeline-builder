@@ -1,6 +1,8 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
-import { Equal, Expression, RegexMatch } from "./operators";
+import {RegexMatch} from "./operators/string";
+import {Expression} from "./operators/misc";
+import {Equal} from "./operators/comparison";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -56,7 +58,7 @@ describe('should create a new pipeline builder object', () => {
                     'match',
                     Expression(Equal('$test', 'test')),
                     { $match: Expression(Equal('$test', 'test')) },
-                    undefined
+                    ''
                 ],
                 [
                     'should not add the stage to the pipeline if its type is invalid or not yet treated',
@@ -67,16 +69,21 @@ describe('should create a new pipeline builder object', () => {
                 ],
             ])('%s', (
                 nameTest: string,
-                stageType: 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+                stageType: string,
                 stageValue: any,
                 expected: any,
                 errorMessage: string
             ) => {
-
                 if (errorMessage) {
-                    expect(() => pipelineBuilderWithDebug.addStage(stageType, stageValue)).toThrowError(new PipelineError(errorMessage));
+                    expect(() => pipelineBuilderWithDebug.addStage(
+                        stageType as 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+                        stageValue
+                    )).toThrowError(new PipelineError(errorMessage));
                 } else {
-                    expect(pipelineBuilderWithDebug.addStage(stageType, stageValue).getPipeline()).toEqual([expected]);
+                    expect(pipelineBuilderWithDebug.addStage(
+                        stageType as 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+                        stageValue
+                    ).getPipeline()).toEqual([expected]);
                 }
             });
         });
