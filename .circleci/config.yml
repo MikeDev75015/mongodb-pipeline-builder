@@ -31,7 +31,23 @@ aliases:
   - &copy-package-json
     run:
       name: Copy package.json to dist/lib
-      command: npm run copypackage
+      command: cp -rf package.json dist/lib
+  - &copy-readme
+    run:
+      name: Copy Readme.md to dist/lib
+      command: cp -rf Readme.md dist/lib
+  - &copy-changelog
+    run:
+      name: Copy CHANGELOG.md to dist/lib
+      command: cp -rf CHANGELOG.md dist/lib
+  - &copy-npmrc
+    run:
+      name: Copy .npmrc to dist/lib
+      command: cp -rf .npmrc dist/lib
+  - &go-to-dist-lib
+    run:
+      name: Go to dist/lib directory before publish
+      command: cd dist/lib
   - &pre-release
     run:
       name: Create a pre release
@@ -39,12 +55,25 @@ aliases:
   - &npm-authenticate
     run:
       name: NPM Account Authentication
-      command: //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+      command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
   - &npm-publish
     run:
       name: Publish package on npm
       command: npm run publish-alpha
 
+commands:
+  set-git-global-user:
+    description: "Set your account's default identity"
+    steps:
+      - run: git config user.email ${USER_EMAIL}
+      - run: git config user.name ${USER_NAME}
+  copy-required-files-to-dist-lib:
+    description: "Copy the publish required files to lib directory"
+    steps:
+      - *copy-package-json
+      - *copy-readme
+      - *copy-changelog
+      - *copy-npmrc
 
 jobs:
   build:
@@ -68,7 +97,7 @@ jobs:
     steps:
       - checkout
       - *restore-cache
-      #- *install-deps
+      - *install-deps
       - *run-unit-tests
       - sonarcloud/scan
 
@@ -78,12 +107,14 @@ jobs:
     steps:
       - checkout
       - *restore-cache
-      #- *install-deps
+      - *install-deps
       - attach_workspace:
           at: .
-      - *copy-package-json
+      - set-git-global-user
       - *pre-release
       - *npm-authenticate
+      - copy-required-files-to-dist-lib
+      - *go-to-dist-lib
       - *npm-publish
 
 workflows:
@@ -119,6 +150,10 @@ workflows:
               only:
                 - release
       - pre-release:
+          context: GIT
+          requires:
+            - build
+            - unit_tests
           filters:
             branches:
               only:
