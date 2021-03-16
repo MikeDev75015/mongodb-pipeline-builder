@@ -5,8 +5,8 @@
   "main": "dist/lib/main.js",
   "scripts": {
     "prepare": "npm run build",
-    "start": "npx tsc && SET NODE_ENV=staging&& node dist/lib/main.js",
-    "build": "SET NODE_ENV=production && tsc",
+    "start": "npx tsc && node dist/lib/main.js",
+    "build": "tsc",
     "test": "jest --runInBand",
     "test-cov": "jest --runInBand --coverage",
     "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
