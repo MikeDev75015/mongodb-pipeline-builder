@@ -12,7 +12,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=bugs)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 
-#`mongodb-pipeline-builder`
+# `mongodb-pipeline-builder`
 </p>
 
 <p style="text-align: justify; width: 100%;">
@@ -21,7 +21,7 @@ is a pipeline builder for the aggregate method of a mongoDB collection. It will 
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-##Install:
+## Install:
 
 ### npm i mongodb-pipeline-builder
 
