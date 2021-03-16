@@ -32,6 +32,14 @@ aliases:
     run:
       name: Copy package.json to dist/lib
       command: cp -rf package.json dist/lib
+  - &copy-readme
+    run:
+      name: Copy Readme.md to dist/lib
+      command: cp -rf package.json dist/lib
+  - &copy-changelog
+    run:
+      name: Copy CHANGELOG.md to dist/lib
+      command: cp -rf package.json dist/lib
   - &go-to-dist-lib
     run:
       name: Go to dist/lib directory before publish
@@ -87,6 +95,8 @@ jobs:
           at: .
       - *pre-release
       - *copy-package-json
+      - *copy-readme
+      - *copy-changelog
       - *go-to-dist-lib
       - *npm-authenticate
       - *npm-publish
