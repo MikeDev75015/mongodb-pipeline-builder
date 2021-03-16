@@ -46,23 +46,21 @@ export const lookupConditionStage = (payload: LookupConditionPayloadInterface) =
     const { from, as, sourceList, pipeline, project } = payload;
 
     const letObject = {};
-    if (sourceList && sourceList.length) {
+    if (sourceList) {
         sourceList.forEach(s => letObject[s] = '$' + s);
     }
 
     let lookupPipeline = [];
+    if (pipeline) lookupPipeline = lookupPipeline.concat(pipeline);
 
-    if (pipeline && pipeline.length) lookupPipeline = lookupPipeline.concat(pipeline);
-
-    if (project && project.list && Object.keys(project.list).length) {
+    if (project && project.list && project.list.length) {
         if (!project.type)
             throw new Error('The project type property must be specified!');
 
         const projectPipeline =
-            project.type === 'ignore' ||
-            (project.type === 'only' && project.list.includes('_id'))
-                ? {}
-                : { _id: 0 };
+            project.type === 'only' && !project.list.includes('_id')
+                ? { _id: 0 }
+                : {};
 
         const projectValue = project.type === 'only'? 1 : 0;
         project.list.forEach(p => projectPipeline[p] = projectValue);
