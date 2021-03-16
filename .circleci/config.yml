@@ -55,10 +55,15 @@ aliases:
     run:
       name: NPM Account Authentication
       command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+  - &npm-git-tags
+    run:
+      name: git push follow release tag
+      command: npm run git-tags
   - &npm-publish
     run:
       name: Publish package on npm
       command: npm run publish
+
 
 commands:
   set-git-local-user:
@@ -111,6 +116,7 @@ jobs:
           at: .
       - set-git-local-user
       - *pre-release
+      - *npm-git-tags
       - *npm-authenticate
       - copy-required-files-to-dist
       - *go-to-dist
