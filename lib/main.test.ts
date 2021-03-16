@@ -62,8 +62,8 @@ describe('should create a new pipeline builder object', () => {
                     'should not add the stage to the pipeline if its type is invalid or not yet treated',
                     'toto',
                     RegexMatch('$name', /toto/g),
-                    { $toto: RegexMatch('$name', /(toto)/g) },
-                    '1) the toto stage type is invalid or not yet treated.'
+                    null,
+                    'Impossible to add the stage, the stage name is not valid!'
                 ],
             ])('%s', (
                 nameTest: string,
@@ -72,13 +72,12 @@ describe('should create a new pipeline builder object', () => {
                 expected: any,
                 errorMessage: string
             ) => {
-                pipelineBuilderWithDebug.addStage(
-                    stageType,
-                    stageValue
-                );
 
-                if (!errorMessage) expect(pipelineBuilderWithDebug.getPipeline()).toEqual([expected]);
-                else expect(() => pipelineBuilderWithDebug.getPipeline()).toThrowError(new PipelineError(errorMessage));
+                if (errorMessage) {
+                    expect(() => pipelineBuilderWithDebug.addStage(stageType, stageValue)).toThrowError(new PipelineError(errorMessage));
+                } else {
+                    expect(pipelineBuilderWithDebug.addStage(stageType, stageValue).getPipeline()).toEqual([expected]);
+                }
             });
         });
     });
@@ -90,10 +89,19 @@ describe('should create a new pipeline builder object', () => {
             pipelineBuilderWithoutDebug = new PipelineBuilder(pipeLineName, false);
         });
 
-        it('should throw an error', () => {
+        it('should throw a PipelineError if the pipeline is empty', () => {
             expect(
                 () => pipelineBuilderWithoutDebug.getPipeline()
             ).toThrowError(new PipelineError('Error, ' + pipeLineName + ' pipeline is empty!'));
+        });
+
+        it('should throw a PipelineError if the stage is invalid or not yet treated', () => {
+            const stageType = 'toto';
+            const stageValue = RegexMatch('$name', /toto/g);
+
+            expect(
+                () => pipelineBuilderWithoutDebug.addStage(stageType as 'match', stageValue).getPipeline()
+            ).toThrowError(new PipelineError('1) the toto stage type is invalid or not yet treated.'));
         });
     });
 });
