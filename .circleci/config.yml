@@ -57,6 +57,12 @@ aliases:
       name: Publish package on npm
       command: npm run publish-alpha
 
+commands:
+  set-git-global-user:
+    description: "Set your account's default identity"
+    steps:
+      - run: git config user.email ${USER_EMAIL}
+      - run: git config user.name ${USER_NAME}
 
 jobs:
   build:
@@ -93,6 +99,7 @@ jobs:
       - *install-deps
       - attach_workspace:
           at: .
+      - set-git-global-user
       - *pre-release
       - *copy-package-json
       - *copy-readme
@@ -134,6 +141,7 @@ workflows:
               only:
                 - release
       - pre-release:
+          context: GIT
           requires:
             - build
             - unit_tests
