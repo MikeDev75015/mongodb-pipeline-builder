@@ -43,7 +43,7 @@ aliases:
   - &copy-npmrc
     run:
       name: Copy .npmrc to dist/lib
-      command: cp -rf .npmrc dist/lib
+      command: cp -rf ./.npmrc dist/lib
   - &go-to-dist-lib
     run:
       name: Go to dist/lib directory before publish
