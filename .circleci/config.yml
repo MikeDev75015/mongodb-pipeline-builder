@@ -58,7 +58,7 @@ aliases:
   - &npm-publish
     run:
       name: Publish package on npm
-      command: npm run publish-alpha
+      command: npm run publish --latest
 
 commands:
   set-git-global-user:
