@@ -108,6 +108,7 @@ jobs:
       - *copy-package-json
       - *copy-readme
       - *copy-changelog
+      - *copy-npmrc
       - *go-to-dist-lib
       - *npm-authenticate
       - *npm-publish
