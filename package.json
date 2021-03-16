@@ -4,11 +4,12 @@
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/lib/main.js",
   "scripts": {
+    "prepare": "npm run build",
     "start": "npx tsc && SET NODE_ENV=staging&& node dist/lib/main.js",
     "build": "NODE_ENV=production && tsc",
     "test": "jest --runInBand",
     "test-cov": "jest --runInBand --coverage",
-    "test:ci": "npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
+    "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib",
     "release": "standard-version",
     "publish-alpha": "git push --follow-tags origin main && npm publish --tag alpha"
@@ -18,7 +19,7 @@
     "url": "git+https://github.com/MikeDev75015/mongodb-pipeline-builder.git"
   },
   "keywords": [
-    "mongod",
+    "mongodb",
     "pipeline",
     "builder",
     "constructor",
@@ -46,5 +47,18 @@
   "dependencies": {
     "custom-env": "^2.0.1",
     "moment-timezone": "^0.5.33"
-  }
+  },
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
+  ],
+  "coverageDirectory": "../coverage",
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/test/"
+  ],
+  "testEnvironment": "node",
+  "reporters": [
+    "default"
+  ]
 }
