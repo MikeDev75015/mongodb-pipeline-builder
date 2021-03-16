@@ -31,7 +31,11 @@ aliases:
   - &copy-package-json
     run:
       name: Copy package.json to dist/lib
-      command: npm run copypackage
+      command: cp -rf package.json dist/lib
+  - &go-to-dist-lib
+    run:
+      name: Go to dist/lib directory before publish
+      command: cd dist/lib
   - &pre-release
     run:
       name: Create a pre release
@@ -68,7 +72,7 @@ jobs:
     steps:
       - checkout
       - *restore-cache
-      #- *install-deps
+      - *install-deps
       - *run-unit-tests
       - sonarcloud/scan
 
@@ -78,11 +82,12 @@ jobs:
     steps:
       - checkout
       - *restore-cache
-      #- *install-deps
+      - *install-deps
       - attach_workspace:
           at: .
-      - *copy-package-json
       - *pre-release
+      - *copy-package-json
+      - *go-to-dist-lib
       - *npm-authenticate
       - *npm-publish
 
