@@ -3,10 +3,6 @@ import {PipelineError} from "../errors";
 
 describe('pipeline Stage Helpers', () => {
     describe('Lookup', () => {
-        let
-            lookupEqualityStage = jest.fn(),
-            lookupConditionSpy;
-
         describe('should throw a PipelineError message', () => {
             test.each([
 
@@ -58,12 +54,10 @@ describe('pipeline Stage Helpers', () => {
                 foreignField: 'foreignField',
                 as: 'as'
             })).toEqual({
-                $lookup: {
-                    from: 'from',
-                    localField: 'localField',
-                    foreignField: 'foreignField',
-                    as: 'as'
-                }
+                from: 'from',
+                localField: 'localField',
+                foreignField: 'foreignField',
+                as: 'as'
             });
         });
     });
@@ -74,10 +68,8 @@ describe('pipeline Stage Helpers', () => {
                 from: 'from',
                 as: 'as'
             })).toEqual({
-                $lookup: {
-                    as: "as",
-                    from: "from",
-                },
+                as: "as",
+                from: "from",
             });
         });
 
@@ -94,33 +86,31 @@ describe('pipeline Stage Helpers', () => {
                 ],
                 as: 'as'
             })).toEqual({
-                $lookup: {
-                    as: "as",
-                    from: "from",
-                    let: {
-                        "testSource": "$testSource",
-                    },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $eq: [
-                                        "$type",
-                                        "$$testSource",
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $project: {
-                                _id: 0,
-                                test1: 1,
-                                test2: 1,
-                                test3: 1,
-                            },
-                        },
-                    ],
+                as: "as",
+                from: "from",
+                let: {
+                    "testSource": "$testSource",
                 },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: [
+                                    "$type",
+                                    "$$testSource",
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            test1: 1,
+                            test2: 1,
+                            test3: 1,
+                        },
+                    },
+                ],
             });
         });
 
@@ -137,32 +127,30 @@ describe('pipeline Stage Helpers', () => {
                 ],
                 as: 'as'
             })).toEqual({
-                $lookup: {
-                    as: "as",
-                    from: "from",
-                    let: {
-                        "testSource": "$testSource",
-                    },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $eq: [
-                                        "$type",
-                                        "$$testSource",
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $project: {
-                                test1: 0,
-                                test2: 0,
-                                test3: 0,
-                            },
-                        },
-                    ],
+                as: "as",
+                from: "from",
+                let: {
+                    "testSource": "$testSource",
                 },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: [
+                                    "$type",
+                                    "$$testSource",
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            test1: 0,
+                            test2: 0,
+                            test3: 0,
+                        },
+                    },
+                ],
             });
         });
     });
