@@ -35,11 +35,15 @@ aliases:
   - &copy-readme
     run:
       name: Copy Readme.md to dist/lib
-      command: cp -rf package.json dist/lib
+      command: cp -rf Readme.md dist/lib
   - &copy-changelog
     run:
       name: Copy CHANGELOG.md to dist/lib
-      command: cp -rf package.json dist/lib
+      command: cp -rf CHANGELOG.md dist/lib
+  - &copy-npmrc
+    run:
+      name: Copy .npmrc to dist/lib
+      command: cp -rf .npmrc dist/lib
   - &go-to-dist-lib
     run:
       name: Go to dist/lib directory before publish
