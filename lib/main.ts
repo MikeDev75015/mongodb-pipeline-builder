@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 import {
     DebugBuildInterface,
     StageErrorInterface,
@@ -32,12 +32,15 @@ export class PipelineBuilder {
      * debugBuild
      * @private
      */
-    private debugBuild: DebugBuildInterface;
+    private debugBuild: DebugBuildInterface = {
+        status: false,
+        historyList: []
+    };
     /**
      * stageErrorList
      * @private
      */
-    private stageErrorList: StageErrorInterface[];
+    private stageErrorList: StageErrorInterface[] = [];
 
     /**
      * constructor
@@ -47,16 +50,17 @@ export class PipelineBuilder {
      */
     constructor(
         pipelineName: string,
-        logsEnabled: boolean = undefined,
-        debug: boolean = false
+        debug: boolean = false,
+        logsEnabled?: boolean
     ) {
         this.pipelineName = pipelineName;
         this.stageList = [];
         this.logsEnabled = logsEnabled !== undefined
             ? logsEnabled
             : (LOGS_ENABLED === 'true');
+        this.debugBuild.status = debug;
 
-        this.saveActionToDebugHistoryList('constructor', { pipelineName, debug });
+        this.saveActionToDebugHistoryList('constructor', { pipelineName, debug, logsEnabled });
     }
 
     /**
@@ -66,10 +70,16 @@ export class PipelineBuilder {
      * @private
      */
     private saveActionToDebugHistoryList(action: string, ...argList: any[]): void {
-        if (this.debugBuild && !this.debugBuild.status) return;
+        if (!this.debugBuild.status) return;
 
-        const historyBundle = { date: this.getCurrentDate(), action, pipeline: this.stageList };
-        if (argList && argList.length) historyBundle['value'] = argList.length > 1? argList : argList[0];
+        const historyBundle: {
+            date: any;
+            action: any;
+            pipeline: any;
+            value?: any;
+        } = { date: this.getCurrentDate(), action, pipeline: this.stageList };
+        if (argList && argList.length)
+            historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
 
         if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
         else {
@@ -165,7 +175,7 @@ export class PipelineBuilder {
 
         this.stageErrorList = pipelineBuilt.map(
             s => this.isValidStage(s)
-        ).filter(error => error);
+        ).filter(error => error) as StageErrorInterface[];
 
         if (this.stageErrorList.length) {
             const errorMessage = this.stageErrorList.map(
@@ -210,7 +220,7 @@ export class PipelineBuilder {
      * @param value
      */
     private createObject = (key: string, value: any) => {
-        const object = {};
+        const object: {[index: string]: any} = {};
         object[key] = value;
         return object;
     }
