@@ -36,6 +36,10 @@ aliases:
     run:
       name: Create a pre release
       command: npm run pre-release
+  - &npm-authenticate
+    run:
+      name: NPM Account Authentication
+      command: //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
   - &npm-publish
     run:
       name: Publish package on npm
@@ -72,14 +76,18 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
+      - checkout
+      - *restore-cache
+      #- *install-deps
       - attach_workspace:
           at: .
       - *copy-package-json
       - *pre-release
+      - *npm-authenticate
       - *npm-publish
 
 workflows:
-  build-and-test-ignore-release:
+  build-and-test-default:
     jobs:
       - build:
           filters:
@@ -95,7 +103,7 @@ workflows:
               ignore:
                 - release
 
-  build-test-and-pre-release-only-release:
+  build-test-and-publish-pre-release:
     jobs:
       - build:
           filters:
