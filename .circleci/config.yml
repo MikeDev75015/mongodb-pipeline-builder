@@ -55,7 +55,7 @@ aliases:
   - &npm-authenticate
     run:
       name: NPM Account Authentication
-      command: //registry.npmjs.org/:_authToken=${NPM_TOKEN} >.npmrc
+      command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
   - &npm-publish
     run:
       name: Publish package on npm
