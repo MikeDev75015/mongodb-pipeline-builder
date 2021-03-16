@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
-  npm-publisher: uraway/npm-publisher@0.2.0
 
 aliases:
   - &restore-cache
