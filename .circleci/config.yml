@@ -58,7 +58,7 @@ aliases:
   - &npm-git-tags
     run:
       name: git push follow release tag
-      command: npm run git-tags
+      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
   - &npm-publish
     run:
       name: Publish package on npm
@@ -69,6 +69,7 @@ commands:
   set-git-local-user:
     description: "Set the account's default identity"
     steps:
+      - run: git config credential.helper 'cache --timeout=120'
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
   copy-required-files-to-dist:
