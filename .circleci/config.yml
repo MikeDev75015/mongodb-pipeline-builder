@@ -120,6 +120,9 @@ jobs:
       - set-git-local-user
       - *pre-release
       - *npm-git-tags
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   pre-release:
     docker:
@@ -156,7 +159,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - unit_tests:
           context:
             - SONARCLOUD
@@ -166,7 +169,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - notify-success-job:
           name: build-unit_tests-ok
           context: SLACK
@@ -176,7 +179,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - approval-prepare-pre-release:
           type: approval
           requires:
@@ -186,7 +189,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - prepare-pre-release:
           context:
             - GIT
@@ -199,7 +202,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - notify-success-job:
           context: SLACK
           requires:
@@ -211,7 +214,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
 
 
   publish-release:
@@ -221,7 +224,7 @@ workflows:
           filters:
             branches:
               only:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - pre-release:
           context:
             - GIT
@@ -231,7 +234,7 @@ workflows:
           filters:
             branches:
               only:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
       - notify-success-job:
           context: SLACK
           requires:
@@ -240,4 +243,4 @@ workflows:
           filters:
             branches:
               only:
-                - release
+                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/

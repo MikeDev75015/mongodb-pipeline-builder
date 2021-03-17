@@ -13,7 +13,7 @@
     "compodoc": "npx compodoc -p tsconfig.json lib",
     "release": "standard-version",
     "pre-release": "npm run release -- --prerelease",
-    "git-tags": "git push --follow-tags origin release",
+    "git-tags": "git push --follow-tags origin main",
     "publish": "npm publish --tag latest"
   },
   "repository": {
