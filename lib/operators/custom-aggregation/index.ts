@@ -67,7 +67,7 @@ export const Accumulator = (
  * @param langCode
  * @constructor
  */
-export const Function = (bodyCode: any, array: any, langCode = 'js') => ({
+export const FunctionOperator = (bodyCode: any, array: any, langCode = 'js') => ({
     $function: {
         body: bodyCode,
         args: array,

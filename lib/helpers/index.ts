@@ -37,8 +37,9 @@ export const Lookup = (payload: any) => {
 export const lookupEqualityStage = (payload: LookupEqualityPayloadInterface) => {
     const { from, as, localField, foreignField } = payload;
 
-    if (!localField || !foreignField)
+    if (!localField || !foreignField) {
         throw new PipelineError('Invalid Lookup Equality Payload, missing "localField" or "foreignField" parameter!');
+    }
 
     return {
         from: from,
@@ -58,13 +59,16 @@ export const lookupConditionStage = (payload: LookupConditionPayloadInterface) =
     const { from, as, sourceList, pipeline, project } = payload;
 
     const letObject: {[index: string]: any} = {};
-    if (sourceList) sourceList.forEach(s => letObject[s] = '$' + s);
+    if (sourceList) {
+        sourceList.forEach(s => letObject[s] = '$' + s);
+    }
 
     let lookupPipeline: any[] = pipeline ? pipeline : [];
 
     if (project && project.list && project.list.length) {
-        if (!project.type)
+        if (!project.type) {
             throw new Error('The project type property must be specified!');
+        }
 
         const projectPipeline: {[index: string]: any} =
             project.type === 'only' && !project.list.includes('_id')
@@ -86,8 +90,12 @@ export const lookupConditionStage = (payload: LookupConditionPayloadInterface) =
         as: as,
     };
 
-    if (Object.keys(letObject).length) lookupStage.let = letObject;
-    if (lookupPipeline.length) lookupStage.pipeline = lookupPipeline;
+    if (Object.keys(letObject).length) {
+        lookupStage.let = letObject;
+    }
+    if (lookupPipeline.length) {
+        lookupStage.pipeline = lookupPipeline;
+    }
 
     return lookupStage;
 };

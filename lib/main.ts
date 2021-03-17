@@ -50,12 +50,12 @@ export class PipelineBuilder {
      */
     constructor(
         pipelineName: string,
-        debug: boolean = false,
-        logsEnabled?: boolean
+        debug = false,
+        logsEnabled = false
     ) {
         this.pipelineName = pipelineName;
         this.stageList = [];
-        this.logsEnabled = logsEnabled !== undefined
+        this.logsEnabled = logsEnabled
             ? logsEnabled
             : (LOGS_ENABLED === 'true');
         this.debugBuild.status = debug;
@@ -70,16 +70,19 @@ export class PipelineBuilder {
      * @private
      */
     private saveActionToDebugHistoryList(action: string, ...argList: any[]): void {
-        if (!this.debugBuild.status) return;
+        if (!this.debugBuild.status) {
+            return;
+        }
 
         const historyBundle: {
             date: any;
             action: any;
             pipeline: any;
             value?: any;
-        } = { date: this.getCurrentDate(), action: this.pipelineName + ' => ' + action, pipeline: this.stageList };
-        if (argList && argList.length)
+        } = { date: this.getCurrentDate(), action: `${this.pipelineName} => ${action}`, pipeline: this.stageList };
+        if (argList && argList.length) {
             historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
+        }
 
         if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
         else {
@@ -169,7 +172,7 @@ export class PipelineBuilder {
      * verifyPipelineValidity
      * @param pipelineBuilt
      */
-    private verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
+    private readonly verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
         this.log('info', 'verifyPipelineValidity of ' + this.pipelineName + ' pipeline:\n', JSON.stringify(this.stageList));
         if (!pipelineBuilt.length) throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
 
@@ -203,7 +206,9 @@ export class PipelineBuilder {
             'redact', 'replaceRoot', 'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount',
             'unionWith', 'unset', 'unwind'
         ];
-        if (treatedStageList.includes(stageType)) return null;
+        if (treatedStageList.includes(stageType)) {
+            return null;
+        }
 
         this.saveActionToDebugHistoryList(
             'Stage Error',
@@ -219,7 +224,7 @@ export class PipelineBuilder {
      * @param key
      * @param value
      */
-    private createObject = (key: string, value: any) => {
+    private readonly createObject = (key: string, value: any) => {
         const object: {[index: string]: any} = {};
         object[key] = value;
         return object;

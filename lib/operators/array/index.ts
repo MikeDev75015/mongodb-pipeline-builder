@@ -101,7 +101,7 @@ export const Last = (array: any) => ({ $last: array });
  * element individually with the variable name specified in as.
  * @constructor
  */
-export const Map = (array: any, apply: any, as: string = 'this') => ({ $map: { input: array, as: as, in: apply } });
+export const MapOperator = (array: any, apply: any, as = 'this') => ({ $map: { input: array, as: as, in: apply } });
 /**
  * Converts a document to an array. The return array contains an element for each field/value pair in the original
  * document. Each element in the return array is a document that contains two fields k and v:
