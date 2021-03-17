@@ -28,10 +28,10 @@ aliases:
     run:
       name: Update NPM version
       command: 'sudo npm install -g npm@latest'
-  - &copy-package-json
+  - &move-package-json
     run:
-      name: Copy package.json to dist
-      command: cp -rf package.json dist
+      name: Move package.json to dist
+      command: mv package.json dist
   - &copy-readme
     run:
       name: Copy Readme.md to dist
@@ -76,7 +76,7 @@ commands:
   copy-required-files-to-dist:
     description: "Copy the publish required files to lib directory"
     steps:
-      - *copy-package-json
+      - *move-package-json
       - *copy-readme
       - *copy-changelog
       - *move-npmrc
