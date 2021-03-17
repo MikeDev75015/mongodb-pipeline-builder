@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
-  npm-publisher: uraway/npm-publisher@0.2.0
+  slack: circleci/slack@4.3.0
 
 aliases:
   - &restore-cache
@@ -30,24 +30,24 @@ aliases:
       command: 'sudo npm install -g npm@latest'
   - &copy-package-json
     run:
-      name: Copy package.json to dist/lib
-      command: cp -rf package.json dist/lib
+      name: Copy package.json to dist
+      command: cp -rf package.json dist
   - &copy-readme
     run:
-      name: Copy Readme.md to dist/lib
-      command: cp -rf Readme.md dist/lib
+      name: Copy Readme.md to dist
+      command: cp -rf Readme.md dist
   - &copy-changelog
     run:
-      name: Copy CHANGELOG.md to dist/lib
-      command: cp -rf CHANGELOG.md dist/lib
-  - &copy-npmrc
+      name: Copy CHANGELOG.md to dist
+      command: cp -rf CHANGELOG.md dist
+#  - &move-npmrc
+#    run:
+#      name: Move .npmrc to dist
+#      command: mv .npmrc dist
+  - &go-to-dist
     run:
-      name: Copy .npmrc to dist/lib
-      command: cp -rf .npmrc dist/lib
-  - &go-to-dist-lib
-    run:
-      name: Go to dist/lib directory before publish
-      command: cd dist/lib
+      name: Go to dist directory before publish
+      command: cd dist
   - &pre-release
     run:
       name: Create a pre release
@@ -56,24 +56,30 @@ aliases:
     run:
       name: NPM Account Authentication
       command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+  - &npm-git-tags
+    run:
+      name: git push follow release tag
+      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
   - &npm-publish
     run:
       name: Publish package on npm
-      command: npm run publish-alpha
+      command: npm run publish
+
 
 commands:
-  set-git-global-user:
-    description: "Set your account's default identity"
+  set-git-local-user:
+    description: "Set the account's default identity"
     steps:
+      - run: git config credential.helper 'cache --timeout=120'
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
-  copy-required-files-to-dist-lib:
-    description: "Copy the publish required files to lib directory"
+  copy-required-files-to-dist:
+    description: "Copy/Move the publish required files to lib directory"
     steps:
-      - *copy-package-json
       - *copy-readme
       - *copy-changelog
-      - *copy-npmrc
+#      - *move-npmrc
+      - *copy-package-json
 
 jobs:
   build:
@@ -90,6 +96,9 @@ jobs:
           root: .
           paths:
             - 'dist'
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   unit_tests:
     docker:
@@ -100,6 +109,9 @@ jobs:
       - *install-deps
       - *run-unit-tests
       - sonarcloud/scan
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   pre-release:
     docker:
@@ -110,39 +122,68 @@ jobs:
       - *install-deps
       - attach_workspace:
           at: .
-      - set-git-global-user
+      - set-git-local-user
       - *pre-release
+      - *npm-git-tags
+      - copy-required-files-to-dist
+      - *go-to-dist
       - *npm-authenticate
-      - copy-required-files-to-dist-lib
-      - *go-to-dist-lib
       - *npm-publish
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  notify-success-job:
+    docker:
+      - image: cimg/base:2020.01
+    resource_class: small
+    steps:
+      - slack/notify:
+          event: always
+          template: basic_success_1
+
 
 workflows:
-  build-and-test-default:
+  build-and-test-main:
     jobs:
       - build:
+          context: SLACK
           filters:
             branches:
               ignore:
                 - release
       - unit_tests:
-          context: SONARCLOUD
+          context:
+            - SONARCLOUD
+            - SLACK
           requires:
             - build
           filters:
             branches:
               ignore:
                 - release
+      - notify-success-job:
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+          filters:
+            branches:
+              ignore:
+                - release
 
-  build-test-and-publish-pre-release:
+  build-test-and-publish-release:
     jobs:
       - build:
+          context: SLACK
           filters:
             branches:
               only:
                 - release
       - unit_tests:
-          context: SONARCLOUD
+          context:
+            - SONARCLOUD
+            - SLACK
           requires:
             - build
           filters:
@@ -150,10 +191,22 @@ workflows:
               only:
                 - release
       - pre-release:
-          context: GIT
+          context:
+            - GIT
+            - SLACK
           requires:
             - build
             - unit_tests
+          filters:
+            branches:
+              only:
+                - release
+      - notify-success-job:
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+            - pre-release
           filters:
             branches:
               only:

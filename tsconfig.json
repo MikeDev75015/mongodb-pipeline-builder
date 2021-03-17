@@ -1,11 +1,5 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist"
 
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Basic Options */
@@ -73,6 +67,16 @@
     /* Advanced Options */
     // "skipLibCheck": true,                           /* Skip type checking of declaration files. */
     // "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
+
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
   },
-  "lib": ["es2015"]
+  "include": ["lib/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }

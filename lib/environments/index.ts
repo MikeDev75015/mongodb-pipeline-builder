@@ -1,3 +1,6 @@
+/**
+ * custom-env lib to load the .env expected file
+ */
 require ('custom-env').env(true);
 
 /**

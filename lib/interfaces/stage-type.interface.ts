@@ -179,6 +179,7 @@ export enum StageTypeEnum {
  * @param label
  */
 export const getStageTypeValueFor = (label: string) => {
+    // @ts-ignore
     return StageTypeEnum[label];
 };
 

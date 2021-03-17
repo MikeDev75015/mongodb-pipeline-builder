@@ -1,4 +1,5 @@
-import {Absolute, Add, Ceil, Divide, Exponent, Expression, Field, Floor, Log, Log10, NaturalLog} from "./index";
+import {Expression, Field} from "./misc";
+import {Absolute, Add, Ceil, Divide, Exponent, Floor, Log, Log10, NaturalLog} from "./arithmetic";
 
 describe('Expression', () => {
     it('should return a valid $expr pipeline operator', () => {
