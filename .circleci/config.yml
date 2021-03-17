@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
+  slack: circleci/slack@4.3.0
 
 aliases:
   - &restore-cache
@@ -95,6 +96,9 @@ jobs:
           root: .
           paths:
             - 'dist'
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   unit_tests:
     docker:
@@ -105,6 +109,9 @@ jobs:
       - *install-deps
       - *run-unit-tests
       - sonarcloud/scan
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   pre-release:
     docker:
@@ -122,33 +129,61 @@ jobs:
       - copy-required-files-to-dist
       - *go-to-dist
       - *npm-publish
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  notify-success-job:
+    docker:
+      - image: cimg/base:2020.01
+    resource_class: small
+    steps:
+      - slack/notify:
+          event: always
+          template: basic_success_1
+
 
 workflows:
   build-and-test-main:
     jobs:
       - build:
+          context: SLACK
           filters:
             branches:
               ignore:
                 - release
       - unit_tests:
-          context: SONARCLOUD
+          context:
+            - SONARCLOUD
+            - SLACK
           requires:
             - build
           filters:
             branches:
               ignore:
                 - release
+      - notify-success-job:
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+            filters:
+              branches:
+                ignore:
+                  - release
 
   build-test-and-publish-release:
     jobs:
       - build:
+          context: SLACK
           filters:
             branches:
               only:
                 - release
       - unit_tests:
-          context: SONARCLOUD
+          context:
+            - SONARCLOUD
+            - SLACK
           requires:
             - build
           filters:
@@ -156,7 +191,9 @@ workflows:
               only:
                 - release
       - pre-release:
-          context: GIT
+          context:
+            - GIT
+            - SLACK
           requires:
             - build
             - unit_tests
@@ -164,3 +201,13 @@ workflows:
             branches:
               only:
                 - release
+      - notify-success-job:
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+            - pre-release
+            filters:
+              branches:
+                only:
+                  - release
