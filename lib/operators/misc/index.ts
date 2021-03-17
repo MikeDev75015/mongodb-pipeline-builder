@@ -1,3 +1,4 @@
+// Custom Operators
 /**
  * Allows the use of aggregation expressions within the query language. The arguments can be any valid aggregation
  * expression.
@@ -16,6 +17,26 @@ export const Field = (fieldName: string, searchedValue: any) => {
     newObject[fieldName] = searchedValue;
     return newObject;
 };
+/**
+ * Returns expected project stage Only Object
+ * @param properties
+ * @constructor
+ */
+export const Only = (...properties: string[]) => {
+    const projectOnlyObject: {[index: string]: any} = {};
+    properties.forEach(prop => projectOnlyObject[prop] = 1);
+    return projectOnlyObject;
+}
+/**
+ * Returns expected project stage Ignore Object
+ * @param properties
+ * @constructor
+ */
+export const Ignore = (...properties: string[]) => {
+    const projectIgnoreObject: {[index: string]: any} = {};
+    properties.forEach(prop => projectIgnoreObject[prop] = 0);
+    return projectIgnoreObject;
+}
 
 // Literal Expression Operator
 
