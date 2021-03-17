@@ -207,7 +207,7 @@ workflows:
             - build
             - unit_tests
             - pre-release
-            filters:
-              branches:
-                only:
-                  - release
+          filters:
+            branches:
+              only:
+                - release
