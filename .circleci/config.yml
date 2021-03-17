@@ -124,7 +124,7 @@ jobs:
       - *npm-publish
 
 workflows:
-  build-and-test-default:
+  build-and-test-main:
     jobs:
       - build:
           filters:
@@ -140,7 +140,7 @@ workflows:
               ignore:
                 - release
 
-  build-test-and-publish-pre-release:
+  build-test-and-publish-release:
     jobs:
       - build:
           filters:
