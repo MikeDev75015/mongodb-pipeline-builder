@@ -1,7 +1,19 @@
-import {Lookup, lookupConditionStage, lookupEqualityStage} from "./index";
+import {Lookup, lookupConditionStage, lookupEqualityStage, Project} from "./index";
 import {PipelineError} from "../errors";
 
 describe('pipeline Stage Helpers', () => {
+    describe('Project', () => {
+        test.each([
+            [Project({}), {}],
+            [Project({}, false), { _id: 0 }],
+        ])('should %s', (
+            helper: any,
+            expectedValue: { [index: string]: number }
+        ) => {
+            expect(helper).toEqual(expectedValue);
+        });
+    });
+
     describe('Lookup', () => {
         describe('should throw a PipelineError message', () => {
             test.each([
