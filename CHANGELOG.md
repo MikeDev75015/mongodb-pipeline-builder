@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-23](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-22...v0.0.2-23) (2021-03-17)
+
+### [0.0.2-22](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-21...v0.0.2-22) (2021-03-17)
+
+### [0.0.2-21](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-20...v0.0.2-21) (2021-03-17)
+
+### [0.0.2-20](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-19...v0.0.2-20) (2021-03-17)
+
+### [0.0.2-19](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-18...v0.0.2-19) (2021-03-17)
+
+### [0.0.2-18](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-17...v0.0.2-18) (2021-03-17)
+
+### [0.0.2-17](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-16...v0.0.2-17) (2021-03-17)
+
+### [0.0.2-16](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-15...v0.0.2-16) (2021-03-17)
+
+### [0.0.2-15](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-14...v0.0.2-15) (2021-03-17)
+
 ### [0.0.2-14](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-13...v0.0.2-14) (2021-03-17)
 
 ### [0.0.2-13](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-12...v0.0.2-13) (2021-03-17)
