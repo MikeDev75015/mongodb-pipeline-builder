@@ -55,7 +55,7 @@ aliases:
   - &npm-git-tags
     run:
       name: git push follow release tag
-      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
+      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git main
   - &npm-publish
     run:
       name: Publish package on npm
