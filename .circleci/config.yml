@@ -154,7 +154,11 @@ jobs:
 workflows:
   build-and-test-main:
     jobs:
+      - approval-build-and-test-main:
+          type: approval
       - build:
+          requires:
+            - approval-build-and-test-main
           context: SLACK
           filters:
             tags:
