@@ -167,10 +167,10 @@ workflows:
           requires:
             - build
             - unit_tests
-            filters:
-              branches:
-                ignore:
-                  - release
+          filters:
+            branches:
+              ignore:
+                - release
 
   build-test-and-publish-release:
     jobs:
