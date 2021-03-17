@@ -1,0 +1,1440 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>mongodb-pipeline-builder documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">mongodb-pipeline-builder documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li>PipelineBuilder</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>lib/main.ts</code>
+        </p>
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>PipelineBuilder</p>
+
+            </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#addStage">addStage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#createObject">createObject</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#debugBuild">debugBuild</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#disableDebug">disableDebug</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#enableDebug">enableDebug</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getCurrentDate">getCurrentDate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#getDebugActionList">getDebugActionList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#getName">getName</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#getPipeline">getPipeline</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logsEnabled">logsEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pipelineName">pipelineName</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#resetPipeline">resetPipeline</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#stageErrorList">stageErrorList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#stageList">stageList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#verifyPipelineValidity">verifyPipelineValidity</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isValidStage">isValidStage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#log">log</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#saveActionToDebugHistoryList">saveActionToDebugHistoryList</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(pipelineName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, debug, logsEnabled)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">lib/main.ts:43</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>constructor</p>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>pipelineName</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>debug</td>
+                                                  
+                                                        <td>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>logsEnabled</td>
+                                                  
+                                                        <td>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="addStage"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            addStage</b>
+                            <a href="#addStage"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="143" class="link-to-prism">lib/main.ts:143</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>addStage</p>
+</div>
+                    </td>
+                </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                          <div class="io-description">
+                                  <b>Parameters :</b>
+                                  <table class="params">
+                                      <thead>
+                                          <tr>
+                                                <td>Name</td>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                                <tr>
+                                                        <td>stageTypeLabel</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>stageValue</td>
+                                                </tr>
+                                      </tbody>
+                                  </table>
+                          </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="createObject"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            createObject</b>
+                            <a href="#createObject"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="227" class="link-to-prism">lib/main.ts:227</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>newObject</p>
+</div>
+                    </td>
+                </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                          <div class="io-description">
+                                  <b>Parameters :</b>
+                                  <table class="params">
+                                      <thead>
+                                          <tr>
+                                                <td>Name</td>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                                <tr>
+                                                        <td>key</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>value</td>
+                                                </tr>
+                                      </tbody>
+                                  </table>
+                          </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="debugBuild"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            debugBuild</b>
+                            <a href="#debugBuild"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/DebugBuildInterface.html" target="_self" >DebugBuildInterface</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{
+        status: false,
+        historyList: []
+    }</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">lib/main.ts:35</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>debugBuild</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="disableDebug"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            disableDebug</b>
+                            <a href="#disableDebug"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">lib/main.ts:124</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>disableDebug</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="enableDebug"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            enableDebug</b>
+                            <a href="#enableDebug"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">lib/main.ts:116</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>enableDebug</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="getCurrentDate"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            getCurrentDate</b>
+                            <a href="#getCurrentDate"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="236" class="link-to-prism">lib/main.ts:236</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>getCurrentDate</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="getDebugActionList"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            getDebugActionList</b>
+                            <a href="#getDebugActionList"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="101" class="link-to-prism">lib/main.ts:101</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Get the list of all actions stored in the debug history list</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="getName"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            getName</b>
+                            <a href="#getName"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="109" class="link-to-prism">lib/main.ts:109</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>getName</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="getPipeline"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            getPipeline</b>
+                            <a href="#getPipeline"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="166" class="link-to-prism">lib/main.ts:166</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>getPipeline</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logsEnabled"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            logsEnabled</b>
+                            <a href="#logsEnabled"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">lib/main.ts:20</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>logsEnabled</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pipelineName"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            pipelineName</b>
+                            <a href="#pipelineName"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">lib/main.ts:25</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>pipelineName</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="resetPipeline"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Public</span>
+                                <span class="modifier">Readonly</span>
+                            resetPipeline</b>
+                            <a href="#resetPipeline"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">lib/main.ts:132</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>reset</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="stageErrorList"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            stageErrorList</b>
+                            <a href="#stageErrorList"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/StageErrorInterface.html" target="_self" >StageErrorInterface[]</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[]</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">lib/main.ts:43</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>stageErrorList</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="stageList"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                            stageList</b>
+                            <a href="#stageList"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/StageInterface.html" target="_self" >StageInterface[]</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">lib/main.ts:30</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>StageList</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="verifyPipelineValidity"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            verifyPipelineValidity</b>
+                            <a href="#verifyPipelineValidity"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="175" class="link-to-prism">lib/main.ts:175</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>verifyPipelineValidity</p>
+</div>
+                    </td>
+                </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                          <div class="io-description">
+                                  <b>Parameters :</b>
+                                  <table class="params">
+                                      <thead>
+                                          <tr>
+                                                <td>Name</td>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                                <tr>
+                                                        <td>pipelineBuilt</td>
+                                                </tr>
+                                      </tbody>
+                                  </table>
+                          </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValidStage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            isValidStage
+                        </b>
+                        <a href="#isValidStage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isValidStage(stageToValidate: <a href="../interfaces/StageInterface.html">StageInterface</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="200"
+                            class="link-to-prism">lib/main.ts:200</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>isValidStage</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>stageToValidate</td>
+                                    <td>
+                                                <code><a href="../interfaces/StageInterface.html" target="_self" >StageInterface</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/StageErrorInterface.html" target="_self" >null | StageErrorInterface</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="log"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            log
+                        </b>
+                        <a href="#log"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>log(type: "info" | "warn" | "error", ...messageList: any[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="244"
+                            class="link-to-prism">lib/main.ts:244</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>log</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                            <code>&quot;info&quot; | &quot;warn&quot; | &quot;error&quot;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>messageList</td>
+                                    <td>
+                                            <code>any[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveActionToDebugHistoryList"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            saveActionToDebugHistoryList
+                        </b>
+                        <a href="#saveActionToDebugHistoryList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveActionToDebugHistoryList(action: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, ...argList: any[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">lib/main.ts:72</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>saveActionToDebugHistoryList</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>action</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>argList</td>
+                                    <td>
+                                            <code>any[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">const moment &#x3D; require(&#x27;moment-timezone&#x27;);
+import {
+    DebugBuildInterface,
+    StageErrorInterface,
+    StageInterface
+} from &quot;./interfaces&quot;;
+import { PipelineError } from &quot;./errors&quot;;
+import { LOGS_ENABLED } from &#x27;./&#x27;;
+import { getStageTypeValueFor } from &quot;./interfaces/stage-type.interface&quot;;
+
+
+/**
+ * PipelineBuilder
+ */
+export class PipelineBuilder {
+    /**
+     * logsEnabled
+     * @private
+     */
+    private readonly logsEnabled: boolean;
+    /**
+     * pipelineName
+     * @private
+     */
+    private readonly pipelineName: string;
+    /**
+     * StageList
+     * @private
+     */
+    private stageList: StageInterface[];
+    /**
+     * debugBuild
+     * @private
+     */
+    private debugBuild: DebugBuildInterface &#x3D; {
+        status: false,
+        historyList: []
+    };
+    /**
+     * stageErrorList
+     * @private
+     */
+    private stageErrorList: StageErrorInterface[] &#x3D; [];
+
+    /**
+     * constructor
+     * @param pipelineName
+     * @param logsEnabled
+     * @param debug
+     */
+    constructor(
+        pipelineName: string,
+        debug &#x3D; false,
+        logsEnabled &#x3D; false
+    ) {
+        this.pipelineName &#x3D; pipelineName;
+        this.stageList &#x3D; [];
+        this.logsEnabled &#x3D; logsEnabled
+            ? logsEnabled
+            : (LOGS_ENABLED &#x3D;&#x3D;&#x3D; &#x27;true&#x27;);
+        this.debugBuild.status &#x3D; debug;
+
+        this.saveActionToDebugHistoryList(&#x27;constructor&#x27;, { debug, logsEnabled });
+    }
+
+    /**
+     * saveActionToDebugHistoryList
+     * @param action
+     * @param argList
+     * @private
+     */
+    private saveActionToDebugHistoryList(action: string, ...argList: any[]): void {
+        if (!this.debugBuild.status) {
+            return;
+        }
+
+        const historyBundle: {
+            date: any;
+            action: any;
+            pipeline: any;
+            value?: any;
+        } &#x3D; { date: this.getCurrentDate(), action: &#x60;${this.pipelineName} &#x3D;&gt; ${action}&#x60;, pipeline: this.stageList };
+        if (argList &amp;&amp; argList.length) {
+            historyBundle.value &#x3D; JSON.stringify(argList.length &gt; 1? argList : argList[0]);
+        }
+
+        if (this.debugBuild &amp;&amp; this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
+        else {
+            this.debugBuild &#x3D; {
+                status: argList[0] ? argList[0].debug : false,
+                historyList: [historyBundle]
+            }
+        }
+
+        this.log(&#x27;info&#x27;, &#x27;saveToDebugActionList&#x27;, historyBundle);
+    }
+
+    /**
+     * Get the list of all actions stored in the debug history list
+     */
+    public readonly getDebugActionList &#x3D; () &#x3D;&gt; {
+        this.log(&#x27;info&#x27;, &#x27;getDebugActionList&#x27;, this.debugBuild.historyList);
+        return this.debugBuild.historyList;
+    }
+
+    /**
+     * getName
+     */
+    public readonly getName &#x3D; () &#x3D;&gt; {
+        this.saveActionToDebugHistoryList(&#x27;getName&#x27;);
+        return this.pipelineName;
+    }
+    /**
+     * enableDebug
+     */
+    public readonly enableDebug &#x3D; () &#x3D;&gt; {
+        this.debugBuild.status &#x3D; true;
+        this.saveActionToDebugHistoryList(&#x27;enableDebug&#x27;, { debugBuildStatus: this.debugBuild.status });
+        return this.debugBuild.status;
+    }
+    /**
+     * disableDebug
+     */
+    public readonly disableDebug &#x3D; () &#x3D;&gt; {
+        this.debugBuild.status &#x3D; false;
+        this.saveActionToDebugHistoryList(&#x27;disableDebug&#x27;, { debugBuildStatus: this.debugBuild.status });
+        return this.debugBuild.status;
+    }
+    /**
+     * reset
+     */
+    public readonly resetPipeline &#x3D; () &#x3D;&gt; {
+        this.stageList &#x3D; [];
+        this.saveActionToDebugHistoryList(&#x27;resetPipeline&#x27;);
+        return this.stageList;
+    }
+
+    /**
+     * addStage
+     * @param stageTypeLabel
+     * @param stageValue
+     */
+    public readonly addStage &#x3D; (
+        stageTypeLabel: &#x27;addFields&#x27; | &#x27;bucket&#x27; | &#x27;bucketAuto&#x27; | &#x27;collStats&#x27; | &#x27;count&#x27; | &#x27;facet&#x27; | &#x27;geoNear&#x27; |
+            &#x27;graphLookup&#x27; | &#x27;group&#x27; | &#x27;indexStats&#x27; | &#x27;limit&#x27; | &#x27;listSessions&#x27; | &#x27;lookup&#x27; | &#x27;match&#x27; | &#x27;merge&#x27; | &#x27;out&#x27; |
+            &#x27;planCacheStats&#x27; | &#x27;project&#x27; | &#x27;redact&#x27; | &#x27;replaceRoot&#x27; | &#x27;replaceWith&#x27; | &#x27;sample&#x27; | &#x27;search&#x27; | &#x27;set&#x27; |
+            &#x27;skip&#x27; | &#x27;sort&#x27; | &#x27;sortByCount&#x27; | &#x27;unionWith&#x27; | &#x27;unset&#x27; | &#x27;unwind&#x27;,
+        stageValue: any
+    ) &#x3D;&gt; {
+        const stageTypeValue &#x3D; getStageTypeValueFor(stageTypeLabel);
+        if (!stageTypeValue &amp;&amp; this.debugBuild.status) {
+            this.saveActionToDebugHistoryList(&#x27;getStageTypeValueFor&#x27;, { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
+            throw new PipelineError(&#x27;Impossible to add the stage, the stage name is not valid!&#x27;);
+        }
+
+        const newStageToAdd &#x3D; this.createObject(stageTypeValue ? stageTypeValue : &#x27;$&#x27; + stageTypeLabel, stageValue) as StageInterface;
+        this.stageList.push(newStageToAdd);
+
+        this.saveActionToDebugHistoryList(&#x27;addStage&#x27;, { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
+        return this;
+    }
+
+    /**
+     * getPipeline
+     */
+    public readonly getPipeline &#x3D; () &#x3D;&gt; {
+        this.saveActionToDebugHistoryList(&#x27;getPipeline&#x27;);
+        return this.verifyPipelineValidity([...this.stageList]);
+    }
+
+    /**
+     * verifyPipelineValidity
+     * @param pipelineBuilt
+     */
+    private readonly verifyPipelineValidity &#x3D; (pipelineBuilt: StageInterface[]) &#x3D;&gt; {
+        this.log(&#x27;info&#x27;, &#x27;verifyPipelineValidity of &#x27; + this.pipelineName + &#x27; pipeline:\n&#x27;, JSON.stringify(this.stageList));
+        if (!pipelineBuilt.length) throw new PipelineError(&#x27;Error, &#x27; + this.pipelineName + &#x27; pipeline is empty!&#x27;);
+
+        this.stageErrorList &#x3D; pipelineBuilt.map(
+            s &#x3D;&gt; this.isValidStage(s)
+        ).filter(error &#x3D;&gt; error) as StageErrorInterface[];
+
+        if (this.stageErrorList.length) {
+            const errorMessage &#x3D; this.stageErrorList.map(
+                (e, i) &#x3D;&gt; (i + 1) + &#x27;) &#x27; + e.message
+            ).join(&#x27;\n&#x27;);
+            this.log(&#x27;error&#x27;, errorMessage, &#x27;stageErrorList&#x27;, this.stageErrorList);
+
+            this.saveActionToDebugHistoryList(&#x27;stageErrorList&#x27;, { errorMessage });
+            throw new PipelineError(errorMessage);
+        }
+        return pipelineBuilt;
+    }
+
+    /**
+     * isValidStage
+     * @param stageToValidate
+     * @private
+     */
+    private isValidStage(stageToValidate: StageInterface): null | StageErrorInterface {
+        const stageType &#x3D; Object.keys(stageToValidate)[0].replace(&#x27;$&#x27;, &#x27;&#x27;);
+
+        const treatedStageList &#x3D; [
+            &#x27;addFields&#x27;, &#x27;bucket&#x27;, &#x27;bucketAuto&#x27;, &#x27;collStats&#x27;, &#x27;count&#x27;, &#x27;facet&#x27;, &#x27;geoNear&#x27;, &#x27;graphLookup&#x27;, &#x27;group&#x27;,
+            &#x27;indexStats&#x27;, &#x27;limit&#x27;, &#x27;listSessions&#x27;, &#x27;lookup&#x27;, &#x27;match&#x27;, &#x27;merge&#x27;, &#x27;out&#x27;, &#x27;planCacheStats&#x27;, &#x27;project&#x27;,
+            &#x27;redact&#x27;, &#x27;replaceRoot&#x27;, &#x27;replaceWith&#x27;, &#x27;sample&#x27;, &#x27;search&#x27;, &#x27;set&#x27;, &#x27;skip&#x27;, &#x27;sort&#x27;, &#x27;sortByCount&#x27;,
+            &#x27;unionWith&#x27;, &#x27;unset&#x27;, &#x27;unwind&#x27;
+        ];
+        if (treatedStageList.includes(stageType)) {
+            return null;
+        }
+
+        this.saveActionToDebugHistoryList(
+            &#x27;Stage Error&#x27;,
+            { stageType, message: &#x27;this pipeline stage type is invalid or not yet treated.&#x27; },
+            { invalidStage: JSON.stringify(stageToValidate) }
+        );
+        return { stageType, message: &#x27;the &#x27; + stageType + &#x27; stage type is invalid or not yet treated.&#x27; };
+    }
+
+    // Utils
+    /**
+     * newObject
+     * @param key
+     * @param value
+     */
+    private readonly createObject &#x3D; (key: string, value: any) &#x3D;&gt; {
+        const object: {[index: string]: any} &#x3D; {};
+        object[key] &#x3D; value;
+        return object;
+    }
+
+    /**
+     * getCurrentDate
+     */
+    private getCurrentDate &#x3D; () &#x3D;&gt; moment().tz(&#x27;Europe/Paris&#x27;).format();
+
+    /**
+     * log
+     * @param type
+     * @param messageList
+     * @private
+     */
+    private log(
+        type: &#x27;info&#x27; | &#x27;warn&#x27; | &#x27;error&#x27;,
+        ...messageList: any[]
+    ) {
+        if (this.logsEnabled) {
+            console[type](
+                this.getCurrentDate() + &#x27;:\n&#x27;,
+                ...messageList
+            );
+        }
+    }
+}
+
+</code></pre>
+    </div>
+</div>
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'PipelineBuilder.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

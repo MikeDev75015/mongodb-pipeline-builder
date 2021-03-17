@@ -12,17 +12,36 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=bugs)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 
-# `mongodb-pipeline-builder`
+# `mongodb-pipeline-builder` <span style="display: inline-block; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
 </p>
 
 <p style="text-align: justify; width: 100%;">
-is a pipeline builder for the aggregate method of a mongoDB collection. It will simplify pipelines by making them more readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them.
+is a pipeline builder for the aggregate method of a mongoDB collection. It will simplify pipelines by making them more
+readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them.
 </p>
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-## Install:
+### npm i mongodb-pipeline-builder@latest
 
-### npm i mongodb-pipeline-builder
+## Usage
 
+<p style="font-size: 16px;">
+import { PipelineBuilder } from 'mongodb-pipeline-builder/dist';<br>
+import { Expression } from 'mongodb-pipeline-builder/dist/operators/misc';<br>
+import { Equal } from 'mongodb-pipeline-builder/dist/operators/comparison';<br>
+</p>
+
+<p style="font-size: 16px;">
+const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'match' , Expression( Equal( '$id' , 'userId' ) ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'project' , { _id: 0, firstname: 1, lastname: 1 } )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
+</p>
+
+### Soon more complex examples will be available!
+
+<a href="https://github.com/MikeDev75015/mongodb-pipeline-builder/tree/main/documentation/miscellaneous/enumerations.html" target="_blank">Aggregation Pipeline Stages</a>
+
+<a href="https://github.com/MikeDev75015/mongodb-pipeline-builder/tree/main/documentation/miscellaneous/variables.html" target="_blank">Tools Index</a>
 
