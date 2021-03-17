@@ -40,10 +40,6 @@ aliases:
     run:
       name: Copy CHANGELOG.md to dist
       command: cp -rf CHANGELOG.md dist
-#  - &move-npmrc
-#    run:
-#      name: Move .npmrc to dist
-#      command: mv .npmrc dist
   - &go-to-dist
     run:
       name: Go to dist directory before publish
@@ -78,7 +74,6 @@ commands:
     steps:
       - *copy-readme
       - *copy-changelog
-#      - *move-npmrc
       - *copy-package-json
 
 jobs:
@@ -113,7 +108,7 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  pre-release:
+  prepare-pre-release:
     docker:
       - image: circleci/node:12
     steps:
@@ -125,6 +120,16 @@ jobs:
       - set-git-local-user
       - *pre-release
       - *npm-git-tags
+
+  pre-release:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - *restore-cache
+      - *install-deps
+      - attach_workspace:
+          at: .
       - copy-required-files-to-dist
       - *go-to-dist
       - *npm-authenticate
@@ -171,21 +176,47 @@ workflows:
             branches:
               ignore:
                 - release
-
-  build-test-and-publish-release:
-    jobs:
-      - build:
-          context: SLACK
+      - approval-prepare-pre-release:
+          type: approval
+          requires:
+            - build
+            - unit_tests
+            - notify-success-job
           filters:
             branches:
-              only:
+              ignore:
                 - release
-      - unit_tests:
+      - prepare-pre-release:
           context:
-            - SONARCLOUD
+            - GIT
             - SLACK
           requires:
             - build
+            - unit_tests
+            - notify-success-job
+            - approval-prepare-pre-release
+          filters:
+            branches:
+              ignore:
+                - release
+      - notify-success-job:
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+            - notify-success-job
+            - approval-prepare-pre-release
+            - prepare-pre-release
+          filters:
+            branches:
+              ignore:
+                - release
+
+
+  publish-release:
+    jobs:
+      - build:
+          context: SLACK
           filters:
             branches:
               only:
@@ -196,7 +227,6 @@ workflows:
             - SLACK
           requires:
             - build
-            - unit_tests
           filters:
             branches:
               only:
@@ -205,7 +235,6 @@ workflows:
           context: SLACK
           requires:
             - build
-            - unit_tests
             - pre-release
           filters:
             branches:
