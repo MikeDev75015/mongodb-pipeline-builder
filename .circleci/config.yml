@@ -168,6 +168,7 @@ workflows:
               ignore:
                 - release
       - notify-success-job:
+          name: build-unit_tests-ok
           context: SLACK
           requires:
             - build
@@ -181,7 +182,7 @@ workflows:
           requires:
             - build
             - unit_tests
-            - notify-success-job
+            - build-unit_tests-ok
           filters:
             branches:
               ignore:
@@ -193,7 +194,7 @@ workflows:
           requires:
             - build
             - unit_tests
-            - notify-success-job
+            - build-unit_tests-ok
             - approval-prepare-pre-release
           filters:
             branches:
@@ -204,7 +205,7 @@ workflows:
           requires:
             - build
             - unit_tests
-            - notify-success-job
+            - build-unit_tests-ok
             - approval-prepare-pre-release
             - prepare-pre-release
           filters:
