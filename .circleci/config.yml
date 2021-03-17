@@ -74,12 +74,12 @@ commands:
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
   copy-required-files-to-dist:
-    description: "Copy the publish required files to lib directory"
+    description: "Copy/Move the publish required files to lib directory"
     steps:
-      - *move-package-json
       - *copy-readme
       - *copy-changelog
       - *move-npmrc
+      - *move-package-json
 
 jobs:
   build:
