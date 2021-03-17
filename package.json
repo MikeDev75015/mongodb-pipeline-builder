@@ -14,7 +14,7 @@
     "release": "standard-version",
     "pre-release": "npm run release -- --prerelease",
     "git-tags": "git push --follow-tags origin main",
-    "publish": "npm publish --tag latest"
+    "publish-latest": "npm publish --tag latest"
   },
   "repository": {
     "type": "git",

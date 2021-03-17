@@ -59,7 +59,7 @@ aliases:
   - &npm-publish
     run:
       name: Publish package on npm
-      command: npm run publish
+      command: npm run publish-latest
 
 
 commands:
@@ -159,7 +159,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - unit_tests:
           context:
             - SONARCLOUD
@@ -169,7 +169,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - notify-success-job:
           name: build-unit_tests-ok
           context: SLACK
@@ -179,7 +179,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - approval-prepare-pre-release:
           type: approval
           requires:
@@ -189,7 +189,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - prepare-pre-release:
           context:
             - GIT
@@ -202,7 +202,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - notify-success-job:
           context: SLACK
           requires:
@@ -214,7 +214,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
 
 
   publish-release:
@@ -224,7 +224,7 @@ workflows:
           filters:
             branches:
               only:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - pre-release:
           context:
             - GIT
@@ -234,7 +234,7 @@ workflows:
           filters:
             branches:
               only:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
       - notify-success-job:
           context: SLACK
           requires:
@@ -243,4 +243,4 @@ workflows:
           filters:
             branches:
               only:
-                - /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/
+                - /^v.*/
