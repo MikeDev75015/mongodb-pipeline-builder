@@ -40,8 +40,13 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 </p>
 
 ### Soon more complex examples will be available!
+<p>
+In the db.collection.aggregate method and db.aggregate method, pipeline stages appear in an array. Documents pass
+through the stages in sequence.
+</p>
 
-<a href="https://github.com/MikeDev75015/mongodb-pipeline-builder/tree/main/documentation/miscellaneous/enumerations.html" target="_blank">Aggregation Pipeline Stages</a>
+<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
-<a href="https://github.com/MikeDev75015/mongodb-pipeline-builder/tree/main/documentation/miscellaneous/variables.html" target="_blank">Tools Index</a>
+<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
+
 
