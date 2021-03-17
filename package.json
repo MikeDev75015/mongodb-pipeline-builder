@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "0.0.2-26",
+  "version": "0.0.2-27",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
     "release": "standard-version",
     "pre-release": "npm run release -- --prerelease",
     "git-tags": "git push --follow-tags origin release",
-    "publish": "npm publish --tag latest"
+    "publish": "npm publish --tag prerelease"
   },
   "repository": {
     "type": "git",

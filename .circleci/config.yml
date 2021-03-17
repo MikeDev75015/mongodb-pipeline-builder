@@ -40,10 +40,10 @@ aliases:
     run:
       name: Copy CHANGELOG.md to dist
       command: cp -rf CHANGELOG.md dist
-  - &copy-npmrc
+  - &move-npmrc
     run:
-      name: Copy .npmrc to dist
-      command: cp -rf .npmrc dist
+      name: Move .npmrc to dist
+      command: mv .npmrc dist
   - &go-to-dist
     run:
       name: Go to dist directory before publish
@@ -79,7 +79,7 @@ commands:
       - *copy-package-json
       - *copy-readme
       - *copy-changelog
-      - *copy-npmrc
+      - *move-npmrc
 
 jobs:
   build:
@@ -125,9 +125,9 @@ jobs:
       - set-git-local-user
       - *pre-release
       - *npm-git-tags
-      - *npm-authenticate
       - copy-required-files-to-dist
       - *go-to-dist
+      - *npm-authenticate
       - *npm-publish
       - slack/notify:
           event: fail
