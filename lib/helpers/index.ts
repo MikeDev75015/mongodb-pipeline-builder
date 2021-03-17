@@ -8,6 +8,16 @@ import {
  * Export pipeline helpers
  */
 
+/**
+ * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be
+ * existing fields from the input documents or newly computed fields.
+ *
+ * @param value Include / Exclude Existing Fields
+ * @param _id By default, the _id field is included in the output documents. To exclude the _id field from the output
+ * documents, you must explicitly specify the suppression of the _id field in $project by passing false.
+ * @constructor
+ */
+export const Project = (value: { [index: string]: any }, _id = true) => _id ? value : ({ ...value, _id: 0 })
 
 /**
  * Performs a left outer join to an unSharded collection in the same database to filter in documents from the “joined”
