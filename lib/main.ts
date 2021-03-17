@@ -173,7 +173,7 @@ export class PipelineBuilder {
     private readonly verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
         this.log('info', `verifyPipelineValidity of ${this.pipelineName} pipeline:\n`, JSON.stringify(this.stageList));
         if (!pipelineBuilt.length) {
-            throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
+            throw new PipelineError(`Error, ${this.pipelineName} pipeline is empty!`);
         }
 
         this.stageErrorList = pipelineBuilt.map(
