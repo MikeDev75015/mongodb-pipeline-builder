@@ -157,7 +157,7 @@ workflows:
       - build:
           context: SLACK
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
       - unit_tests:
@@ -167,7 +167,7 @@ workflows:
           requires:
             - build
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
       - notify-success-job:
@@ -177,7 +177,7 @@ workflows:
             - build
             - unit_tests
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
       - approval-prepare-pre-release:
@@ -187,9 +187,12 @@ workflows:
             - unit_tests
             - build-unit_tests-ok
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
+            branches:
+              only:
+                - main
       - prepare-pre-release:
           context:
             - GIT
@@ -200,9 +203,12 @@ workflows:
             - build-unit_tests-ok
             - approval-prepare-pre-release
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
+            branches:
+              only:
+                - main
       - notify-success-job:
           context: SLACK
           requires:
@@ -212,9 +218,12 @@ workflows:
             - approval-prepare-pre-release
             - prepare-pre-release
           filters:
-            branches:
+            tags:
               ignore:
                 - /^v.*/
+            branches:
+              only:
+                - main
 
 
   publish-release:
@@ -222,9 +231,8 @@ workflows:
       - build:
           context: SLACK
           filters:
-            branches:
-              only:
-                - /^v.*/
+            tags:
+              only: /^v.*/
       - pre-release:
           context:
             - GIT
@@ -232,15 +240,13 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              only:
-                - /^v.*/
+            tags:
+              only: /^v.*/
       - notify-success-job:
           context: SLACK
           requires:
             - build
             - pre-release
           filters:
-            branches:
-              only:
-                - /^v.*/
+            tags:
+              only: /^v.*/
