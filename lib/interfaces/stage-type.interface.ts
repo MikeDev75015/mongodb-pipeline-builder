@@ -183,36 +183,34 @@ export const getStageTypeValueFor = (label: string) => {
     return StageTypeEnum[label];
 };
 
-
-/*
-'addFields' |
-'bucket' |
-'bucketAuto' |
-'collStats' |
-'count' |
-'facet' |
-'geoNear' |
-'graphLookup' |
-'group' |
-'indexStats' |
-'limit' |
-'listSessions' |
-'lookup' |
-'match' |
-'merge' |
-'out' |
-'planCacheStats' |
-'project' |
-'redact' |
-'replaceRoot' |
-'replaceWith' |
-'sample' |
-'search' |
-'set' |
-'skip' |
-'sort' |
-'sortByCount' |
-'unionWith' |
-'unset' |
-'unwind'
-*/
+export type StageLabel =
+    'addFields' |
+    'bucket' |
+    'bucketAuto' |
+    'collStats' |
+    'count' |
+    'facet' |
+    'geoNear' |
+    'graphLookup' |
+    'group' |
+    'indexStats' |
+    'limit' |
+    'listSessions' |
+    'lookup' |
+    'match' |
+    'merge' |
+    'out' |
+    'planCacheStats' |
+    'project' |
+    'redact' |
+    'replaceRoot' |
+    'replaceWith' |
+    'sample' |
+    'search' |
+    'set' |
+    'skip' |
+    'sort' |
+    'sortByCount' |
+    'unionWith' |
+    'unset' |
+    'unwind';

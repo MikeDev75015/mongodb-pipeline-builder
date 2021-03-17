@@ -6,7 +6,7 @@ import {
 } from "./interfaces";
 import { PipelineError } from "./errors";
 import { LOGS_ENABLED } from './';
-import { getStageTypeValueFor } from "./interfaces/stage-type.interface";
+import {getStageTypeValueFor, StageLabel} from "./interfaces/stage-type.interface";
 
 
 /**
@@ -84,8 +84,9 @@ export class PipelineBuilder {
             historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
         }
 
-        if (this.debugBuild && this.debugBuild.status) this.debugBuild.historyList.push(historyBundle);
-        else {
+        if (this.debugBuild && this.debugBuild.status) {
+            this.debugBuild.historyList.push(historyBundle);
+        } else {
             this.debugBuild = {
                 status: argList[0] ? argList[0].debug : false,
                 historyList: [historyBundle]
@@ -141,10 +142,7 @@ export class PipelineBuilder {
      * @param stageValue
      */
     public readonly addStage = (
-        stageTypeLabel: 'addFields' | 'bucket' | 'bucketAuto' | 'collStats' | 'count' | 'facet' | 'geoNear' |
-            'graphLookup' | 'group' | 'indexStats' | 'limit' | 'listSessions' | 'lookup' | 'match' | 'merge' | 'out' |
-            'planCacheStats' | 'project' | 'redact' | 'replaceRoot' | 'replaceWith' | 'sample' | 'search' | 'set' |
-            'skip' | 'sort' | 'sortByCount' | 'unionWith' | 'unset' | 'unwind',
+        stageTypeLabel: StageLabel,
         stageValue: any
     ) => {
         const stageTypeValue = getStageTypeValueFor(stageTypeLabel);
@@ -173,8 +171,10 @@ export class PipelineBuilder {
      * @param pipelineBuilt
      */
     private readonly verifyPipelineValidity = (pipelineBuilt: StageInterface[]) => {
-        this.log('info', 'verifyPipelineValidity of ' + this.pipelineName + ' pipeline:\n', JSON.stringify(this.stageList));
-        if (!pipelineBuilt.length) throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
+        this.log('info', `verifyPipelineValidity of ${this.pipelineName} pipeline:\n`, JSON.stringify(this.stageList));
+        if (!pipelineBuilt.length) {
+            throw new PipelineError('Error, ' + this.pipelineName + ' pipeline is empty!');
+        }
 
         this.stageErrorList = pipelineBuilt.map(
             s => this.isValidStage(s)
@@ -182,7 +182,7 @@ export class PipelineBuilder {
 
         if (this.stageErrorList.length) {
             const errorMessage = this.stageErrorList.map(
-                (e, i) => (i + 1) + ') ' + e.message
+                (e, i) => `${i + 1}) ${e.message}`
             ).join('\n');
             this.log('error', errorMessage, 'stageErrorList', this.stageErrorList);
 
@@ -215,7 +215,7 @@ export class PipelineBuilder {
             { stageType, message: 'this pipeline stage type is invalid or not yet treated.' },
             { invalidStage: JSON.stringify(stageToValidate) }
         );
-        return { stageType, message: 'the ' + stageType + ' stage type is invalid or not yet treated.' };
+        return { stageType, message: `the ${stageType} stage type is invalid or not yet treated.` };
     }
 
     // Utils
@@ -233,7 +233,7 @@ export class PipelineBuilder {
     /**
      * getCurrentDate
      */
-    private getCurrentDate = () => moment().tz('Europe/Paris').format();
+    private readonly getCurrentDate = () => moment().tz('Europe/Paris').format();
 
     /**
      * log

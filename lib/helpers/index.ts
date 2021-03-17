@@ -18,8 +18,9 @@ import {
  * @constructor
  */
 export const Lookup = (payload: any) => {
-    if (!payload.from || !payload.as)
+    if (!payload.from || !payload.as) {
         throw new PipelineError('Invalid Lookup Payload, missing "from" or "as" property!');
+    }
 
     if (payload['localField'] || payload['foreignField']) {
         return lookupEqualityStage(payload as LookupEqualityPayloadInterface);
