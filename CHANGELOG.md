@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-35](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-34...v0.0.2-35) (2021-03-17)
+
 ### [0.0.2-34](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-33...v0.0.2-34) (2021-03-17)
 
 ### [0.0.2-33](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-32...v0.0.2-33) (2021-03-17)
