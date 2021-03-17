@@ -28,10 +28,10 @@ aliases:
     run:
       name: Update NPM version
       command: 'sudo npm install -g npm@latest'
-  - &move-package-json
+  - &copy-package-json
     run:
-      name: Move package.json to dist
-      command: mv package.json dist
+      name: Copy package.json to dist
+      command: cp -rf package.json dist
   - &copy-readme
     run:
       name: Copy Readme.md to dist
@@ -40,10 +40,10 @@ aliases:
     run:
       name: Copy CHANGELOG.md to dist
       command: cp -rf CHANGELOG.md dist
-  - &move-npmrc
-    run:
-      name: Move .npmrc to dist
-      command: mv .npmrc dist
+#  - &move-npmrc
+#    run:
+#      name: Move .npmrc to dist
+#      command: mv .npmrc dist
   - &go-to-dist
     run:
       name: Go to dist directory before publish
@@ -78,8 +78,8 @@ commands:
     steps:
       - *copy-readme
       - *copy-changelog
-      - *move-npmrc
-      - *move-package-json
+#      - *move-npmrc
+      - *copy-package-json
 
 jobs:
   build:
