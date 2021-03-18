@@ -134,6 +134,10 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - 'dist'
       - slack/notify:
           event: fail
           template: basic_fail_1
