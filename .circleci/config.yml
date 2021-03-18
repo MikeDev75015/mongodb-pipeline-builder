@@ -40,10 +40,10 @@ aliases:
     run:
       name: Copy CHANGELOG.md to dist
       command: cp -rf CHANGELOG.md dist
-  - &go-to-dist
+  - &copy-license
     run:
-      name: Go to dist directory before publish
-      command: cd dist
+      name: Copy LICENSE to dist
+      command: cp -rf LICENSE dist
   - &pre-release
     run:
       name: Create a pre release
@@ -60,6 +60,10 @@ aliases:
     run:
       name: Publish package on npm
       command: npm run publish-latest
+  - &npm-typescript
+    run:
+      name: Install typescript
+      command: 'sudo npm install -g typescript'
 
 
 commands:
@@ -74,6 +78,7 @@ commands:
     steps:
       - *copy-readme
       - *copy-changelog
+      - *copy-license
       - *copy-package-json
 
 jobs:
@@ -134,11 +139,11 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - run: ls dist
       - persist_to_workspace:
           root: dist
           paths:
             - CHANGELOG.md
+            - LICENSE
             - errors
             - index.js
             - main.d.ts
@@ -152,7 +157,6 @@ jobs:
             - index.d.ts
             - interfaces
             - main.js.map
-
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -166,6 +170,7 @@ jobs:
           at: .
       - run: ls
       - *npm-authenticate
+      - *npm-typescript
       - *npm-publish
       - slack/notify:
           event: fail
