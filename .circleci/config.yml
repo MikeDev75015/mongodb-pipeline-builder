@@ -133,13 +133,27 @@ jobs:
       - *install-deps
       - attach_workspace:
           at: .
-      - run: ls dist
       - copy-required-files-to-dist
       - run: ls dist
       - persist_to_workspace:
-          root: .
+          root: /dist
           paths:
-            - dist
+            - *
+#            - CHANGELOG.md
+#            - errors
+#            - index.js
+#            - main.d.ts
+#            - operators
+#            - Readme.md
+#            - helpers
+#            - index.js.map
+#            - main.js
+#            - package.json
+#            - environments
+#            - index.d.ts
+#            - interfaces
+#            - main.js.map
+
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -152,7 +166,6 @@ jobs:
       - attach_workspace:
           at: .
       - run: ls
-      - run: ls dist
       - *npm-authenticate
       - *npm-publish
       - slack/notify:
