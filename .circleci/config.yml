@@ -28,45 +28,25 @@ aliases:
     run:
       name: Update NPM version
       command: 'sudo npm install -g npm@latest'
-  - &copy-package-json
-    run:
-      name: Copy package.json to dist
-      command: cp -rf package.json dist
-  - &copy-readme
-    run:
-      name: Copy Readme.md to dist
-      command: cp -rf Readme.md dist
-  - &copy-changelog
-    run:
-      name: Copy CHANGELOG.md to dist
-      command: cp -rf CHANGELOG.md dist
-  - &copy-license
-    run:
-      name: Copy LICENSE to dist
-      command: cp -rf LICENSE dist
   - &pre-release
     run:
       name: Create a pre release
       command: npm run pre-release
-  - &npm-authenticate
-    run:
-      name: NPM Account Authentication
-      command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
   - &npm-git-tags
     run:
       name: git push follow release tag
       command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git main
-  - &npm-publish
-    run:
-      name: Publish package on npm
-      command: npm run publish-latest
-  - &npm-typescript
-    run:
-      name: Install typescript
-      command: 'sudo npm install -g typescript'
-
 
 commands:
+  authenticate-and-publish:
+    description: "Authenticate to npm account and publish latest package version"
+    steps:
+      - run:
+          name: NPM Account Authentication
+          command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+      - run:
+          name: Publish package on npm
+          command: npm run publish-latest
   set-git-local-user:
     description: "Set the account's default identity"
     steps:
@@ -74,12 +54,20 @@ commands:
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
   copy-required-files-to-dist:
-    description: "Copy/Move the publish required files to lib directory"
+    description: "Copy the publish required files to lib directory"
     steps:
-      - *copy-readme
-      - *copy-changelog
-      - *copy-license
-      - *copy-package-json
+      - run:
+          name: Copy Readme.md to dist
+          command: cp -rf Readme.md dist
+      - run:
+          name: Copy CHANGELOG.md to dist
+          command: cp -rf CHANGELOG.md dist
+      - run:
+          name: Copy LICENSE to dist
+          command: cp -rf LICENSE dist
+      - run:
+          name: Copy package.json to dist
+          command: cp -rf package.json dist
 
 jobs:
   build:
@@ -136,12 +124,10 @@ jobs:
       - checkout
       - *restore-cache
       - *install-deps
-      - *save-cache
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - *npm-authenticate
-      - *npm-publish
+      - authenticate-and-publish
       - slack/notify:
           event: fail
           template: basic_fail_1

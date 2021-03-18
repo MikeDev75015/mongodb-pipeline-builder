@@ -17,7 +17,7 @@
 <span style="display: block; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
 </p>
 
-<p style="text-align: justify; width: 100%;">
+<p style="text-align: justify; width: 100%;font-size: 15px;">
 is a pipeline builder for the aggregate method of a mongoDB collection. It will simplify pipelines by making them more
 readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them.
 </p>
@@ -28,14 +28,14 @@ readable and much easier to edit. It also allows you to test your pipelines on a
 
 ## Usage
 
-<p style="font-size: 16px;">
+<p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
 import { Expression, Only } from 'mongodb-pipeline-builder/operators/misc';<br>
 import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
 import { Project } from 'mongodb-pipeline-builder/helpers';<br>
 </p>
 
-<p style="font-size: 16px;">
+<p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'match' , Expression( Equal( '$id' , 'userId' ) ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'project' , Project( Only( 'firstname', 'lastname' ), false ) ) // false to exclude default _id<br>
