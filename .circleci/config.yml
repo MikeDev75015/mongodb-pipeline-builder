@@ -215,6 +215,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
       - build:
           requires:
             - approval-build-and-test-main
@@ -223,6 +224,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
       - unit_tests:
           context:
             - SONARCLOUD
@@ -233,6 +235,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
       - notify-success-job:
           name: build-unit_tests-success
           context: SLACK
@@ -243,6 +246,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
       - approval-prepare-pre-release:
           type: approval
           requires:
@@ -253,6 +257,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
               only:
                 - main
       - prepare-pre-release:
@@ -268,6 +273,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
               only:
                 - main
       - notify-success-job:
@@ -283,6 +289,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - test
               only:
                 - main
 
@@ -344,6 +351,8 @@ workflows:
               only:
                 - test
       - create-pull-request:
+          requires:
+            - merge-release-main
           context:
             - GIT
             - SLACK
