@@ -278,14 +278,14 @@ workflows:
           context:
             - GIT
             - SLACK
-            requires:
-              - build
-              - publish-package
-            filters:
-              tags:
-                only: /^v.*/
-              branches:
-                ignore: /.*/
+          requires:
+            - build
+            - publish-package
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - notify-success-job:
           name: publish-and-merge-release-success
           context: SLACK
