@@ -93,7 +93,7 @@ commands:
           command: cp -rf package.json dist
 
   install-github-cli:
-    description: Installs latest Github CLI
+    description: "Installs latest Github CLI"
     steps:
       - jq/install
       - run:
@@ -106,17 +106,25 @@ commands:
             wget --quiet -O gh_latest.deb $DEB_URL
             sudo apt install ./gh_latest.deb
 
-  authenticate-github:
-    description: Authentication to github
+
+  create-merge-release-pull-request:
+    description: "Create and merge release pull request and also delete branch"
     steps:
-      - run: git checkout release
-      - run: gh pr create -H release -f -B main
-      - run: gh pr merge release -m -d
+      - run:
+          name: Checkout to the release branch
+          command: git checkout release
+      - run:
+          name: Create a pull request to merge into the main branch
+          command: gh pr create -H release -f -B main
+      - run:
+          name: Merge the pull request and delete the release branch
+          command: gh pr merge release -m -d
 
 jobs:
   build:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *update-npm-version
@@ -135,6 +143,7 @@ jobs:
   unit_tests:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -148,6 +157,7 @@ jobs:
   prepare-pre-release:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -165,6 +175,7 @@ jobs:
   publish-package:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -186,38 +197,25 @@ jobs:
           event: always
           template: basic_success_1
 
-  merge-release-main:
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
-      - set-git-local-user
-      - merge-release-branch
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
 
-  create-pull-request:
+  create-pull-request-to-merge-release-main:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - set-git-local-user
       - install-github-cli
-      - authenticate-github
+      - create-merge-release-pull-request
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
 workflows:
-  build-and-test-main:
+  build-and-test-default:
     when:
       not: << pipeline.git.tag >>
     jobs:
-      - approval-build-and-test-main:
-          type: approval
-          filters:
-            branches:
-              ignore:
-                - release
-                - test
       - build:
           requires:
             - approval-build-and-test-main
@@ -226,7 +224,7 @@ workflows:
             branches:
               ignore:
                 - release
-                - test
+                - main
       - unit_tests:
           context:
             - SONARCLOUD
@@ -237,7 +235,7 @@ workflows:
             branches:
               ignore:
                 - release
-                - test
+                - main
       - notify-success-job:
           name: build-unit_tests-success
           context: SLACK
@@ -248,7 +246,7 @@ workflows:
             branches:
               ignore:
                 - release
-                - test
+                - main
       - approval-prepare-pre-release:
           type: approval
           requires:
@@ -257,11 +255,8 @@ workflows:
             - build-unit_tests-success
           filters:
             branches:
-              ignore:
-                - release
-                - test
               only:
-                - main
+                - develop
       - prepare-pre-release:
           context:
             - GIT
@@ -273,11 +268,8 @@ workflows:
             - approval-prepare-pre-release
           filters:
             branches:
-              ignore:
-                - release
-                - test
               only:
-                - main
+                - develop
       - notify-success-job:
           name: prepare-pre-release-success
           context: SLACK
@@ -289,11 +281,8 @@ workflows:
             - prepare-pre-release
           filters:
             branches:
-              ignore:
-                - release
-                - test
               only:
-                - main
+                - develop
 
   publish-release:
     jobs:
@@ -315,7 +304,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - merge-release-main:
+      - create-pull-request-to-merge-release-main:
           context:
             - GIT
             - SLACK
@@ -333,30 +322,9 @@ workflows:
           requires:
             - build
             - publish-package
-            - merge-release-main
+            - create-pull-request-to-merge-release-main
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
-
-  test-github-cli:
-    when:
-      not: << pipeline.git.tag >>
-    jobs:
-      - create-pull-request:
-          context:
-            - GIT
-            - SLACK
-          filters:
-            branches:
-              only:
-                - test
-#      - merge-release-main:
-#          context:
-#            - GIT
-#            - SLACK
-#          filters:
-#            branches:
-#              only:
-#                - test
