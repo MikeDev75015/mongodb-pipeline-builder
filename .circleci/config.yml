@@ -43,22 +43,6 @@ aliases:
       command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
 
 commands:
-  merge-release-branch:
-    description: "Merge the release branch in main"
-    steps:
-      - run:
-          name: Checkout to release
-          command: git checkout release
-#      - run:
-#          name: Checkout to main
-#          command: git checkout main
-#      - run:
-#          name: Merge release branch
-#          command: git merge release
-#      - run:
-#          name: Delete release branch
-#          command: git branch -d release
-
   authenticate-and-publish:
     description: "Authenticate to npm account and publish latest package version"
     steps:
@@ -119,6 +103,9 @@ commands:
       - run:
           name: Merge the pull request and delete the release branch
           command: gh pr merge release -m -d
+      - run:
+          name: Delete the develop branch
+          command: git push origin --delete develop
 
 jobs:
   build:
@@ -196,7 +183,6 @@ jobs:
       - slack/notify:
           event: always
           template: basic_success_1
-
 
   create-pull-request-to-merge-release-main:
     docker:
