@@ -103,9 +103,6 @@ commands:
       - run:
           name: Merge the pull request and delete the release branch
           command: gh pr merge release -m -d
-      - run:
-          name: Delete the develop branch
-          command: git push origin --delete develop
 
 jobs:
   build:
