@@ -342,6 +342,7 @@ workflows:
               only:
                 - test
       - clean-repository:
+          context: GIT
           requires:
             - approval-test
           filters:
