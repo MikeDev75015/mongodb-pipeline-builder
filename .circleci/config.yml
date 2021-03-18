@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
   slack: circleci/slack@4.3.0
+  jq: circleci/jq@2.2.0
 
 aliases:
   - &restore-cache
@@ -42,22 +43,6 @@ aliases:
       command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
 
 commands:
-  merge-release-branch:
-    description: "Merge the release branch in main"
-    steps:
-      - run:
-          name: Checkout to release
-          command: git checkout release
-      - run:
-          name: Checkout to main
-          command: git checkout main
-      - run:
-          name: Merge release branch
-          command: git merge release
-      - run:
-          name: Delete release branch
-          command: git branch -d release
-
   authenticate-and-publish:
     description: "Authenticate to npm account and publish latest package version"
     steps:
@@ -67,12 +52,14 @@ commands:
       - run:
           name: Publish package on npm
           command: npm run publish-latest
+
   set-git-local-user:
     description: "Set the account's default identity"
     steps:
       - run: git config credential.helper 'cache --timeout=120'
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
+
   copy-required-files-to-dist:
     description: "Copy the publish required files to lib directory"
     steps:
@@ -89,10 +76,42 @@ commands:
           name: Copy package.json to dist
           command: cp -rf package.json dist
 
+  install-github-cli:
+    description: "Installs latest Github CLI"
+    steps:
+      - jq/install
+      - run:
+          name: Install Github CLI
+          description: Gets latest realease version of Github CLI
+          command: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/cli/cli/releases/latest)
+            VERSION=$(echo $LATEST_RELEASE | jq -r '.tag_name')
+            DEB_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url | select(. | contains("linux_amd64.deb"))')
+            wget --quiet -O gh_latest.deb $DEB_URL
+            sudo apt install ./gh_latest.deb
+
+
+  create-merge-release-pull-request:
+    description: "Create and merge release pull request and also delete branch"
+    steps:
+      - run:
+          name: Checkout to the release branch
+          command: git checkout release
+      - run:
+          name: Create a pull request to merge into the main branch
+          command: gh pr create -H release -f -B main
+      - run:
+          name: Merge the pull request and delete the release branch
+          command: gh pr merge release -m -d
+      - run:
+          name: Delete the develop branch
+          command: git push origin --delete develop
+
 jobs:
   build:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *update-npm-version
@@ -111,6 +130,7 @@ jobs:
   unit_tests:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -124,6 +144,7 @@ jobs:
   prepare-pre-release:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -141,6 +162,7 @@ jobs:
   publish-package:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - *restore-cache
@@ -162,37 +184,31 @@ jobs:
           event: always
           template: basic_success_1
 
-  merge-release-main:
+  create-pull-request-to-merge-release-main:
     docker:
       - image: circleci/node:12
+    resource_class: small
     steps:
       - checkout
       - set-git-local-user
-      - merge-release-branch
+      - install-github-cli
+      - create-merge-release-pull-request
       - slack/notify:
           event: fail
           template: basic_fail_1
 
-
 workflows:
-  build-and-test-main:
+  build-and-test-default:
     when:
       not: << pipeline.git.tag >>
     jobs:
-      - approval-build-and-test-main:
-          type: approval
-          filters:
-            branches:
-              ignore:
-                - release
       - build:
-          requires:
-            - approval-build-and-test-main
           context: SLACK
           filters:
             branches:
               ignore:
                 - release
+                - main
       - unit_tests:
           context:
             - SONARCLOUD
@@ -203,6 +219,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - main
       - notify-success-job:
           name: build-unit_tests-success
           context: SLACK
@@ -213,6 +230,7 @@ workflows:
             branches:
               ignore:
                 - release
+                - main
       - approval-prepare-pre-release:
           type: approval
           requires:
@@ -221,10 +239,8 @@ workflows:
             - build-unit_tests-success
           filters:
             branches:
-              ignore:
-                - release
               only:
-                - main
+                - develop
       - prepare-pre-release:
           context:
             - GIT
@@ -236,10 +252,8 @@ workflows:
             - approval-prepare-pre-release
           filters:
             branches:
-              ignore:
-                - release
               only:
-                - main
+                - develop
       - notify-success-job:
           name: prepare-pre-release-success
           context: SLACK
@@ -251,11 +265,8 @@ workflows:
             - prepare-pre-release
           filters:
             branches:
-              ignore:
-                - release
               only:
-                - main
-
+                - develop
 
   publish-release:
     jobs:
@@ -277,7 +288,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - merge-release-main:
+      - create-pull-request-to-merge-release-main:
           context:
             - GIT
             - SLACK
@@ -295,7 +306,7 @@ workflows:
           requires:
             - build
             - publish-package
-            - merge-release-main
+            - create-pull-request-to-merge-release-main
           filters:
             tags:
               only: /^v.*/
