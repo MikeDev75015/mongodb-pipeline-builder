@@ -136,7 +136,7 @@ jobs:
       - copy-required-files-to-dist
       - run: ls dist
       - persist_to_workspace:
-          root: /dist
+          root: dist
           paths:
             - CHANGELOG.md
             - errors
