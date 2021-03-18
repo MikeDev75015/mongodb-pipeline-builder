@@ -46,6 +46,9 @@ commands:
     description: "Merge the release branch in main"
     steps:
       - run:
+          name: Checkout to release
+          command: git checkout release
+      - run:
           name: Checkout to main
           command: git checkout main
       - run:
