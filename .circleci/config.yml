@@ -138,21 +138,20 @@ jobs:
       - persist_to_workspace:
           root: /dist
           paths:
-            - *
-#            - CHANGELOG.md
-#            - errors
-#            - index.js
-#            - main.d.ts
-#            - operators
-#            - Readme.md
-#            - helpers
-#            - index.js.map
-#            - main.js
-#            - package.json
-#            - environments
-#            - index.d.ts
-#            - interfaces
-#            - main.js.map
+            - CHANGELOG.md
+            - errors
+            - index.js
+            - main.d.ts
+            - operators
+            - Readme.md
+            - helpers
+            - index.js.map
+            - main.js
+            - package.json
+            - environments
+            - index.d.ts
+            - interfaces
+            - main.js.map
 
       - slack/notify:
           event: fail
