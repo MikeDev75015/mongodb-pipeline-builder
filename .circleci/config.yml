@@ -203,8 +203,6 @@ workflows:
       not: << pipeline.git.tag >>
     jobs:
       - build:
-          requires:
-            - approval-build-and-test-main
           context: SLACK
           filters:
             branches:
