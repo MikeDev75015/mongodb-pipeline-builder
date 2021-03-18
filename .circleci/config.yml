@@ -153,6 +153,8 @@ jobs:
 
 workflows:
   build-and-test-main:
+    when:
+      equal: [false, $CIRCLE_TAG]
     jobs:
       - approval-build-and-test-main:
           type: approval
@@ -175,7 +177,7 @@ workflows:
               ignore:
                 - /^v.*/
       - notify-success-job:
-          name: build-unit_tests-ok
+          name: build-unit_tests-success
           context: SLACK
           requires:
             - build
@@ -189,7 +191,7 @@ workflows:
           requires:
             - build
             - unit_tests
-            - build-unit_tests-ok
+            - build-unit_tests-success
           filters:
             tags:
               ignore:
@@ -204,7 +206,7 @@ workflows:
           requires:
             - build
             - unit_tests
-            - build-unit_tests-ok
+            - build-unit_tests-success
             - approval-prepare-pre-release
           filters:
             tags:
@@ -214,11 +216,12 @@ workflows:
               only:
                 - main
       - notify-success-job:
+          name: prepare-pre-release-success
           context: SLACK
           requires:
             - build
             - unit_tests
-            - build-unit_tests-ok
+            - build-unit_tests-success
             - approval-prepare-pre-release
             - prepare-pre-release
           filters:
@@ -251,6 +254,7 @@ workflows:
             branches:
               ignore: /.*/
       - notify-success-job:
+          name: pre-release-success
           context: SLACK
           requires:
             - build
