@@ -170,6 +170,7 @@ jobs:
       - attach_workspace:
           at: .
       - *restore-cache
+      - *npm-typescript
       - run: sudo rm -rf dist
       - run: ls
       - *npm-authenticate
