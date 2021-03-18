@@ -167,9 +167,9 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
-      - *restore-cache
       - attach_workspace:
           at: .
+      - *restore-cache
       - run: sudo rm -rf dist
       - run: ls
       - *npm-authenticate
