@@ -136,6 +136,7 @@ jobs:
       - checkout
       - *restore-cache
       - *install-deps
+      - *save-cache
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
@@ -166,11 +167,12 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
+      - *restore-cache
       - attach_workspace:
           at: .
+      - run: sudo rm -rf dist
       - run: ls
       - *npm-authenticate
-      - *npm-typescript
       - *npm-publish
       - slack/notify:
           event: fail
