@@ -14,13 +14,14 @@
 
 # `mongodb-pipeline-builder`
 
-<span style="display: block; font-weight: bold; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
+## <span style="display: block; font-weight: bold; whitespace: nowrap;">[ pre-release ]</span>
 
 </p>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
-is a pipeline builder for the aggregate method of a mongoDB collection. It will simplify pipelines by making them more
-readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them.
+is a pipeline builder for the db.collection.aggregate method and db.aggregate method. It will simplify pipelines by making them more
+readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them. Pipeline stages appear in an array. Documents pass
+through the stages in sequence.
 </p>
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
@@ -66,8 +67,7 @@ const myNewPipeline = [<br>
 
 ### Soon more complex examples will be available!
 <p>
-In the db.collection.aggregate method and db.aggregate method, pipeline stages appear in an array. Documents pass
-through the stages in sequence.
+
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
