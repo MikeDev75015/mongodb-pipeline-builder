@@ -49,7 +49,7 @@ commands:
       - run:
           name: Checkout to release
           command: git checkout release
-      - run:
+#      - run:
 #          name: Checkout to main
 #          command: git checkout main
 #      - run:
@@ -109,12 +109,12 @@ commands:
   authenticate-github:
     description: Authentication to github
     steps:
-#      - run: echo $GH_TOKEN > ghtoken.txt
-#      - run: gh auth login --with-token < ghtoken.txt
       - run:
           name: Checkout to release
           command: git checkout release
       - run: gh pr create -H release -f -B main
+        #      - run: echo $GH_TOKEN > ghtoken.txt
+        #      - run: gh auth login --with-token < ghtoken.txt
 
 jobs:
   build:
@@ -347,6 +347,14 @@ workflows:
     when:
       not: << pipeline.git.tag >>
     jobs:
+      - create-pull-request:
+          context:
+            - GIT
+            - SLACK
+          filters:
+            branches:
+              only:
+                - test
 #      - merge-release-main:
 #          context:
 #            - GIT
@@ -355,13 +363,3 @@ workflows:
 #            branches:
 #              only:
 #                - test
-      - create-pull-request:
-#          requires:
-#            - merge-release-main
-          context:
-            - GIT
-            - SLACK
-          filters:
-            branches:
-              only:
-                - test
