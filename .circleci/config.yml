@@ -113,8 +113,7 @@ commands:
           name: Checkout to release
           command: git checkout release
       - run: gh pr create -H release -f -B main
-        #      - run: echo $GH_TOKEN > ghtoken.txt
-        #      - run: gh auth login --with-token < ghtoken.txt
+      - run: gh pr merge release --auto -m -d
 
 jobs:
   build:
