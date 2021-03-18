@@ -134,7 +134,15 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - *go-to-dist
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  publish-package-to-npm:
+    working_directory: ~/project/dist
+    docker:
+      - image: circleci/node:12
+    steps:
       - *npm-authenticate
       - *npm-publish
       - slack/notify:
@@ -253,12 +261,25 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+      - publish-package-to-npm:
+          context:
+            - GIT
+            - SLACK
+          requires:
+            - build
+            - pre-release
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - notify-success-job:
-          name: pre-release-success
+          name: publish-package-to-npm-success
           context: SLACK
           requires:
             - build
             - pre-release
+            - publish-package-to-npm
           filters:
             tags:
               only: /^v.*/
