@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
   slack: circleci/slack@4.3.0
+  jq: circleci/jq@2.2.0
 
 aliases:
   - &restore-cache
@@ -67,12 +68,14 @@ commands:
       - run:
           name: Publish package on npm
           command: npm run publish-latest
+
   set-git-local-user:
     description: "Set the account's default identity"
     steps:
       - run: git config credential.helper 'cache --timeout=120'
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
+
   copy-required-files-to-dist:
     description: "Copy the publish required files to lib directory"
     steps:
@@ -88,6 +91,27 @@ commands:
       - run:
           name: Copy package.json to dist
           command: cp -rf package.json dist
+
+  install-github-cli:
+    description: Installs latest Github CLI
+    steps:
+      - jq/install
+      - run:
+          name: Install Github CLI
+          description: Gets latest realease version of Github CLI
+          command: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/cli/cli/releases/latest)
+            VERSION=$(echo $LATEST_RELEASE | jq -r '.tag_name')
+            DEB_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url | select(. | contains("linux_amd64.deb"))')
+            wget --quiet -O gh_latest.deb $DEB_URL
+            sudo apt install ./gh_latest.deb
+
+  authenticate-github:
+    description: Authentication to github
+    steps:
+      - run: echo $GH_TOKEN > ghtoken.txt
+      - run: gh auth login --with-token < ghtoken.txt
+      - run: gh pr create -H release -f -B main
 
 jobs:
   build:
@@ -173,6 +197,12 @@ jobs:
           event: fail
           template: basic_fail_1
 
+  create-pull-request:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - install-github-cli
+      - authenticate-github
 
 workflows:
   build-and-test-main:
@@ -256,7 +286,6 @@ workflows:
               only:
                 - main
 
-
   publish-release:
     jobs:
       - build:
@@ -301,3 +330,24 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+
+  test-github-cli:
+    when:
+      not: << pipeline.git.tag >>
+    jobs:
+      - merge-release-main:
+          context:
+            - GIT
+            - SLACK
+          filters:
+            branches:
+              only:
+                - test
+      - create-pull-request:
+          context:
+            - GIT
+            - SLACK
+          filters:
+            branches:
+              only:
+                - test
