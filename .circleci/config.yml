@@ -170,6 +170,7 @@ jobs:
       - attach_workspace:
           at: .
       - *restore-cache
+      - *install-deps
       - *npm-typescript
       - run: sudo rm -rf dist
       - run: ls
