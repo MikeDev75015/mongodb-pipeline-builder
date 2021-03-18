@@ -129,7 +129,7 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  pre-publish:
+  publish-package:
     docker:
       - image: circleci/node:12
     steps:
@@ -140,40 +140,6 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - persist_to_workspace:
-          root: dist
-          paths:
-            - CHANGELOG.md
-            - LICENSE
-            - errors
-            - index.js
-            - main.d.ts
-            - operators
-            - Readme.md
-            - helpers
-            - index.js.map
-            - main.js
-            - package.json
-            - environments
-            - index.d.ts
-            - interfaces
-            - main.js.map
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  publish-package-to-npm:
-    working_directory: ~/project/dist
-    docker:
-      - image: circleci/node:12
-    steps:
-      - attach_workspace:
-          at: .
-      - *restore-cache
-      - *install-deps
-      - *npm-typescript
-      - run: sudo rm -rf dist
-      - run: ls
       - *npm-authenticate
       - *npm-publish
       - slack/notify:
@@ -281,36 +247,23 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - pre-publish:
+      - publish-package:
           context:
             - GIT
             - SLACK
           requires:
             - build
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - publish-package-to-npm:
-          context:
-            - GIT
-            - SLACK
-          requires:
-            - build
-            - pre-publish
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
       - notify-success-job:
-          name: publish-package-to-npm-success
+          name: publish-package-success
           context: SLACK
           requires:
             - build
-            - pre-publish
-            - publish-package-to-npm
+            - publish-package
           filters:
             tags:
               only: /^v.*/

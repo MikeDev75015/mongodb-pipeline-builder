@@ -12,7 +12,9 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=bugs)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 
-# `mongodb-pipeline-builder` <span style="display: block; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
+# `mongodb-pipeline-builder`
+
+<span style="display: block; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
 </p>
 
 <p style="text-align: justify; width: 100%;">
@@ -27,10 +29,10 @@ readable and much easier to edit. It also allows you to test your pipelines on a
 ## Usage
 
 <p style="font-size: 16px;">
-import { PipelineBuilder } from 'mongodb-pipeline-builder/dist';<br>
-import { Expression, Only } from 'mongodb-pipeline-builder/dist/operators/misc';<br>
-import { Equal } from 'mongodb-pipeline-builder/dist/operators/comparison';<br>
-import { Project } from 'mongodb-pipeline-builder/dist/helpers';<br>
+import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
+import { Expression, Only } from 'mongodb-pipeline-builder/operators/misc';<br>
+import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
+import { Project } from 'mongodb-pipeline-builder/helpers';<br>
 </p>
 
 <p style="font-size: 16px;">
