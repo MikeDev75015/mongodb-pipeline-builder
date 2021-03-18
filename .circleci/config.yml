@@ -124,7 +124,7 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  pre-release:
+  pre-publish:
     docker:
       - image: circleci/node:12
     steps:
@@ -149,8 +149,6 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
-      - run: ls
-      - run: ls dist
       - attach_workspace:
           at: .
       - run: ls
@@ -262,7 +260,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - pre-release:
+      - pre-publish:
           context:
             - GIT
             - SLACK
