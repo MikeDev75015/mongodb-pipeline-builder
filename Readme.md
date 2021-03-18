@@ -14,7 +14,8 @@
 
 # `mongodb-pipeline-builder`
 
-<span style="display: block; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
+<span style="display: block; font-weight: bold; font-size: 20px; whitespace: nowrap;">[ pre-release ]</span>
+
 </p>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
