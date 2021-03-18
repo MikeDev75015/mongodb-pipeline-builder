@@ -50,14 +50,14 @@ commands:
           name: Checkout to release
           command: git checkout release
       - run:
-          name: Checkout to main
-          command: git checkout main
-      - run:
-          name: Merge release branch
-          command: git merge release
-      - run:
-          name: Delete release branch
-          command: git branch -d release
+#          name: Checkout to main
+#          command: git checkout main
+#      - run:
+#          name: Merge release branch
+#          command: git merge release
+#      - run:
+#          name: Delete release branch
+#          command: git branch -d release
 
   authenticate-and-publish:
     description: "Authenticate to npm account and publish latest package version"
@@ -109,8 +109,11 @@ commands:
   authenticate-github:
     description: Authentication to github
     steps:
-      - run: echo $GH_TOKEN > ghtoken.txt
-      - run: gh auth login --with-token < ghtoken.txt
+#      - run: echo $GH_TOKEN > ghtoken.txt
+#      - run: gh auth login --with-token < ghtoken.txt
+      - run:
+          name: Checkout to release
+          command: git checkout release
       - run: gh pr create -H release -f -B main
 
 jobs:
@@ -342,17 +345,17 @@ workflows:
     when:
       not: << pipeline.git.tag >>
     jobs:
-      - merge-release-main:
-          context:
-            - GIT
-            - SLACK
-          filters:
-            branches:
-              only:
-                - test
+#      - merge-release-main:
+#          context:
+#            - GIT
+#            - SLACK
+#          filters:
+#            branches:
+#              only:
+#                - test
       - create-pull-request:
-          requires:
-            - merge-release-main
+#          requires:
+#            - merge-release-main
           context:
             - GIT
             - SLACK
