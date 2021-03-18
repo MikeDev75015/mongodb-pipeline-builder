@@ -277,7 +277,7 @@ workflows:
             - SLACK
           requires:
             - build
-            - pre-release
+            - pre-publish
           filters:
             tags:
               only: /^v.*/
@@ -288,7 +288,7 @@ workflows:
           context: SLACK
           requires:
             - build
-            - pre-release
+            - pre-publish
             - publish-package-to-npm
           filters:
             tags:
