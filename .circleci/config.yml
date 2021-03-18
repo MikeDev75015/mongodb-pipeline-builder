@@ -109,11 +109,9 @@ commands:
   authenticate-github:
     description: Authentication to github
     steps:
-      - run:
-          name: Checkout to release
-          command: git checkout release
+#      - run: git checkout release
       - run: gh pr create -H release -f -B main
-      - run: gh pr merge release --auto -m -d
+      - run: gh pr merge release -m -d
 
 jobs:
   build:
