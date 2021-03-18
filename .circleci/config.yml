@@ -154,7 +154,7 @@ jobs:
 workflows:
   build-and-test-main:
     when:
-      equal: [ false, << pipeline.git.tag >> ]
+      not: << pipeline.git.tag >>
     jobs:
       - approval-build-and-test-main:
           type: approval
