@@ -15,7 +15,7 @@ export interface LookupConditionPayloadInterface {
     /**
      * project
      */
-    project?: ProjectStageInterface;
+    project?: { [index: string]: any };
     /**
      * pipeline
      */

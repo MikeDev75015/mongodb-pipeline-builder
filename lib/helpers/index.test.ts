@@ -1,5 +1,6 @@
 import {Lookup, lookupConditionStage, lookupEqualityStage, Project} from "./index";
 import {PipelineError} from "../errors";
+import {Ignore, Only} from "../operators/misc";
 
 describe('pipeline Stage Helpers', () => {
     describe('Project', () => {
@@ -44,8 +45,8 @@ describe('pipeline Stage Helpers', () => {
 
                 [
                     'if the type property is missing in a Lookup Condition Payload project property',
-                    {from: 'test', as: 'test', project: {list: ['test']}},
-                    new PipelineError('The project type property must be specified!')
+                    {from: 'test', as: 'test', project: {}},
+                    new PipelineError('The project object must contain at least one property!')
                 ],
 
             ])('%s', (
@@ -89,10 +90,7 @@ describe('pipeline Stage Helpers', () => {
             expect(lookupConditionStage({
                 from: 'from',
                 sourceList: ['testSource'],
-                project: {
-                    type: 'only',
-                    list: ['test1', 'test2', 'test3']
-                },
+                project: Project(Only('test1', 'test2', 'test3'), false),
                 pipeline: [
                     {$match: {$expr: {$eq: ['$type', '$$testSource']}}}
                 ],
@@ -130,10 +128,7 @@ describe('pipeline Stage Helpers', () => {
             expect(lookupConditionStage({
                 from: 'from',
                 sourceList: ['testSource'],
-                project: {
-                    type: 'ignore',
-                    list: ['test1', 'test2', 'test3']
-                },
+                project: Project(Ignore('test1', 'test2', 'test3')),
                 pipeline: [
                     {$match: {$expr: {$eq: ['$type', '$$testSource']}}}
                 ],
