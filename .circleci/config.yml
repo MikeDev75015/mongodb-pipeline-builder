@@ -203,14 +203,13 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  clean-repository:
+  clean-test:
     docker:
       - image: circleci/node:12
     resource_class: small
     steps:
       - checkout
       - set-git-local-user
-      - *delete-develop
       - *delete-test
 
 workflows:
@@ -342,7 +341,7 @@ workflows:
             branches:
               only:
                 - test
-      - clean-repository:
+      - clean-test:
           context: GIT
           requires:
             - approval-test
