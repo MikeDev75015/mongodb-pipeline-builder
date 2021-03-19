@@ -9,9 +9,9 @@ export interface LookupConditionPayloadInterface {
      */
     from: string;
     /**
-     * sourceList
+     * let
      */
-    sourceList?: string[];
+    let?: { [index: string]: string };
     /**
      * project
      */
@@ -25,3 +25,4 @@ export interface LookupConditionPayloadInterface {
      */
     as: string
 }
+
