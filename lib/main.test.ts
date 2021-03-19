@@ -49,6 +49,51 @@ describe('should create a new pipeline builder object', () => {
             });
         });
 
+        describe('lookup()', () => {
+            it('should throw a PipelineError if the value is invalid', () => {
+                expect(
+                    () => pipelineBuilderWithDebug.Lookup(undefined)
+                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
+            });
+
+            it('should add a $lookup stage to the pipeline', () => {
+                pipelineBuilderWithDebug.Lookup({ from: 'from', as: 'as' });
+                expect(
+                    pipelineBuilderWithDebug.getPipeline()
+                ).toEqual([{ $lookup: { from: 'from', as: 'as' } }]);
+            });
+        });
+
+        describe('match()', () => {
+            it('should throw a PipelineError if the value is invalid', () => {
+                expect(
+                    () => pipelineBuilderWithDebug.Match(undefined)
+                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
+            });
+
+            it('should add a $match stage to the pipeline', () => {
+                pipelineBuilderWithDebug.Match('test');
+                expect(
+                    pipelineBuilderWithDebug.getPipeline()
+                ).toEqual([{ $match: 'test' }]);
+            });
+        });
+
+        describe('project()', () => {
+            it('should throw a PipelineError if the value is invalid', () => {
+                expect(
+                    () => pipelineBuilderWithDebug.Project(undefined)
+                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
+            });
+
+            it('should add a $project stage to the pipeline', () => {
+                pipelineBuilderWithDebug.Project({ unit: 'test' });
+                expect(
+                    pipelineBuilderWithDebug.getPipeline()
+                ).toEqual([{ $project: { unit: 'test' } }]);
+            });
+        });
+
         describe('addStage()', () => {
             test.each([
                 [
@@ -91,7 +136,7 @@ describe('should create a new pipeline builder object', () => {
         const pipeLineName = 'builder-test2';
         beforeEach(() => {
             process.env.LOGS_ENABLED = 'false';
-            pipelineBuilderWithoutDebug = new PipelineBuilder(pipeLineName, false);
+            pipelineBuilderWithoutDebug = new PipelineBuilder(pipeLineName);
         });
 
         it('should throw a PipelineError if the pipeline is empty', () => {
