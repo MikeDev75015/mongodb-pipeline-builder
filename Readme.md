@@ -1,5 +1,6 @@
 <p style="text-align: center; width: 100%;">
 
+[![CircleCI](https://circleci.com/gh/MikeDev75015/mongodb-pipeline-builder.svg?style=shield)](https://app.circleci.com/pipelines/github/MikeDev75015/mongodb-pipeline-builder)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
@@ -42,11 +43,15 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 'userId' ) ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, localField, foreignField, as ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'unset', ['as'] )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'unset', ['as'] )&nbsp;***<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
 </p>
 
-#### is equivalent to:
+<p>
+*** If a helper is not yet available, use the addStage method of the pipeline builder and pass it a valid stage type and its value as parameters.
+</p>
+
+### is equivalent to:
 
 <p style="font-size: 15px;">
 const myNewPipeline = [<br>
