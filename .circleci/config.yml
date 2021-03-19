@@ -37,10 +37,18 @@ aliases:
     run:
       name: Create a pre release
       command: npm run pre-release
-  - &npm-git-tags
+  - &release-follow-tags
     run:
-      name: git push follow release tag
+      name: Commit and push version tag on release
       command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
+  - &delete-develop
+    run:
+      name: Delete the develop branch
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
+  - &delete-test
+    run:
+      name: Delete the test branch
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git test
 
 commands:
   authenticate-and-publish:
@@ -151,7 +159,7 @@ jobs:
       - set-git-local-user
       - *checkout-release-branch
       - *pre-release
-      - *npm-git-tags
+      - *release-follow-tags
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -181,7 +189,7 @@ jobs:
           event: always
           template: basic_success_1
 
-  create-pull-request-to-merge-release-main:
+  final-repository-operations:
     docker:
       - image: circleci/node:12
     resource_class: small
@@ -190,9 +198,19 @@ jobs:
       - set-git-local-user
       - install-github-cli
       - create-merge-release-pull-request
+      - *delete-develop
       - slack/notify:
           event: fail
           template: basic_fail_1
+
+  clean-test:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    steps:
+      - checkout
+      - set-git-local-user
+      - *delete-test
 
 workflows:
   build-and-test-default:
@@ -204,6 +222,7 @@ workflows:
           filters:
             branches:
               ignore:
+                - test
                 - release
                 - main
       - unit_tests:
@@ -215,6 +234,7 @@ workflows:
           filters:
             branches:
               ignore:
+                - test
                 - release
                 - main
       - notify-success-job:
@@ -226,6 +246,7 @@ workflows:
           filters:
             branches:
               ignore:
+                - test
                 - release
                 - main
       - approval-prepare-pre-release:
@@ -265,7 +286,7 @@ workflows:
               only:
                 - develop
 
-  publish-release:
+  publish-release-on-version-tag:
     jobs:
       - build:
           context: SLACK
@@ -285,7 +306,7 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-      - create-pull-request-to-merge-release-main:
+      - final-repository-operations:
           context:
             - GIT
             - SLACK
@@ -303,9 +324,28 @@ workflows:
           requires:
             - build
             - publish-package
-            - create-pull-request-to-merge-release-main
+            - final-repository-operations
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
+
+  test-workflow:
+    when:
+      not: << pipeline.git.tag >>
+    jobs:
+      - approval-test:
+          type: approval
+          filters:
+            branches:
+              only:
+                - test
+      - clean-test:
+          context: GIT
+          requires:
+            - approval-test
+          filters:
+            branches:
+              only:
+                - test
