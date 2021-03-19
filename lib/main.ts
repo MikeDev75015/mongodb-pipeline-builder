@@ -1,3 +1,5 @@
+
+
 const moment = require('moment-timezone');
 import {
     DebugBuildInterface,
@@ -7,7 +9,9 @@ import {
 import { PipelineError } from "./errors";
 import { LOGS_ENABLED } from './';
 import {getStageTypeValueFor, StageLabel} from "./interfaces/stage-type.interface";
-
+import {Lookup} from "./helpers/lookup";
+import {Project} from "./helpers/project";
+import {Match} from "./helpers/match";
 
 /**
  * PipelineBuilder
@@ -60,7 +64,7 @@ export class PipelineBuilder {
             : (LOGS_ENABLED === 'true');
         this.debugBuild.status = debug;
 
-        this.saveActionToDebugHistoryList('constructor', { debug, logsEnabled });
+        this.saveActionToDebugHistoryList('constructor', { debug }, { logsEnabled }, { debugBuild: this.debugBuild });
     }
 
     /**
@@ -84,15 +88,7 @@ export class PipelineBuilder {
             historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
         }
 
-        if (this.debugBuild && this.debugBuild.status) {
-            this.debugBuild.historyList.push(historyBundle);
-        } else {
-            this.debugBuild = {
-                status: argList[0] ? argList[0].debug : false,
-                historyList: [historyBundle]
-            }
-        }
-
+        this.debugBuild.historyList.push(historyBundle);
         this.log('info', 'saveToDebugActionList', historyBundle);
     }
 
@@ -155,6 +151,76 @@ export class PipelineBuilder {
         this.stageList.push(newStageToAdd);
 
         this.saveActionToDebugHistoryList('addStage', { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
+        return this;
+    }
+
+    /**
+     * Filters the documents to pass only the documents that match the specified condition(s) to the next pipeline stage.
+     *
+     * $match takes a document that specifies the query conditions. The query syntax is identical to the read operation
+     * query syntax; i.e. $match does not accept raw aggregation expressions. Instead, use a $expr query expression to
+     * include aggregation expression in $match.
+     *
+     * Pipeline Optimization
+     * - Place the $match as early in the aggregation pipeline as possible. Because $match limits the total number of
+     * documents in the aggregation pipeline, earlier $match operations minimize the amount of processing down the pipe.
+     * - If you place a $match at the very beginning of a pipeline, the query can take advantage of indexes like any other
+     * db.collection.find() or db.collection.findOne().
+     *
+     * Restrictions
+     * - The $match query syntax is identical to the read operation query syntax; i.e. $match does not accept raw
+     * aggregation expressions. To include aggregation expression in $match, use a $expr query expression.
+     *
+     * @param value
+     * @constructor
+     */
+    public readonly Match = (value: any) => {
+        if (!value && this.debugBuild.status) {
+            throw new PipelineError('Impossible to add the stage, the value is not valid!');
+        }
+
+        this.stageList.push(Match(value));
+
+        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel: 'match', stageValue: JSON.stringify(value) });
+        return this;
+    }
+
+    /**
+     * Performs a left outer join to an unSharded collection in the same database to filter in documents from the “joined”
+     * collection for processing. To each input document, the $lookup stage adds a new array field whose elements are the
+     * matching documents from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
+     *
+     * @param value
+     * @constructor
+     */
+    public readonly Lookup = (value: any) => {
+        console.log('Lookup', value, this.debugBuild.status);
+        if (!value && this.debugBuild.status) {
+            throw new PipelineError('Impossible to add the stage, the value is not valid!');
+        }
+
+        this.stageList.push(Lookup(value));
+
+        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel: 'lookup', stageValue: JSON.stringify(value) });
+        return this;
+    }
+
+    /**
+     * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be
+     * existing fields from the input documents or newly computed fields.
+     *
+     * @param value Include OR Exclude Existing Fields
+     * documents, you must explicitly specify the suppression of the _id field in $project by passing false.
+     * @constructor
+     */
+    public readonly Project = (value: any) => {
+        if (!value && this.debugBuild.status) {
+            throw new PipelineError('Impossible to add the stage, the value is not valid!');
+        }
+
+        this.stageList.push(Project(value));
+
+        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel: 'project', stageValue: JSON.stringify(value) });
         return this;
     }
 
