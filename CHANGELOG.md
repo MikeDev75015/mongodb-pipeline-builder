@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-62](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-61...v0.0.2-62) (2021-03-19)
+
+
+### Features
+
+* implement Lookup, Match and Project method of the pipeline builder ([9b859cf](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/9b859cf72b0847bd632f6bb66ebde952854e5c65))
+
 ### [0.0.2-61](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-60...v0.0.2-61) (2021-03-19)
 
 ### [0.0.2-60](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-59...v0.0.2-60) (2021-03-19)
