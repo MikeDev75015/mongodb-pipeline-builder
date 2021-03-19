@@ -73,6 +73,12 @@ const myNewPipeline = [<br>
 addFields | bucket | bucketAuto | collStats | count | facet | geoNear | graphLookup | group | indexStats | limit | listSessions | lookup | match | merge | out | planCacheStats | project | redact | replaceRoot | replaceWith | sample | search | set | skip | sort | sortByCount | unionWith | unset | unwind
 </p>
 
+<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
+
+<p style="font-size: 15px;">
+Lookup | Project
+</p>
+
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
 
 <p style="font-size: 15px;">
