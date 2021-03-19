@@ -1,8 +1,6 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
 import {RegexMatch} from "./operators/string";
-import {Expression} from "./operators/misc";
-import {Equal} from "./operators/comparison";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -56,8 +54,8 @@ describe('should create a new pipeline builder object', () => {
                 [
                     'should add a stage to the pipeline',
                     'match',
-                    Expression(Equal('$test', 'test')),
-                    { $match: Expression(Equal('$test', 'test')) },
+                    { name: 'toto' },
+                    { $match: { name: 'toto' } },
                     ''
                 ],
                 [
