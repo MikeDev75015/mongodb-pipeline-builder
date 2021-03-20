@@ -1,6 +1,6 @@
 import { PipelineError } from "../../errors";
 import {
-    LookupConditionPayloadInterface
+    LookupConditionPayloadInterface, LookupEqualityPayloadInterface
 } from "../../interfaces";
 
 /**
@@ -8,7 +8,7 @@ import {
  * @param payload
  * @constructor
  */
-export const validLookupPayload = (payload: any) => {
+export const lookupPayloadValidator = (payload: any) => {
     if (!payload.from && !payload.as) {
         return 'The from and as properties are required';
     } else if (!payload.from) {
@@ -39,7 +39,7 @@ export const EqualityPayload = (from: string, as: string, localField: string, fo
         localField: localField,
         foreignField: foreignField,
         as: as
-    };
+    } as LookupEqualityPayloadInterface;
 };
 /**
  * Join Conditions and Uncorrelated Sub-queries
