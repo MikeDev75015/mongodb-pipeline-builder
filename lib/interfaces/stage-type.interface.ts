@@ -175,11 +175,10 @@ export enum StageTypeEnum {
 }
 
 /**
- * getStageTypeValueFor
- * @param label
+ * Returns the stage value for a stage type
+ * @param label The stage label
  */
-export const getStageTypeValueFor = (label: string) => {
-    // @ts-ignore
+export const getStageTypeValue = (label: StageLabel) => {
     return StageTypeEnum[label];
 };
 
