@@ -27,7 +27,7 @@ through the stages in sequence.
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-### npm i mongodb-pipeline-builder@latest
+### npm i mongodb-pipeline-builder@latest --save
 
 ## Usage
 
