@@ -33,8 +33,9 @@ through the stages in sequence.
 
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
-import { Match, Expression } from 'mongodb-pipeline-builder/helpers/match';<br>
-import { Project, Only } from 'mongodb-pipeline-builder/helpers/project';<br>
+import { Expression } from 'mongodb-pipeline-builder/helpers/match';<br>
+import { EqualityPayload } from 'mongodb-pipeline-builder/helpers/lookup';<br>
+import { Only } from 'mongodb-pipeline-builder/helpers/project';<br>
 import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
 </p>
 
@@ -43,12 +44,12 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 'userId' ) ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, localField, foreignField, as ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.addStage( 'unset', ['as'] )&nbsp;***<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Unset( ['as'] )&nbsp;***<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
 </p>
 
 <p>
-*** If a helper is not yet available, use the addStage method of the pipeline builder and pass it a valid stage type and its value as parameters.
+*** If no helper is available for a stage, use its method and pass it a valid value in parameters.
 </p>
 
 ### is equivalent to:
@@ -93,15 +94,15 @@ const myNewPipeline = [<br>
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
 <p style="font-size: 15px;">
-addFields | bucket | bucketAuto | collStats | count | facet | geoNear | graphLookup | group | indexStats | limit | listSessions | lookup | match | merge | out | planCacheStats | project | redact | replaceRoot | replaceWith | sample | search | set | skip | sort | sortByCount | unionWith | unset | unwind
+AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
 <p style="font-size: 15px;">
-Lookup >> ConditionPayload | EqualityPayload<br>
-Match >> Expression | Field | 'any valid read operation request syntax'<br>
-Project >> Only | Ignore
+Lookup( ConditionPayload | EqualityPayload )<br>
+Match( Expression | Field | 'any valid read operation request syntax' )<br>
+Project( Only | Ignore )
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
