@@ -286,6 +286,19 @@ workflows:
               only:
                 - develop
 
+  update-main-coverage:
+    when:
+      not: << pipeline.git.tag >>
+    jobs:
+      - unit_tests:
+          context:
+            - SONARCLOUD
+            - SLACK
+          filters:
+            branches:
+              only:
+                - main
+
   publish-release-on-version-tag:
     jobs:
       - build:
