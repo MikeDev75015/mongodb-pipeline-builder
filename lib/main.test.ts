@@ -62,7 +62,7 @@ describe('should create a new pipeline builder object', () => {
                 ['should add a stage to the pipeline', 'indexStats', { name: 'toto' }, '' ],
                 ['should add a stage to the pipeline', 'limit', { name: 'toto' }, '' ],
                 ['should add a stage to the pipeline', 'listSessions', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'lookup', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'lookup', { from: 'unit', as: 'test' }, '' ],
                 ['should add a stage to the pipeline', 'match', { name: 'toto' }, '' ],
                 ['should add a stage to the pipeline', 'merge', { name: 'toto' }, '' ],
                 ['should add a stage to the pipeline', 'out', { name: 'toto' }, '' ],
@@ -85,6 +85,18 @@ describe('should create a new pipeline builder object', () => {
                     'should not add the stage to the pipeline if its value is invalid',
                     'Match',
                     undefined,
+                    'Impossible to add the stage, its value is not valid!'
+                ],
+                [
+                    'should not add the stage to the pipeline if its value is invalid',
+                    'Lookup',
+                    { as: 'unit'},
+                    'Impossible to add the stage, its value is not valid!'
+                ],
+                [
+                    'should not add the stage to the pipeline if its value is invalid',
+                    'Lookup',
+                    { from: 'unit'},
                     'Impossible to add the stage, its value is not valid!'
                 ],
             ])('%s: $%s => %o', (
