@@ -7,6 +7,7 @@ import {
     StageLabel,
     BucketStageInterface,
     BuilderOptionsInterface,
+    InitOptionsInterface,
 } from "./interfaces";
 import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import { PipelineError } from "./errors";
@@ -67,11 +68,11 @@ export class PipelineBuilder {
      */
     constructor(
         pipelineName: string,
-        options?: BuilderOptionsInterface
+        options?: InitOptionsInterface
     ) {
         const setOptions = (!options
             ? this.defaultOptions
-            : { ...this.defaultOptions, ...options }) as { debug: boolean; logsEnabled: boolean; };
+            : { ...this.defaultOptions, ...options }) as BuilderOptionsInterface;
 
         this.pipelineName = pipelineName;
         this.debugBuild = { status: setOptions.debug, historyList: [] };
