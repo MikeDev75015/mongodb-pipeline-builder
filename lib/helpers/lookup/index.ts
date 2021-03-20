@@ -1,7 +1,6 @@
 import { PipelineError } from "../../errors";
 import {
-    LookupConditionPayloadInterface,
-    LookupEqualityPayloadInterface
+    LookupConditionPayloadInterface
 } from "../../interfaces";
 
 /**
@@ -10,10 +9,15 @@ import {
  * @constructor
  */
 export const validLookupPayload = (payload: any) => {
-    if (!payload.from && !payload.as) return 'The from and as properties are required';
-    else if (!payload.from) return 'The from property is required';
-    else if (!payload.as) return 'The as property is required';
-    else return '';
+    if (!payload.from && !payload.as) {
+        return 'The from and as properties are required';
+    } else if (!payload.from) {
+        return 'The from property is required';
+    } else if (!payload.as) {
+        return 'The as property is required';
+    } else {
+        return '';
+    }
 }
 /**
  * Equality Match
@@ -30,14 +34,12 @@ export const EqualityPayload = (from: string, as: string, localField: string, fo
         throw new PipelineError('Invalid Lookup Equality Payload, invalid or missing "localField" or "foreignField" parameter!');
     }
 
-    const payload: LookupEqualityPayloadInterface = {
+    return {
         from: from,
         localField: localField,
         foreignField: foreignField,
         as: as
     };
-
-    return payload;
 };
 /**
  * Join Conditions and Uncorrelated Sub-queries
