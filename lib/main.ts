@@ -139,8 +139,11 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public AddFields(value: { [key: string]: any }): this {
-        return this.addStage('addFields', value);
+    public AddFields(value: { [key: string]: any } | { [key: string]: any }[]): this {
+        return this.addStage(
+            'addFields',
+            Array.isArray(value) ? this.ToObject(value) : value
+        );
     }
     /**
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket
@@ -438,7 +441,7 @@ export class PipelineBuilder {
      * @returns the builder allowing to chain the methods
      */
     private readonly addStage = (stageTypeLabel: StageLabel, stageValue: any) => {
-        console.log({ stageTypeLabel, stageValue });
+        // console.log({ stageTypeLabel, stageValue });
         const payloadError = this.validatePayload(stageTypeLabel, stageValue);
         if (
             (!stageValue || payloadError) &&
@@ -565,6 +568,16 @@ export class PipelineBuilder {
     }
 
     // Utils
+    /**
+     * Converts a list of objects to one
+     * @param list
+     * @constructor
+     */
+    private readonly ToObject = (list: { [key: string]: any }[]) => {
+        const objectToReturn: { [key: string]: any } = {};
+        list.forEach(element => objectToReturn[Object.keys(element)[0]] = Object.values(element)[0]);
+        return objectToReturn;
+    }
     /**
      * Returns the current date in the expected format if specified. ISO by default.
      * @param type Default to ISO
