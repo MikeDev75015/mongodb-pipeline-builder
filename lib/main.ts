@@ -6,9 +6,10 @@ import {
     StageLabel
 } from "./interfaces";
 import { BucketStageInterface } from "./interfaces/stages";
-import { DATE_FORMAT } from "./constants";
+import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import { PipelineError } from "./errors";
 import { LOGS_ENABLED, APP_TIMEZONE } from './';
+import {validLookupPayload} from "./helpers/lookup";
 
 /**
  * The moment.js library for formatting dates
@@ -44,6 +45,11 @@ export class PipelineBuilder {
      * @private
      */
     private stageErrorList: StageErrorInterface[];
+    /**
+     * Contains all active payload validators
+     * @private
+     */
+    private stageValidatorsBundle: { [key: string]: any };
 
     /**
      * constructor
@@ -61,6 +67,9 @@ export class PipelineBuilder {
         this.logsEnabled = logsEnabled ? true : (LOGS_ENABLED === 'true');
         this.stageList = [];
         this.stageErrorList = [];
+        this.stageValidatorsBundle = {
+            lookup: validLookupPayload
+        };
 
         this.saveActionToDebugHistoryList('constructor', { debug }, { logsEnabled }, { debugBuild: this.debugBuild });
     }
@@ -388,8 +397,15 @@ export class PipelineBuilder {
      * @returns the builder allowing to chain the methods
      */
     private readonly addStage = (stageTypeLabel: StageLabel, stageValue: any) => {
-        if (!stageValue && this.debugBuild.status) {
-            throw new PipelineError('Impossible to add the stage, its value is not valid!');
+        const payloadError = this.validatePayload(stageTypeLabel, stageValue);
+        if (
+            (!stageValue || payloadError) &&
+            this.debugBuild.status
+        ) {
+            const errorMessage = !stageValue
+                ? `The ${stageTypeLabel} stage value is not valid.`
+                : payloadError;
+            throw new PipelineError(errorMessage);
         }
 
         this.stageList.push(
@@ -434,23 +450,37 @@ export class PipelineBuilder {
     private isValidStage(stageToValidate: StageInterface): null | StageErrorInterface {
         const stageType: string = Object.keys(stageToValidate)[0].substr(1);
         const stageValue: any = Object.values(stageToValidate)[0];
+        const payloadError = this.validatePayload(stageType, stageValue);
 
+        if (!stageValue || payloadError) {
+            const errorMessage = !stageValue
+                ? `The ${stageType} stage value is not valid.`
+                : payloadError;
 
-
-        if (!stageValue) {
             this.saveActionToDebugHistoryList(
                 'Stage Error',
-                { message: 'The value is not valid.' },
+                { message: errorMessage },
                 stageType,
                 { invalidStage: JSON.stringify(stageToValidate) }
             );
             return {
                 stageType,
-                message: `The ${stageType} stage value is not valid.`
+                message: errorMessage
             };
         }
 
         return null;
+    }
+
+    /**
+     * Checks the compliance of the stage payload
+     * @param stageType
+     * @param payload
+     */
+    private validatePayload = (stageType: string, payload: any) => {
+        if (!PAYLOAD_VALIDATION_ENABLED.includes(stageType)) return '';
+
+        return this.stageValidatorsBundle[stageType](payload);
     }
 
     // Utils
