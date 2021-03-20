@@ -156,5 +156,16 @@ describe('should create a new pipeline builder object', () => {
                 () => pipelineBuilderWithoutDebug.Lookup({ name: 'toto' }).getPipeline()
             ).toThrowError(new PipelineError('1) The from and as properties are required'));
         });
+
+        it('should convert AddFields list payload to Object', () => {
+            expect(
+                pipelineBuilderWithoutDebug.AddFields([{ name: 'toto' }, { car: 'tesla' }]).getPipeline()
+            ).toEqual([{
+                $addFields: {
+                    name: 'toto',
+                    car: 'tesla'
+                }
+            }]);
+        });
     });
 });
