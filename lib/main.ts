@@ -7,7 +7,7 @@ import {
     StageLabel,
     BucketStageInterface,
     BuilderOptionsInterface,
-    InitOptionsInterface,
+    InitOptionsInterface, BucketAutoStageInterface, CollStatsStageInterface, FacetStageInterface, GeoNearStageInterface,
 } from "./interfaces";
 import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import { PipelineError } from "./errors";
@@ -162,7 +162,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public BucketAuto(value: any): this {
+    public BucketAuto(value: BucketAutoStageInterface): this {
         return this.addStage('bucketAuto', value);
     }
     /**
@@ -170,7 +170,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public CollStats(value: any): this {
+    public CollStats(value: CollStatsStageInterface): this {
         return this.addStage('collStats', value);
     }
     /**
@@ -178,7 +178,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Count(value: any): this {
+    public Count(value: string): this {
         return this.addStage('count', value);
     }
     /**
@@ -188,7 +188,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Facet(value: any): this {
+    public Facet(value: FacetStageInterface): this {
         return this.addStage('facet', value);
     }
     /**
@@ -198,7 +198,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public GeoNear(value: any): this {
+    public GeoNear(value: GeoNearStageInterface): this {
         return this.addStage('geoNear', value);
     }
     /**

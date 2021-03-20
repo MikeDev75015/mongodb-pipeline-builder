@@ -1,3 +1,11 @@
+import {
+    BucketStageInterface,
+    BucketAutoStageInterface,
+    CollStatsStageInterface,
+    FacetStageInterface,
+    GeoNearStageInterface
+} from "../";
+
 /**
  * interface StageInterface
  */
@@ -5,31 +13,32 @@ export interface StageInterface {
     /**
      * $addFields
      */
-    $addFields?: any;
+    $addFields?: { [key: string]: any; } | { [key: string]: any; }[];
     /**
      * $bucket
      */
-    $bucket?: any;
+    $bucket?: BucketStageInterface;
     /**
      * $bucketAuto
      */
-    $bucketAuto?: any;
+    $bucketAuto?: BucketAutoStageInterface;
     /**
      * $collStats
      */
-    $collStats?: any;
+    $collStats?: CollStatsStageInterface;
     /**
      * $count
+     * Passes a document to the next stage that contains a count of the number of documents input to the stage.
      */
-    $count?: any;
+    $count?: string;
     /**
      * $facet
      */
-    $facet?: any;
+    $facet?: FacetStageInterface;
     /**
      * $geoNear
      */
-    $geoNear?: any;
+    $geoNear?: GeoNearStageInterface;
     /**
      * $graphLookup
      */

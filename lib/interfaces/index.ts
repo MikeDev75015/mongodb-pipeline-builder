@@ -13,5 +13,11 @@ export { StageTypeEnum, getStageTypeValue, StageLabel } from './core/stage-type.
 STAGE INTERFACE
  */
 export { BucketStageInterface } from "./stages/bucket-stage.interface";
+export { BucketAutoStageInterface } from './stages/bucket-auto-stage.interface';
+export { CollStatsStageInterface } from './stages/coll-stats-stage.interface';
+export { FacetStageInterface } from './stages/facet-stage.interface';
+export { GeoNearStageInterface } from './stages/geo-near-stage.interface';
+
 export { LookupConditionPayloadInterface } from './stages/lookup-condition-payload.interface';
 export { LookupEqualityPayloadInterface } from './stages/lookup-equality-payload.interface';
+
