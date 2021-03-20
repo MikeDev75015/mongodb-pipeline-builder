@@ -5,10 +5,10 @@ import {
     getStageTypeValue,
     StageLabel
 } from "./interfaces";
-import {DATE_FORMAT, VALID_STAGE_LIST} from "./constants";
+import { BucketStageInterface } from "./interfaces/stages";
+import { DATE_FORMAT } from "./constants";
 import { PipelineError } from "./errors";
 import { LOGS_ENABLED, APP_TIMEZONE } from './';
-import {BucketStageInterface} from "./interfaces/stages/bucket-stage.interface";
 
 /**
  * The moment.js library for formatting dates
