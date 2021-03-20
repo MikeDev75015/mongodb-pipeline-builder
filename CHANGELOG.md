@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-63](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-62...v0.0.2-63) (2021-03-20)
+
+
+### Features
+
+* add payload validator ([6c243e1](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/6c243e1fe4a3c38af469371d3423649c598022fa))
+* implement all the stage methods as an alias of the addStage method ([b4066e0](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/b4066e0bd8bfba11780134ce22d5c0a706a4bfd9))
+
 ### [0.0.2-62](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-61...v0.0.2-62) (2021-03-19)
 
 
