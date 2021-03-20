@@ -85,19 +85,25 @@ describe('should create a new pipeline builder object', () => {
                     'should not add the stage to the pipeline if its value is invalid',
                     'Match',
                     undefined,
-                    'Impossible to add the stage, its value is not valid!'
+                    'The match stage value is not valid.'
+                ],
+                [
+                    'should not add the stage to the pipeline if its value is invalid',
+                    'Lookup',
+                    { name: 'toto' },
+                    'The from and as properties are required'
                 ],
                 [
                     'should not add the stage to the pipeline if its value is invalid',
                     'Lookup',
                     { as: 'unit'},
-                    'Impossible to add the stage, its value is not valid!'
+                    'The from property is required'
                 ],
                 [
                     'should not add the stage to the pipeline if its value is invalid',
                     'Lookup',
                     { from: 'unit'},
-                    'Impossible to add the stage, its value is not valid!'
+                    'The as property is required'
                 ],
             ])('%s: $%s => %o', (
                 nameTest: string,
@@ -139,10 +145,16 @@ describe('should create a new pipeline builder object', () => {
             ).toThrowError(new PipelineError('Error, ' + pipeLineName + ' pipeline is empty!'));
         });
 
-        it('should throw a PipelineError if the stage is invalid or not yet treated', () => {
+        it('should throw a PipelineError if the stage value is invalid', () => {
             expect(
                 () => pipelineBuilderWithoutDebug.Match(undefined).getPipeline()
             ).toThrowError(new PipelineError('1) The match stage value is not valid.'));
+        });
+
+        it('should throw a PipelineError if the stage payload is invalid', () => {
+            expect(
+                () => pipelineBuilderWithoutDebug.Lookup({ name: 'toto' }).getPipeline()
+            ).toThrowError(new PipelineError('1) The from and as properties are required'));
         });
     });
 });
