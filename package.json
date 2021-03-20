@@ -15,7 +15,7 @@
     "pre-release": "npm run release -- --prerelease",
     "git-tags": "git push --follow-tags origin main",
     "publish-latest": "npm publish dist --tag latest",
-    "dev": "git checkout main && git branch -q -D develop && git pull -q origin && git checkout -b develop"
+    "dev": "git checkout -q main && git branch -q -D develop && git pull -q origin && git checkout -q -b develop && git fetch"
   },
   "repository": {
     "type": "git",
