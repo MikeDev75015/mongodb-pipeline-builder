@@ -49,7 +49,7 @@ export class PipelineBuilder {
      * Contains all active payload validators
      * @private
      */
-    private stageValidatorsBundle: { [key: string]: any };
+    private readonly stageValidatorsBundle: { [key: string]: any };
 
     /**
      * constructor
@@ -477,8 +477,10 @@ export class PipelineBuilder {
      * @param stageType
      * @param payload
      */
-    private validatePayload = (stageType: string, payload: any) => {
-        if (!PAYLOAD_VALIDATION_ENABLED.includes(stageType)) return '';
+    private readonly validatePayload = (stageType: string, payload: any) => {
+        if (!PAYLOAD_VALIDATION_ENABLED.includes(stageType)) {
+            return '';
+        }
 
         return this.stageValidatorsBundle[stageType](payload);
     }
@@ -509,10 +511,9 @@ export class PipelineBuilder {
      * @param messageList Messages to display
      * @private
      */
-    private log = (type: 'info' | 'warn' | 'error', ...messageList: any[]) => {
+    private readonly log = (type: 'info' | 'warn' | 'error', ...messageList: any[]) => {
         if (this.logsEnabled) {
             console[type](this.getCurrentDate() + ':\n', ...messageList);
         }
-    };
+    }
 }
-

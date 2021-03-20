@@ -5,7 +5,11 @@
  */
 export const Only = (...properties: string[]) => {
     const projectOnlyObject: {[index: string]: any} = properties.includes('_id') ? {} : { _id: 0 };
-    properties.forEach(prop => prop !== '_id' ? projectOnlyObject[prop] = 1 : null);
+    properties.forEach(prop => {
+        if (prop !== '_id') {
+            projectOnlyObject[prop] = 1;
+        }
+    });
     return projectOnlyObject;
 }
 
