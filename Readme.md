@@ -42,7 +42,7 @@ import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
 <p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 'userId' ) ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, localField, foreignField, as ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, as, localField, foreignField ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Unset( ['as'] )&nbsp;***<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
