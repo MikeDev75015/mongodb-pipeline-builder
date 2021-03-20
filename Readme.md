@@ -33,19 +33,20 @@ through the stages in sequence.
 
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
-import { Expression } from 'mongodb-pipeline-builder/helpers/match';<br>
-import { EqualityPayload } from 'mongodb-pipeline-builder/helpers/lookup';<br>
-import { Only } from 'mongodb-pipeline-builder/helpers/project';<br>
-import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
-import { List } from 'mongodb-pipeline-builder/helpers/common';<br>
+import { EqualityPayload, Expression, List, Only, Property } from 'mongodb-pipeline-builder/helpers';<br>
+import { ArrayElemAt, Equal } from 'mongodb-pipeline-builder/operators';
 </p>
 
 <p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 'userId' ) ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, as, localField, foreignField ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Unset( List( 'as' ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , userId ) ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname', 'email' ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.AddFields( List(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'availability', ArrayElemAt( '$profile.availability', 0 ) ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;List(&nbsp;'profile'&nbsp;)&nbsp;)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
 </p>
 
@@ -62,17 +63,17 @@ const myNewPipeline = [<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$expr:&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$eq:&nbsp;[<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'$id',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'userId'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userId<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$lookup:&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from:&nbsp;'from',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;localField:&nbsp;'localField',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreignField:&nbsp;'foreignField'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as:&nbsp;'as',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from:&nbsp;'profiles',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as:&nbsp;'profile',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;localField:&nbsp;'profileId',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreignField:&nbsp;'id'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
@@ -80,11 +81,22 @@ const myNewPipeline = [<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_id:&nbsp;0,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;firstname:&nbsp;1,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lastname:&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;email:&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$addFields:&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;skills:&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$arrayElemAt('$profile.skills', 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;availability:&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$arrayElemAt('$profile.availability', 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$unset:&nbsp;[<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'as'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'profile'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 ];<br>
@@ -101,8 +113,9 @@ AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLoo
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
 <p style="font-size: 15px;">
+AddFields( Property | List( Property, Property, ... )<br>
 Lookup( ConditionPayload | EqualityPayload )<br>
-Match( Expression | Field | 'any valid read operation request syntax' )<br>
+Match( Expression | Field | "any valid read operation request syntax" )<br>
 Project( Only | Ignore )<br>
 Unset( List )
 </p>

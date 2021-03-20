@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-67](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-66...v0.0.2-67) (2021-03-20)
+
+
+### Features
+
+* add Property helper to create a javascript object ([62855da](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/62855da58b42c0da372e2009bf514c5d66638b4f))
+* add the ability to pass an object or a list to AddFields ([9c97026](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/9c97026efe2da77a98291911fea30aa8a8a599a3))
+
 ### [0.0.2-66](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-65...v0.0.2-66) (2021-03-20)
 
 
