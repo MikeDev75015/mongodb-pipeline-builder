@@ -5,3 +5,7 @@ export const VALID_STAGE_LIST = [
     'limit', 'listSessions', 'lookup', 'match', 'merge', 'out', 'planCacheStats', 'project', 'redact', 'replaceRoot',
     'replaceWith', 'sample', 'search', 'set', 'skip', 'sort', 'sortByCount', 'unionWith', 'unset', 'unwind'
 ];
+
+export const PAYLOAD_VALIDATION_ENABLED = [
+    'lookup'
+];
