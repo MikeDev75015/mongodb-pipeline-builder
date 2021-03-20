@@ -49,7 +49,8 @@ export const DateFromParts = (
     })
     : ({
         $dateFromParts : {
-            'isoWeekYear': isoWeekYear, 'isoWeek': isoWeekYearBundle.isoWeek, 'isoDayOfWeek': isoWeekYearBundle.isoDayOfWeek,
+            'isoWeekYear': isoWeekYear, 'isoWeek': isoWeekYearBundle.isoWeek,
+            'isoDayOfWeek': isoWeekYearBundle.isoDayOfWeek,
             'hour': options.hour, 'minute': options.minute, 'second': options.second,
             'millisecond': options.millisecond, 'timezone': timezone
         }
@@ -93,7 +94,13 @@ export const DateFromString = (
     }
 });
 
-
+/**
+ * Returns a document containing the constituent parts of a date.
+ * @param dateExpression
+ * @param timezone
+ * @param iso8601
+ * @constructor
+ */
 export const DateToParts = (dateExpression: any, timezone?: any, iso8601 = false) => ({
     $dateToParts: {
         'date' : dateExpression,
@@ -101,6 +108,14 @@ export const DateToParts = (dateExpression: any, timezone?: any, iso8601 = false
         'iso8601' : iso8601
     }
 });
+/**
+ * Returns the date as a formatted string.
+ * @param dateExpression
+ * @param formatString
+ * @param timezone
+ * @param onNull
+ * @constructor
+ */
 export const DateToString = (
     dateExpression: any, formatString = '%Y-%m-%dT%H:%M:%S.%LZ', timezone?: any, onNull?: any
 ) => ({
@@ -111,17 +126,103 @@ export const DateToString = (
         onNull: onNull
     }
 });
+/**
+ * Returns the day of the month for a date as a number between 1 and 31.
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const DayOfMonth = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const DayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the day of the year for a date as a number between 1 and 366 (leap year).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const DayOfYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the hour for a date as a number between 0 and 23.
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Hour = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const IsoDayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the week number in ISO 8601 format, ranging from 1 to 53. Week numbers start at 1 with the week (Monday
+ * through Sunday) that contains the year’s first Thursday.
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const IsoWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the year number in ISO 8601 format. The year starts with the Monday of week 1 (ISO 8601) and ends with the
+ * Sunday of the last week (ISO 8601).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const IsoWeekYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the milliseconds of a date as a number between 0 and 999.
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Millisecond = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the minute for a date as a number between 0 and 59.
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Minute = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the month for a date as a number between 1 (January) and 12 (December).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Month = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Second = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Converts value to a Date.
+ * @param expression
+ * @constructor
+ */
 export const ToDate = (expression: any) => ({ $toDate: expression });
+/**
+ * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the
+ * year) and 53 (leap year).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Week = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+/**
+ * Returns the year for a date as a number (e.g. 2014).
+ * @param dateExpression
+ * @param timezone
+ * @constructor
+ */
 export const Year = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });

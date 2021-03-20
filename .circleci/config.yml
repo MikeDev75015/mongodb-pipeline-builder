@@ -44,7 +44,7 @@ aliases:
   - &delete-develop
     run:
       name: Delete the develop branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
+      command: git push -D -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
   - &delete-test
     run:
       name: Delete the test branch
@@ -189,6 +189,18 @@ jobs:
           event: always
           template: basic_success_1
 
+  clean-repository:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    steps:
+      - checkout
+      - set-git-local-user
+      - *delete-develop
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
   final-repository-operations:
     docker:
       - image: circleci/node:12
@@ -198,7 +210,6 @@ jobs:
       - set-git-local-user
       - install-github-cli
       - create-merge-release-pull-request
-      - *delete-develop
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -286,7 +297,29 @@ workflows:
               only:
                 - develop
 
-  update-main-coverage:
+  update-repository:
+    when:
+      not: << pipeline.git.tag >>
+    jobs:
+      - clean-repository:
+          context:
+            - GIT
+            - SLACK
+          filters:
+            branches:
+              only:
+                - release
+      - notify-success-job:
+          name: clean-repository-success
+          context: SLACK
+          requires:
+            - clean-repository
+          filters:
+            branches:
+              only:
+                - release
+
+  update-main-code-analysis:
     when:
       not: << pipeline.git.tag >>
     jobs:
