@@ -1,1 +1,1 @@
-export { PipelineError } from './pipeline.error';
+export { PipelineError } from './pipeline/pipeline.error';
