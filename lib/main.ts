@@ -68,11 +68,12 @@ export class PipelineBuilder {
      */
     constructor(
         pipelineName: string,
-        options?: InitOptionsInterface
+        options: InitOptionsInterface = {}
     ) {
-        const setOptions = (!options
-            ? this.defaultOptions
-            : { ...this.defaultOptions, ...options }) as BuilderOptionsInterface;
+        const setOptions: BuilderOptionsInterface = {
+            ...this.defaultOptions,
+            ...options
+        };
 
         this.pipelineName = pipelineName;
         this.debugBuild = { status: setOptions.debug, historyList: [] };

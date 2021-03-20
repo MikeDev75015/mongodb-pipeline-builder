@@ -107,7 +107,8 @@ export const StrLenBytes = (stringExpression: any) => ({ $strLenBytes: stringExp
  */
 export const StrLenCP = (stringExpression: any) => ({ $strLenCP: stringExpression });
 /**
- * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
+ * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is
+ * greater than the second, and -1 if the first string is less than the second.
  * @param expression1
  * @param expression2
  * @constructor
