@@ -1,6 +1,5 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
-import {RegexMatch} from "./operators/string";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -49,82 +48,65 @@ describe('should create a new pipeline builder object', () => {
             });
         });
 
-        describe('lookup()', () => {
-            it('should throw a PipelineError if the value is invalid', () => {
-                expect(
-                    () => pipelineBuilderWithDebug.Lookup(undefined)
-                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
-            });
-
-            it('should add a $lookup stage to the pipeline', () => {
-                pipelineBuilderWithDebug.Lookup({ from: 'from', as: 'as' });
-                expect(
-                    pipelineBuilderWithDebug.getPipeline()
-                ).toEqual([{ $lookup: { from: 'from', as: 'as' } }]);
-            });
-        });
-
-        describe('match()', () => {
-            it('should throw a PipelineError if the value is invalid', () => {
-                expect(
-                    () => pipelineBuilderWithDebug.Match(undefined)
-                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
-            });
-
-            it('should add a $match stage to the pipeline', () => {
-                pipelineBuilderWithDebug.Match('test');
-                expect(
-                    pipelineBuilderWithDebug.getPipeline()
-                ).toEqual([{ $match: 'test' }]);
-            });
-        });
-
-        describe('project()', () => {
-            it('should throw a PipelineError if the value is invalid', () => {
-                expect(
-                    () => pipelineBuilderWithDebug.Project(undefined)
-                ).toThrowError(new PipelineError('Impossible to add the stage, the value is not valid!'));
-            });
-
-            it('should add a $project stage to the pipeline', () => {
-                pipelineBuilderWithDebug.Project({ unit: 'test' });
-                expect(
-                    pipelineBuilderWithDebug.getPipeline()
-                ).toEqual([{ $project: { unit: 'test' } }]);
-            });
-        });
-
-        describe('addStage()', () => {
+        describe('Stage Method() => addStage()', () => {
             test.each([
+                ['should add a stage to the pipeline', 'addFields', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'bucket', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'bucketAuto', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'collStats', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'count', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'facet', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'geoNear', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'graphLookup', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'group', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'indexStats', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'limit', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'listSessions', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'lookup', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'match', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'merge', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'out', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'planCacheStats', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'project', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'redact', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'replaceRoot', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'replaceWith', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'sample', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'search', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'set', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'skip', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'sort', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'sortByCount', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'unionWith', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'unset', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'unwind', { name: 'toto' }, '' ],
+
                 [
-                    'should add a stage to the pipeline',
-                    'match',
-                    { name: 'toto' },
-                    { $match: { name: 'toto' } },
-                    ''
+                    'should not add the stage to the pipeline if its value is invalid',
+                    'Match',
+                    undefined,
+                    'Impossible to add the stage, its value is not valid!'
                 ],
-                [
-                    'should not add the stage to the pipeline if its type is invalid or not yet treated',
-                    'toto',
-                    RegexMatch('$name', /toto/g),
-                    null,
-                    'Impossible to add the stage, the stage name is not valid!'
-                ],
-            ])('%s', (
+            ])('%s: $%s => %o', (
                 nameTest: string,
                 stageType: string,
                 stageValue: any,
-                expected: any,
                 errorMessage: string
             ) => {
+                // addFields => AddFields
+                const method = stageType.charAt(0).toUpperCase() + stageType.substr(1);
+                const expected = {
+                    ['$' + stageType]: stageValue
+                };
+
                 if (errorMessage) {
-                    expect(() => pipelineBuilderWithDebug.addStage(
-                        stageType as 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+                    // @ts-ignore
+                    expect(() => pipelineBuilderWithDebug[method](
                         stageValue
                     )).toThrowError(new PipelineError(errorMessage));
                 } else {
-                    expect(pipelineBuilderWithDebug.addStage(
-                        stageType as 'addFields' | 'match' | 'lookup' | 'project' | 'unset' | 'sort' | 'count' | 'skip' | 'limit',
+                    // @ts-ignore
+                    expect(pipelineBuilderWithDebug[method](
                         stageValue
                     ).getPipeline()).toEqual([expected]);
                 }
@@ -146,12 +128,9 @@ describe('should create a new pipeline builder object', () => {
         });
 
         it('should throw a PipelineError if the stage is invalid or not yet treated', () => {
-            const stageType = 'toto';
-            const stageValue = RegexMatch('$name', /toto/g);
-
             expect(
-                () => pipelineBuilderWithoutDebug.addStage(stageType as 'match', stageValue).getPipeline()
-            ).toThrowError(new PipelineError('1) the toto stage type is invalid or not yet treated.'));
+                () => pipelineBuilderWithoutDebug.Match(undefined).getPipeline()
+            ).toThrowError(new PipelineError('1) The match stage value is not valid.'));
         });
     });
 });
