@@ -441,7 +441,6 @@ export class PipelineBuilder {
      * @returns the builder allowing to chain the methods
      */
     private readonly addStage = (stageTypeLabel: StageLabel, stageValue: any) => {
-        // console.log({ stageTypeLabel, stageValue });
         const payloadError = this.validatePayload(stageTypeLabel, stageValue);
         if (
             (!stageValue || payloadError) &&
