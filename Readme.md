@@ -14,7 +14,7 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MikeDev75015_mongodb-pipeline-builder&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=MikeDev75015_mongodb-pipeline-builder)
 
 # `mongodb-pipeline-builder`
-
+#### <a style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
 ## <span style="display: block; font-weight: bold; whitespace: nowrap;">[ pre-release ]</span>
 
 </p>
@@ -98,6 +98,8 @@ const myNewPipeline = [<br>
 </p>
 
 ### Soon more complex examples will be available!
+
+
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
