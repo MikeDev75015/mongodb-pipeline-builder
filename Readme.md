@@ -103,7 +103,8 @@ AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLoo
 <p style="font-size: 15px;">
 Lookup( ConditionPayload | EqualityPayload )<br>
 Match( Expression | Field | 'any valid read operation request syntax' )<br>
-Project( Only | Ignore )
+Project( Only | Ignore )<br>
+Unset( List )
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
