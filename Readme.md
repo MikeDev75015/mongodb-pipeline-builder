@@ -37,19 +37,20 @@ import { Expression } from 'mongodb-pipeline-builder/helpers/match';<br>
 import { EqualityPayload } from 'mongodb-pipeline-builder/helpers/lookup';<br>
 import { Only } from 'mongodb-pipeline-builder/helpers/project';<br>
 import { Equal } from 'mongodb-pipeline-builder/operators/comparison';<br>
+import { List } from 'mongodb-pipeline-builder/helpers/common';<br>
 </p>
 
 <p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 'userId' ) ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, localField, foreignField, as ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( from, as, localField, foreignField ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Unset( ['as'] )&nbsp;***<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Unset( List( 'as' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
 </p>
 
 <p>
-*** If no helper is available for a stage, use its method and pass it a valid value in parameters.
+*** If no helper is available for a stage, use its method and pass it a valid value as a parameter.
 </p>
 
 ### is equivalent to:
@@ -102,7 +103,8 @@ AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLoo
 <p style="font-size: 15px;">
 Lookup( ConditionPayload | EqualityPayload )<br>
 Match( Expression | Field | 'any valid read operation request syntax' )<br>
-Project( Only | Ignore )
+Project( Only | Ignore )<br>
+Unset( List )
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>

@@ -1,4 +1,4 @@
-import {StageInterface} from "./";
+import {DebugHistoryInterface} from "./debug-history.interface";
 
 /**
  * interface DebugBuildInterface
@@ -11,10 +11,5 @@ export interface DebugBuildInterface {
     /**
      * historyList
      */
-    historyList: {
-        date: string;
-        action: string;
-        value?: any;
-        pipeline?: StageInterface[];
-    }[]
+    historyList: DebugHistoryInterface[]
 }

@@ -9,7 +9,7 @@ describe('should create a new pipeline builder object', () => {
     describe('pipeline Builder With Debug', () => {
         const pipeLineName = 'builder-test';
         beforeEach(() => {
-            pipelineBuilderWithDebug = new PipelineBuilder(pipeLineName, true, true);
+            pipelineBuilderWithDebug = new PipelineBuilder(pipeLineName, { debug: true, logsEnabled: true});
         });
 
         it('should be defined', () => {

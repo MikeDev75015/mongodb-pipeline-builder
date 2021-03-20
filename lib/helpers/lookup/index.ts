@@ -1,24 +1,8 @@
 import { PipelineError } from "../../errors";
 import {
-    LookupConditionPayloadInterface
+    LookupConditionPayloadInterface, LookupEqualityPayloadInterface
 } from "../../interfaces";
 
-/**
- * Check the mandatory properties of the lookup payload
- * @param payload
- * @constructor
- */
-export const validLookupPayload = (payload: any) => {
-    if (!payload.from && !payload.as) {
-        return 'The from and as properties are required';
-    } else if (!payload.from) {
-        return 'The from property is required';
-    } else if (!payload.as) {
-        return 'The as property is required';
-    } else {
-        return '';
-    }
-}
 /**
  * Equality Match
  * To perform an equality match between a field from the input documents with a field from the documents of the “joined”
@@ -39,7 +23,7 @@ export const EqualityPayload = (from: string, as: string, localField: string, fo
         localField: localField,
         foreignField: foreignField,
         as: as
-    };
+    } as LookupEqualityPayloadInterface;
 };
 /**
  * Join Conditions and Uncorrelated Sub-queries
