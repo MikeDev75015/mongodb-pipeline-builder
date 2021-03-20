@@ -5,24 +5,11 @@ import {
 } from "../../interfaces";
 
 /**
- * Performs a left outer join to an unSharded collection in the same database to filter in documents from the “joined”
- * collection for processing. To each input document, the $lookup stage adds a new array field whose elements are the
- * matching documents from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
- *
+ * Check the mandatory properties of the lookup payload
  * @param payload
  * @constructor
  */
-export const Lookup = (payload: any) => {
-    if (!payload || !Object.keys(payload).length) {
-        throw new PipelineError('Invalid Lookup Payload!');
-    }
-
-    if (!payload.from || !payload.as) {
-        throw new PipelineError('Invalid Lookup Payload, missing "from" or "as" property!');
-    }
-
-    return { $lookup: payload };
-};
+export const validLookupPayload = (payload: any) => !!(payload.from && payload.as);
 /**
  * Equality Match
  * To perform an equality match between a field from the input documents with a field from the documents of the “joined”
