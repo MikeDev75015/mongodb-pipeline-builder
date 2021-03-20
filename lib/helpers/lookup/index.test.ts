@@ -1,52 +1,7 @@
-import {Lookup, ConditionPayload, EqualityPayload} from "./";
+import { ConditionPayload, EqualityPayload } from "./";
 import {PipelineError} from "../../errors";
 
 describe('$lookup stage helpers', () => {
-    describe('Lookup', () => {
-        describe('should throw a PipelineError message', () => {
-            test.each([
-
-                [
-                    'if the object is empty',
-                    {},
-                    new PipelineError('Invalid Lookup Payload!')
-                ],
-
-                [
-                    'if the from property is missing',
-                    {as: 'test'},
-                    new PipelineError('Invalid Lookup Payload, missing "from" or "as" property!')
-                ],
-
-                [
-                    'if the as property is missing',
-                    {from: 'test'},
-                    new PipelineError('Invalid Lookup Payload, missing "from" or "as" property!')
-                ]
-
-            ])('%s', (
-                testName: string,
-                payload: any,
-                errorThrown
-            ) => {
-                expect(() => Lookup(payload)).toThrowError(errorThrown);
-            });
-        });
-
-        it('should return a $lookup stage with the provided value', () => {
-            expect(Lookup({
-                from: 'from',
-                localField: 'localField',
-                foreignField: 'foreignField',
-                as: 'as'
-            })).toEqual({ $lookup: {
-                from: 'from',
-                localField: 'localField',
-                foreignField: 'foreignField',
-                as: 'as'
-            } });
-        });
-    });
 
     describe('EqualityPayload', () => {
         describe('should throw a PipelineError message', () => {

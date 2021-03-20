@@ -1,4 +1,4 @@
-import {StageInterface} from "./";
+import {StageInterface} from "../index";
 
 /**
  * interface LookupConditionPayloadInterface

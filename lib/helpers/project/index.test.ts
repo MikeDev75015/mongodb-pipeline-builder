@@ -1,11 +1,6 @@
-import {Ignore, Only, Project} from "./";
+import { Ignore, Only } from "./";
 
 describe('$project stage helpers', () => {
-    describe('Project', () => {
-        it('should return $project stage with provided value', () => {
-            expect(Project({})).toEqual({ $project: {} });
-        });
-    });
 
     describe('Only', () => {
         it('should return a $project object with specified properties to include', () => {
