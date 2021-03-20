@@ -181,7 +181,9 @@ export enum StageTypeEnum {
 export const getStageTypeValue = (label: StageLabel) => {
     return StageTypeEnum[label];
 };
-
+/**
+ * Type of pipeline stage
+ */
 export type StageLabel =
     'addFields' |
     'bucket' |

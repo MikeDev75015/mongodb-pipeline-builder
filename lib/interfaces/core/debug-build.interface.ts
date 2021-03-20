@@ -1,7 +1,7 @@
 import {DebugHistoryInterface} from "./debug-history.interface";
 
 /**
- * interface DebugBuildInterface
+ * Interface representing the complete debug object
  */
 export interface DebugBuildInterface {
     /**
