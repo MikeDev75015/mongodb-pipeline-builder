@@ -7,7 +7,6 @@ import {
     StageLabel,
     BucketStageInterface,
     BuilderOptionsInterface,
-    DebugHistoryInterface
 } from "./interfaces";
 import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import { PipelineError } from "./errors";
