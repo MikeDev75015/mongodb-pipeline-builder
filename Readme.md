@@ -1,4 +1,4 @@
-<p style="text-align: center; width: 100%;">
+<div style="text-align: center; width: 100%;">
 
 [![NPM version](https://img.shields.io/npm/v/mongodb-pipeline-builder.svg)](https://www.npmjs.com/package/mongodb-pipeline-builder)
 ![NPM](https://img.shields.io/npm/l/mongodb-pipeline-builder)
@@ -25,10 +25,12 @@
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/MikeDev75015/mongodb-pipeline-builder/main)
 
 # `mongodb-pipeline-builder`
-#### <a style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
+
+</div>
+
 ## <span style="display: block; font-weight: bold; whitespace: nowrap;">[ pre-release ]</span>
 
-</p>
+<a style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
 is a pipeline builder for the db.collection.aggregate method and db.aggregate method. It will simplify pipelines by making them more
