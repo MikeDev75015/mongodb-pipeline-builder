@@ -1,13 +1,31 @@
-import {StageInterface} from "../index";
+import {StageInterface} from "../core/stage.interface";
 
 /**
- * Lookup Condition Payload Interface
+ * Lookup Stage Interface
  */
-export interface LookupConditionPayloadInterface {
+export interface LookupStageInterface {
     /**
      * Specifies the collection in the same database to perform the join with. The from collection cannot be sharded.
      */
     from: string;
+    /**
+     * Specifies the name of the new array field to add to the input documents. The new array field contains the
+     * matching documents from the from collection. If the specified name already exists in the input document, the
+     * existing field is overwritten.
+     */
+    as: string;
+    /**
+     * Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the
+     * localField to the foreignField from the documents of the from collection. If an input document does not contain
+     * the localField, the $lookup treats the field as having a value of null for matching purposes.
+     */
+    localField?: string;
+    /**
+     * Specifies the field from the documents in the from collection. $lookup performs an equality match on the
+     * foreignField to the localField from the input documents. If a document in the from collection does not contain
+     * the foreignField, the $lookup treats the value as null for matching purposes.
+     */
+    foreignField?: string;
     /**
      * Optional. Specifies variables to use in the pipeline field stages. Use the variable expressions to access the
      * fields from the documents input to the $lookup stage.
@@ -33,13 +51,7 @@ export interface LookupConditionPayloadInterface {
      *
      * Other (non-$match) stages in the pipeline do not require an $expr operator to access the variables.
      */
-    let?: { [index: string]: string };
-    /**
-     * The project takes a document that can specify the inclusion of fields, the suppression of the _id field, the
-     * addition of new fields, and the resetting of the values of existing fields. Alternatively, you may specify the
-     * exclusion of fields.
-     */
-    project?: { [index: string]: any };
+    let?: { [key: string]: any },
     /**
      * Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the
      * joined collection. To return all documents, specify an empty pipeline [].
@@ -68,12 +80,5 @@ export interface LookupConditionPayloadInterface {
      *
      * Other (non-$match) stages in the pipeline do not require an $expr operator to access the variables.
      */
-    pipeline?: StageInterface[];
-    /**
-     * Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the
-     * localField to the foreignField from the documents of the from collection. If an input document does not contain
-     * the localField, the $lookup treats the field as having a value of null for matching purposes.
-     */
-    as: string
+    pipeline?: StageInterface[],
 }
-
