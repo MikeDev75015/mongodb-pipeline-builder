@@ -33,7 +33,7 @@ export interface BucketStageInterface {
      *
      * The default value can be of a different type than the entries in boundaries.
      */
-    default?: any;
+    default?: string | number;
     /**
      * Optional. A document that specifies the fields to include in the output documents in addition to the _id field.
      * To specify the field to include, you must use accumulator expressions.

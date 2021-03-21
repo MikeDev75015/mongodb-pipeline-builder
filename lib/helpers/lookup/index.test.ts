@@ -45,7 +45,7 @@ describe('$lookup stage helpers', () => {
         });
     });
 
-    describe('LookupConditionStage', () => {
+    describe('ConditionStage', () => {
         it('should return a basic valid $lookup condition stage', () => {
             expect(ConditionPayload(
                 'from',

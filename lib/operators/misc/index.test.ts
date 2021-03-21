@@ -1,4 +1,4 @@
-import {Let, Literal, MergeObjects, Meta, Rand, SampleRate} from "./";
+import {Expression, Let, Literal, MergeObjects, Meta, Rand, SampleRate} from "./";
 
 
 const
@@ -16,6 +16,7 @@ newObject[fieldName] = searchedValue;
 
 describe('misc operators', () => {
     test.each([
+        [Expression(value), { $expr: value }],
         [Literal(value), { $literal: value }],
         [Rand(), { $rand: {} }],
         [SampleRate(nonNegativeFloat), { $sampleRate: nonNegativeFloat }],

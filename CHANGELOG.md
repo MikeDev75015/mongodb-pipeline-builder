@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-71](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-70...v0.0.2-71) (2021-03-21)
+
+
+### Features
+
+* add bucket GroupByPayload helper ([03fb8d6](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/03fb8d697439b154febdc29616bd8c752d0ca70e))
+
 ### [0.0.2-70](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-69...v0.0.2-70) (2021-03-21)
 
 ### [0.0.2-69](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-68...v0.0.2-69) (2021-03-21)

@@ -1,7 +1,10 @@
 /*
-HELPERS
+COMMON HELPERS
 */
 export {List, Field} from './commons';
+/*
+STAGE HELPERS
+*/
+export {GroupByPayload} from "./bucket";
 export {ConditionPayload, EqualityPayload} from "./lookup";
-export {Expression} from "./match";
-export {Ignore, Only} from "./project";
+export {IgnorePayload, OnlyPayload} from "./project";

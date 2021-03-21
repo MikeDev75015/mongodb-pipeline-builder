@@ -3,7 +3,7 @@
  * @param properties
  * @constructor
  */
-export const Only = (...properties: string[]) => {
+export const OnlyPayload = (...properties: string[]) => {
     const projectOnlyObject: {[index: string]: any} = properties.includes('_id') ? {} : { _id: 0 };
     properties.forEach(prop => {
         if (prop !== '_id') {
@@ -18,7 +18,7 @@ export const Only = (...properties: string[]) => {
  * @param properties
  * @constructor
  */
-export const Ignore = (...properties: string[]) => {
+export const IgnorePayload = (...properties: string[]) => {
     const projectIgnoreObject: {[index: string]: any} = {};
     properties.forEach(prop => projectIgnoreObject[prop] = 0);
     return projectIgnoreObject;
