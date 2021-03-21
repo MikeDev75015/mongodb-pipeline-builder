@@ -37,10 +37,10 @@ aliases:
     run:
       name: Create a pre release
       command: npm run pre-release
-  - &first-release
+  - &release
     run:
-      name: Create the first release
-      command: npm run first-release
+      name: Create the release
+      command: npm run release
   - &release-follow-tags
     run:
       name: Commit and push version tag on release
@@ -162,7 +162,7 @@ jobs:
           at: .
       - set-git-local-user
       - *checkout-release-branch
-      - *first-release
+      - *release
       - *release-follow-tags
       - slack/notify:
           event: fail
