@@ -149,7 +149,7 @@ export interface MergeStageInterface {
      *
      * The user-defined variables in the let field, i.e. $$<uservariable>.<field>.
      */
-    whenMatched?: 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
+    whenMatched?: whenMatched;
     /**
      * Optional. Specifies variables accessible for use in the whenMatched pipeline
      *
@@ -188,3 +188,5 @@ export interface MergeStageInterface {
      */
     whenNotMatched?: 'insert' | 'discard' | 'fail';
 }
+
+declare type whenMatched = 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
