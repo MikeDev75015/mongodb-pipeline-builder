@@ -1,7 +1,7 @@
 /*
 HELPERS
 */
-export {List} from './commons';
+export {List, Field} from './commons';
 export {ConditionPayload, EqualityPayload} from "./lookup";
-export {Expression, Field} from "./match";
+export {Expression} from "./match";
 export {Ignore, Only} from "./project";
