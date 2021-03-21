@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-69](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-68...v0.0.2-69) (2021-03-21)
+
+
+### Bug Fixes
+
+* github script in circleci pipeline to delete develop branch when release is ready to merge ([fd11909](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/fd11909414eb9bb0c73b6f8b002c2aa5daadfb12))
+
 ### [0.0.2-68](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-67...v0.0.2-68) (2021-03-20)
 
 ### [0.0.2-67](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-66...v0.0.2-67) (2021-03-20)
