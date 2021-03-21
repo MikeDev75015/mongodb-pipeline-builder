@@ -53,8 +53,6 @@
 
 </div>
 
-## <span style="display: block; font-weight: bold; whitespace: nowrap;">[ pre-release ]</span>
-
 <a id="doc-link" style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
@@ -82,7 +80,7 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.AddFields(<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;'profile'&nbsp;)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
