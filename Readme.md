@@ -33,7 +33,7 @@ through the stages in sequence.
 
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
-import { EqualityPayload, Expression, List, Only, Property } from 'mongodb-pipeline-builder/helpers';<br>
+import { EqualityPayload, Expression, List, Only, Field } from 'mongodb-pipeline-builder/helpers';<br>
 import { ArrayElemAt, Equal } from 'mongodb-pipeline-builder/operators';
 </p>
 
