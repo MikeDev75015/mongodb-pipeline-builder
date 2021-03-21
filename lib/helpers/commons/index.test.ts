@@ -1,4 +1,4 @@
-import {List, Property} from "./";
+import {List, Field} from "./";
 
 describe('List', () => {
     it('should create a list with the arguments passed in parameter', () => {
@@ -6,8 +6,8 @@ describe('List', () => {
     });
 });
 
-describe('Property', () => {
-    it('should return a javascript object with the arguments passed in parameter', () => {
-        expect(Property('name', 'toto')).toEqual({ name: 'toto' });
+describe('Field', () => {
+    it('should create a javascript object', () => {
+        expect(Field('unit', 'test')).toEqual({ unit: 'test' });
     });
 });
