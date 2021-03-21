@@ -35,6 +35,7 @@ const moment = require('moment-timezone');
  * The class of the pipeline builder object
  */
 export class PipelineBuilder {
+
     /**
      * Default builder options
      * @private
@@ -43,31 +44,37 @@ export class PipelineBuilder {
         debug: false,
         logsEnabled: false
     };
+
     /**
      * Contains the name of the pipeline
      * @private
      */
     private readonly pipelineName: string;
+
     /**
      * Contains debug status and information saved at each step
      * @private
      */
     private readonly debugBuild: DebugBuildInterface;
+
     /**
      * A boolean allowing to display or not the logs
      * @private
      */
     private readonly logsEnabled: boolean;
+
     /**
      * Contains the list of pipeline stages that have been added
      * @private
      */
     private stageList: StageInterface[];
+
     /**
      * Contains the list of errors returned by the pipeline validator
      * @private
      */
     private stageErrorList: StageErrorInterface[];
+
     /**
      * Contains all active payload validators
      * @private
@@ -102,12 +109,39 @@ export class PipelineBuilder {
 
     // basics
     /**
+     * Adds a new stage to the pipeline
+     * @param stageTypeLabel the type of stage
+     * @param stageValue the value of the stage
+     * @returns the builder allowing to chain the methods
+     */
+    public readonly addStage = (stageTypeLabel: StageLabel, stageValue: any) => {
+        const payloadError = this.validatePayload(stageTypeLabel, stageValue);
+        if (
+            (!stageValue || payloadError) &&
+            this.debugBuild.status
+        ) {
+            const errorMessage = !stageValue
+                ? `The ${stageTypeLabel} stage value is not valid.`
+                : payloadError;
+            throw new PipelineError(errorMessage);
+        }
+
+        this.stageList.push({
+            [getStageTypeValue(stageTypeLabel)]: stageValue
+        });
+
+        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
+        return this;
+    }
+
+    /**
      * Returns the name of the pipeline
      */
     public readonly getName = () => {
         this.saveActionToDebugHistoryList('getName');
         return this.pipelineName;
     }
+
     /**
      * Return the constructed pipeline
      */
@@ -115,6 +149,7 @@ export class PipelineBuilder {
         this.saveActionToDebugHistoryList('getPipeline');
         return this.verifyPipelineValidity([...this.stageList]);
     }
+
     /**
      * Reset the pipeline
      */
@@ -124,6 +159,7 @@ export class PipelineBuilder {
         return this.stageList;
     }
 
+
     // tools
     /**
      * Enable debug mode
@@ -131,12 +167,14 @@ export class PipelineBuilder {
     public readonly enableDebug = () => {
         return this.toggleDebug(true);
     }
+
     /**
      * Disable debug mode
      */
     public readonly disableDebug = () => {
         return this.toggleDebug(false);
     }
+
     /**
      * Get the list of all actions stored in the debug history list
      */
@@ -145,21 +183,20 @@ export class PipelineBuilder {
         return this.debugBuild.historyList;
     }
 
-    // stage
+    // stages
     /**
-     * Adds new fields to documents. Similar to $project, $addFields reshapes each document in the stream; specifically,
-     * by adding new fields to output documents that contain both the existing fields from the input documents and the
-     * newly added fields.
-     * $set is an alias for $addFields.
-     * @param value
+     * Adds new fields to documents
+     *
+     * @param value one or more Field helper
      * @constructor
      */
-    public AddFields(value: { [key: string]: any } | { [key: string]: any }[]): this {
+    public AddFields(...value: { [key: string]: any }[]): this {
         return this.addStage(
             'addFields',
-            Array.isArray(value) ? this.ToObject(value) : value
+            this.ToObject(value, 'AddFields')
         );
     }
+
     /**
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket
      * boundaries.
@@ -169,6 +206,7 @@ export class PipelineBuilder {
     public Bucket(value: BucketStageInterface): this {
         return this.addStage('bucket', value);
     }
+
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression.
      * Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified
@@ -179,6 +217,7 @@ export class PipelineBuilder {
     public BucketAuto(value: BucketAutoStageInterface): this {
         return this.addStage('bucketAuto', value);
     }
+
     /**
      * Returns statistics regarding a collection or view.
      * @param value
@@ -187,6 +226,7 @@ export class PipelineBuilder {
     public CollStats(value: CollStatsStageInterface): this {
         return this.addStage('collStats', value);
     }
+
     /**
      * Returns a count of the number of documents at this stage of the aggregation pipeline.
      * @param value
@@ -195,6 +235,7 @@ export class PipelineBuilder {
     public Count(value: string): this {
         return this.addStage('count', value);
     }
+
     /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the
      * creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a
@@ -205,6 +246,7 @@ export class PipelineBuilder {
     public Facet(value: FacetStageInterface): this {
         return this.addStage('facet', value);
     }
+
     /**
      * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality
      * of $match, $sort, and $limit for geospatial data. The output documents include an additional distance field and can
@@ -215,6 +257,7 @@ export class PipelineBuilder {
     public GeoNear(value: GeoNearStageInterface): this {
         return this.addStage('geoNear', value);
     }
+
     /**
      * Performs a recursive search on a collection. To each output document, adds a new array field that contains the
      * traversal results of the recursive search for that document.
@@ -224,6 +267,7 @@ export class PipelineBuilder {
     public GraphLookup(value: GraphLookupStageInterface): this {
         return this.addStage('graphLookup', value);
     }
+
     /**
      * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified,
      * to each group. Consumes all input documents and outputs one document per each distinct group. The output documents
@@ -234,6 +278,7 @@ export class PipelineBuilder {
     public Group(value: GroupStageInterface): this {
         return this.addStage('group', value);
     }
+
     /**
      * Returns statistics regarding the use of each index for the collection.
      * @param value
@@ -242,6 +287,7 @@ export class PipelineBuilder {
     public IndexStats(value: any): this {
         return this.addStage('indexStats', value);
     }
+
     /**
      * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document,
      * outputs either one document (for the first n documents) or zero documents (after the first n documents).
@@ -251,6 +297,7 @@ export class PipelineBuilder {
     public Limit(value: number): this {
         return this.addStage('limit', value);
     }
+
     /**
      * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
      * @param value
@@ -259,6 +306,7 @@ export class PipelineBuilder {
     public ListSessions(value: any): this {
         return this.addStage('listSessions', value);
     }
+
     /**
      * Performs a left outer join to an unSharded collection in the same database to filter in documents from the “joined”
      * collection for processing. To each input document, the $lookup stage adds a new array field whose elements are the
@@ -270,6 +318,7 @@ export class PipelineBuilder {
     public Lookup(value: LookupStageInterface): this {
         return this.addStage('lookup', value);
     }
+
     /**
      * Filters the documents to pass only the documents that match the specified condition(s) to the next pipeline stage.
      *
@@ -293,6 +342,7 @@ export class PipelineBuilder {
     public Match(value: any): this {
         return this.addStage('match', value);
     }
+
     /**
      * Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new
      * documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with
@@ -304,6 +354,7 @@ export class PipelineBuilder {
     public Merge(value: MergeStageInterface): this {
         return this.addStage('merge', value);
     }
+
     /**
      * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the
      * last stage in the pipeline.
@@ -313,6 +364,7 @@ export class PipelineBuilder {
     public Out(value: OutStageInterface): this {
         return this.addStage('out', value);
     }
+
     /**
      * Returns plan cache information for a collection.
      * @param value
@@ -321,6 +373,7 @@ export class PipelineBuilder {
     public PlanCacheStats(value: any): this {
         return this.addStage('planCacheStats', value);
     }
+
     /**
      * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be
      * existing fields from the input documents or newly computed fields.
@@ -332,6 +385,7 @@ export class PipelineBuilder {
     public Project(value: { [key: string]: any }): this {
         return this.addStage('project', value);
     }
+
     /**
      * Reshapes each document in the stream by restricting the content for each document based on information stored in
      * the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field
@@ -342,6 +396,7 @@ export class PipelineBuilder {
     public Redact(value: any): this {
         return this.addStage('redact', value);
     }
+
     /**
      * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input
      * document, including the _id field. Specify a document embedded in the input document to promote the embedded
@@ -353,6 +408,7 @@ export class PipelineBuilder {
     public ReplaceRoot(value: ReplaceRootStageInterface): this {
         return this.addStage('replaceRoot', value);
     }
+
     /**
      * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input
      * document, including the _id field. Specify a document embedded in the input document to promote the embedded
@@ -364,6 +420,7 @@ export class PipelineBuilder {
     public ReplaceWith(value: any): this {
         return this.addStage('replaceWith', value);
     }
+
     /**
      * Randomly selects the specified number of documents from its input.
      * @param value
@@ -372,15 +429,20 @@ export class PipelineBuilder {
     public Sample(value: SampleStageInterface): this {
         return this.addStage('sample', value);
     }
+
     /**
      * Performs a full-text search of the field or fields in an Atlas collection.
      * $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
+     *
+     * https://docs.atlas.mongodb.com/reference/atlas-search/operators/
+     *
      * @param value
      * @constructor
      */
     public Search(value: any): this {
         return this.addStage('search', value);
     }
+
     /**
      * Adds new fields to documents. Similar to $project, $set reshapes each document in the stream; specifically, by
      * adding new fields to output documents that contain both the existing fields from the input documents and the
@@ -389,9 +451,13 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Set(value: { [key: string]: any }): this {
-        return this.addStage('set', value);
+    public Set(...value: { [key: string]: any }[]): this {
+        return this.addStage(
+            'set',
+            this.ToObject(value, 'Set')
+        );
     }
+
     /**
      * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to
      * the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document
@@ -402,15 +468,20 @@ export class PipelineBuilder {
     public Skip(value: number): this {
         return this.addStage('skip', value);
     }
+
     /**
      * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified.
      * For each input document, outputs one document.
      * @param value
      * @constructor
      */
-    public Sort(value: { [key: string]: any }): this {
-        return this.addStage('sort', value);
+    public Sort(...value: { [key: string]: any }[]): this {
+        return this.addStage(
+            'sort',
+            this.ToObject(value, 'Sort')
+        );
     }
+
     /**
      * Groups incoming documents based on the value of a specified expression, then computes the count of documents in
      * each distinct group.
@@ -420,6 +491,7 @@ export class PipelineBuilder {
     public SortByCount (value: any): this {
         return this.addStage('sortByCount', value);
     }
+
     /**
      * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result
      * set.
@@ -429,15 +501,20 @@ export class PipelineBuilder {
     public UnionWith(value: UnionWithStageInterface): this {
         return this.addStage('unionWith', value);
     }
+
     /**
      * Removes/excludes fields from documents.
      * $unset is an alias for $project stage that removes fields.
      * @param value
      * @constructor
      */
-    public Unset(value: string | string[]): this {
-        return this.addStage('unset', value);
+    public Unset(...value: string[]): this {
+        return this.addStage(
+            'unset',
+            value.length > 1 ? value : value[0]
+        );
     }
+
     /**
      * Deconstructs an array field from the input documents to output a document for each element. Each output document
      * replaces the array with an element value. For each input document, outputs n documents where n is the number of
@@ -447,32 +524,6 @@ export class PipelineBuilder {
      */
     public Unwind(value: string | UnwindStageInterface): this {
         return this.addStage('unwind', value);
-    }
-
-    /**
-     * Adds a new stage to the pipeline
-     * @param stageTypeLabel the type of stage
-     * @param stageValue the value of the stage
-     * @returns the builder allowing to chain the methods
-     */
-    private readonly addStage = (stageTypeLabel: StageLabel, stageValue: any) => {
-        const payloadError = this.validatePayload(stageTypeLabel, stageValue);
-        if (
-            (!stageValue || payloadError) &&
-            this.debugBuild.status
-        ) {
-            const errorMessage = !stageValue
-                ? `The ${stageTypeLabel} stage value is not valid.`
-                : payloadError;
-            throw new PipelineError(errorMessage);
-        }
-
-        this.stageList.push({
-            [getStageTypeValue(stageTypeLabel)]: stageValue
-        });
-
-        this.saveActionToDebugHistoryList('addStage', { stageTypeLabel, stageValue: JSON.stringify(stageValue) });
-        return this;
     }
 
     /**
@@ -585,13 +636,32 @@ export class PipelineBuilder {
     /**
      * Converts a list of objects to one
      * @param list
+     * @param stageType
      * @constructor
      */
-    private readonly ToObject = (list: { [key: string]: any }[]) => {
+    private readonly ToObject = (list: { [key: string]: any }[], stageType: string) => {
+        const invalidValueList = list.filter(v => {
+            const isArray = Array.isArray(v);
+            const isEmptyObject = !Object.keys(v).length;
+            const hasInvalidValue = !Object.values(v)[0]
+            return isArray || isEmptyObject || hasInvalidValue;
+        });
+
+        if (
+            !Array.isArray(list) || invalidValueList.length
+        ) {
+            throw new PipelineError(
+                invalidValueList.length > 1
+                    ? `${invalidValueList.length} fields of the ${stageType} stage are not valid.`
+                    : `The ${stageType} stage value is not valid.`
+            );
+        }
+
         const objectToReturn: { [key: string]: any } = {};
         list.forEach(element => objectToReturn[Object.keys(element)[0]] = Object.values(element)[0]);
         return objectToReturn;
     }
+
     /**
      * Returns the current date in the expected format if specified. ISO by default.
      * @param type Default to ISO
