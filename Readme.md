@@ -53,8 +53,6 @@
 
 </div>
 
-## <span style="display: block; font-weight: bold; whitespace: nowrap;">[ pre-release ]</span>
-
 <a id="doc-link" style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
