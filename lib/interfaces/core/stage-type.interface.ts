@@ -83,9 +83,6 @@ export enum StageTypeEnum {
      * in the pipeline.
      */
     merge = '$merge',
-
-    // New in version 4.2.
-
     /**
      * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the
      * last stage in the pipeline.
@@ -158,9 +155,6 @@ export enum StageTypeEnum {
      * set.
      */
     unionWith = '$unionWith',
-
-    // New in version 4.4.
-
     /**
      * Removes/excludes fields from documents.
      * $unset is an alias for $project stage that removes fields.
