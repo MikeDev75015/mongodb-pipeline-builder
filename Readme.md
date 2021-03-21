@@ -46,7 +46,7 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'availability', ArrayElemAt( '$profile.availability', 0 ) ),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;List(&nbsp;'profile'&nbsp;)&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;'profile'&nbsp;)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
 </p>
 
@@ -92,7 +92,7 @@ const myNewPipeline = [<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$unset:&nbsp;[ 'profile' ]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$unset:&nbsp;'profile'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 ];<br>
 </p>
