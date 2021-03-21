@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2-72](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-71...v0.0.2-72) (2021-03-21)
+
+
+### Features
+
+* add bucket auto GroupByAutoPayload helper ([344b46c](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/344b46c1342988cd411585ef87f12d338cfcecac))
+* add sample SizePayload helper ([c8d05f7](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/c8d05f7cda38fbf96c6832e697ea634e2f04f84f))
+* add unionWith CollectionPayload helper ([938bcaa](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/938bcaad9692df2cb57dd63277056cf44a900aec))
+
 ### [0.0.2-71](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-70...v0.0.2-71) (2021-03-21)
 
 
