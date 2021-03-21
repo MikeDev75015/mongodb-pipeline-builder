@@ -43,8 +43,8 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( Only( 'firstname', 'lastname', 'email' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.AddFields( List(<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Property( 'availability', ArrayElemAt( '$profile.availability', 0 ) ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) ),<br>
 &nbsp;&nbsp;&nbsp;&nbsp;) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;'profile'&nbsp;)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
@@ -110,9 +110,9 @@ AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLoo
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
 <p style="font-size: 15px;">
-AddFields( Property | List( Property, Property, ... )<br>
+AddFields( Field | List( Field, Field, ... )<br>
 Lookup( ConditionPayload | EqualityPayload )<br>
-Match( Expression | Field | "any valid read operation request syntax" )<br>
+Match( Expression | Field )<br>
 Project( Only | Ignore )<br>
 Unset( List )
 </p>
