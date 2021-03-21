@@ -13,7 +13,7 @@ export {
     Size, Slice,
     Zip
 } from "./array";
-export {Let, Literal, MergeObjects, Meta, Rand, SampleRate} from "./misc";
+export {Expression, Let, Literal, MergeObjects, Meta, Rand, SampleRate} from "./misc";
 export {And, Not, Or} from "./boolean";
 export {AllElementsTrue, AnyElementTrue, SetDifference, SetEquals, SetIntersection, SetIsSubset, SetUnion} from "./set";
 export {Convert, IsNumber, ToBool, ToDecimal, ToDouble, ToInt, ToLong, ToObjectId, Type} from "./type";
