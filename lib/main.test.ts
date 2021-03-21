@@ -1,5 +1,6 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
+import {LookupStageInterface} from "./interfaces";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -49,41 +50,60 @@ describe('should create a new pipeline builder object', () => {
         });
 
         describe('Stage Method() => addStage()', () => {
+            const testPayload = { name: 'toto' };
             test.each([
-                ['should add a stage to the pipeline', 'addFields', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'bucket', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'bucketAuto', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'collStats', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'count', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'facet', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'geoNear', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'graphLookup', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'group', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'indexStats', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'limit', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'listSessions', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'lookup', { from: 'unit', as: 'test' }, '' ],
-                ['should add a stage to the pipeline', 'match', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'merge', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'out', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'planCacheStats', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'project', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'redact', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'replaceRoot', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'replaceWith', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'sample', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'search', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'set', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'skip', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'sort', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'sortByCount', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'unionWith', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'unset', { name: 'toto' }, '' ],
-                ['should add a stage to the pipeline', 'unwind', { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'addFields',
+                    [{ name: 'toto' }], { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'addFields',
+                    [{ name: 'toto' }, { test: 'unit' }], { name: 'toto', test: 'unit' }, '' ],
+
+                ['should add a stage to the pipeline', 'bucket', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'bucketAuto', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'collStats', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'count', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'facet', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'geoNear', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'graphLookup', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'group', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'indexStats', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'limit', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'listSessions', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'lookup', { from: 'unit', as: 'test' }, { from: 'unit', as: 'test' }, '' ],
+                ['should add a stage to the pipeline', 'match', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'merge', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'out', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'planCacheStats', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'project', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'redact', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'replaceRoot', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'replaceWith', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'sample', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'search', { name: 'toto' }, { name: 'toto' }, '' ],
+
+                ['should add a stage to the pipeline', 'set',
+                    [{ name: 'toto' }], { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'set',
+                    [{ name: 'toto' }, { test: 'unit' }], { name: 'toto', test: 'unit' }, '' ],
+
+                ['should add a stage to the pipeline', 'skip', { name: 'toto' }, { name: 'toto' }, '' ],
+
+                ['should add a stage to the pipeline', 'sort',
+                    [{ name: 'toto' }], { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'sort',
+                    [{ name: 'toto' }, { test: 'unit' }], { name: 'toto', test: 'unit' }, '' ],
+
+                ['should add a stage to the pipeline', 'sortByCount', { name: 'toto' }, { name: 'toto' }, '' ],
+                ['should add a stage to the pipeline', 'unionWith', { name: 'toto' }, { name: 'toto' }, '' ],
+
+                ['should add a stage to the pipeline', 'unset', ['toto'], 'toto', '' ],
+                ['should add a stage to the pipeline', 'unset', ['toto', 'test', 'unit'], ['toto', 'test', 'unit'], '' ],
+
+                ['should add a stage to the pipeline', 'unwind', { name: 'toto' }, { name: 'toto' }, '' ],
 
                 [
                     'should not add the stage to the pipeline if its value is invalid',
                     'Match',
+                    undefined,
                     undefined,
                     'The match stage value is not valid.'
                 ],
@@ -91,30 +111,21 @@ describe('should create a new pipeline builder object', () => {
                     'should not add the stage to the pipeline if its value is invalid',
                     'Lookup',
                     { name: 'toto' },
+                    undefined,
                     'The from and as properties are required'
-                ],
-                [
-                    'should not add the stage to the pipeline if its value is invalid',
-                    'Lookup',
-                    { as: 'unit'},
-                    'The from property is required'
-                ],
-                [
-                    'should not add the stage to the pipeline if its value is invalid',
-                    'Lookup',
-                    { from: 'unit'},
-                    'The as property is required'
                 ],
             ])('%s: $%s => %o', (
                 nameTest: string,
                 stageType: string,
-                stageValue: any,
+                stageValue: any | any[],
+                expectedValue: any,
                 errorMessage: string
             ) => {
                 // addFields => AddFields
                 const method = stageType.charAt(0).toUpperCase() + stageType.substr(1);
+                // addFields => $addFields
                 const expected = {
-                    ['$' + stageType]: stageValue
+                    ['$' + stageType]: expectedValue
                 };
 
                 if (errorMessage) {
@@ -124,9 +135,9 @@ describe('should create a new pipeline builder object', () => {
                     )).toThrowError(new PipelineError(errorMessage));
                 } else {
                     // @ts-ignore
-                    expect(pipelineBuilderWithDebug[method](
-                        stageValue
-                    ).getPipeline()).toEqual([expected]);
+                    const operation = ['addFields', 'set', 'sort', 'unset'].includes(stageType) ? pipelineBuilderWithDebug[method](...stageValue) : pipelineBuilderWithDebug[method](stageValue);
+
+                    expect(operation.getPipeline()[0]).toEqual(expected);
                 }
             });
         });
@@ -153,19 +164,20 @@ describe('should create a new pipeline builder object', () => {
 
         it('should throw a PipelineError if the stage payload is invalid', () => {
             expect(
-                () => pipelineBuilderWithoutDebug.Lookup({ name: 'toto' }).getPipeline()
-            ).toThrowError(new PipelineError('1) The from and as properties are required'));
+                () => pipelineBuilderWithoutDebug.Lookup({ from: 'test', as: 'unit', localField: 'toto' }).getPipeline()
+            ).toThrowError(new PipelineError('1) The foreignField property is required when localfield is specified.'));
         });
 
-        it('should convert AddFields list payload to Object', () => {
-            expect(
-                pipelineBuilderWithoutDebug.AddFields([{ name: 'toto' }, { car: 'tesla' }]).getPipeline()
-            ).toEqual([{
-                $addFields: {
-                    name: 'toto',
-                    car: 'tesla'
-                }
-            }]);
+        it('should throw a PipelineError if the stage value or one of its element is not valid when calling toObject method', () => {
+            expect(() => pipelineBuilderWithoutDebug.AddFields(
+                    ["{ name: 'toto' }"]
+            )).toThrowError(new PipelineError('The AddFields stage value is not valid.'));
+        });
+
+        it('should throw a PipelineError if the stage value or one of its element is not valid when calling toObject method', () => {
+            expect(() => pipelineBuilderWithoutDebug.AddFields(
+                [{ name: 'toto' }], { test: 'unit'}, {}, [{}]
+            )).toThrowError(new PipelineError('3 fields of the AddFields stage are not valid.'));
         });
     });
 });
