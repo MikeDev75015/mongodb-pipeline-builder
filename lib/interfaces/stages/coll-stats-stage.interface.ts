@@ -1,10 +1,5 @@
 /**
- * Returns statistics regarding a collection or view.
- *
- * For a collection in a replica set or a non-sharded collection in a cluster, $collStats outputs a single document.
- * For a sharded collection, $collStats outputs one document per shard.
- *
- * https://docs.mongodb.com/manual/reference/operator/aggregation/collStats/
+ * CollStats Stage Interface
  */
 export interface CollStatsStageInterface {
     /**

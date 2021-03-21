@@ -1,5 +1,5 @@
 /**
- * The Bucket Stage Interface
+ * Bucket Stage Interface
  */
 export interface BucketStageInterface {
     /**

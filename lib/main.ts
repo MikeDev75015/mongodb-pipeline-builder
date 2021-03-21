@@ -1,16 +1,29 @@
-import { LOGS_ENABLED, APP_TIMEZONE } from './';
+import {APP_TIMEZONE, LOGS_ENABLED} from './';
 import {
-    DebugBuildInterface,
-    StageErrorInterface,
-    StageInterface,
-    getStageTypeValue,
-    StageLabel,
+    BucketAutoStageInterface,
     BucketStageInterface,
     BuilderOptionsInterface,
-    InitOptionsInterface, BucketAutoStageInterface, CollStatsStageInterface, FacetStageInterface, GeoNearStageInterface,
+    CollStatsStageInterface,
+    DebugBuildInterface,
+    FacetStageInterface,
+    GeoNearStageInterface,
+    getStageTypeValue,
+    GraphLookupStageInterface,
+    GroupStageInterface,
+    InitOptionsInterface,
+    LookupStageInterface,
+    MergeStageInterface,
+    OutStageInterface,
+    ReplaceRootStageInterface,
+    SampleStageInterface,
+    StageErrorInterface,
+    StageInterface,
+    StageLabel,
+    UnionWithStageInterface,
+    UnwindStageInterface,
 } from "./interfaces";
 import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
-import { PipelineError } from "./errors";
+import {PipelineError} from "./errors";
 import {lookupPayloadValidator} from "./validators";
 
 /**
@@ -208,7 +221,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public GraphLookup(value: any): this {
+    public GraphLookup(value: GraphLookupStageInterface): this {
         return this.addStage('graphLookup', value);
     }
     /**
@@ -218,7 +231,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Group(value: any): this {
+    public Group(value: GroupStageInterface): this {
         return this.addStage('group', value);
     }
     /**
@@ -235,7 +248,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Limit(value: any): this {
+    public Limit(value: number): this {
         return this.addStage('limit', value);
     }
     /**
@@ -254,7 +267,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Lookup(value: any): this {
+    public Lookup(value: LookupStageInterface): this {
         return this.addStage('lookup', value);
     }
     /**
@@ -288,7 +301,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Merge(value: any): this {
+    public Merge(value: MergeStageInterface): this {
         return this.addStage('merge', value);
     }
     /**
@@ -297,7 +310,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Out(value: any): this {
+    public Out(value: OutStageInterface): this {
         return this.addStage('out', value);
     }
     /**
@@ -316,7 +329,7 @@ export class PipelineBuilder {
      * documents, you must explicitly specify the suppression of the _id field in $project by passing false.
      * @constructor
      */
-    public Project(value: any): this {
+    public Project(value: { [key: string]: any }): this {
         return this.addStage('project', value);
     }
     /**
@@ -337,7 +350,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public ReplaceRoot(value: any): this {
+    public ReplaceRoot(value: ReplaceRootStageInterface): this {
         return this.addStage('replaceRoot', value);
     }
     /**
@@ -356,7 +369,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Sample(value: any): this {
+    public Sample(value: SampleStageInterface): this {
         return this.addStage('sample', value);
     }
     /**
@@ -376,7 +389,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Set(value: any): this {
+    public Set(value: { [key: string]: any }): this {
         return this.addStage('set', value);
     }
     /**
@@ -386,7 +399,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Skip(value: any): this {
+    public Skip(value: number): this {
         return this.addStage('skip', value);
     }
     /**
@@ -395,7 +408,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Sort(value: any): this {
+    public Sort(value: { [key: string]: any }): this {
         return this.addStage('sort', value);
     }
     /**
@@ -413,7 +426,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public UnionWith(value: any): this {
+    public UnionWith(value: UnionWithStageInterface): this {
         return this.addStage('unionWith', value);
     }
     /**
@@ -422,7 +435,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Unset(value: string[]): this {
+    public Unset(value: string | string[]): this {
         return this.addStage('unset', value);
     }
     /**
@@ -432,7 +445,7 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Unwind(value: any): this {
+    public Unwind(value: string | UnwindStageInterface): this {
         return this.addStage('unwind', value);
     }
 

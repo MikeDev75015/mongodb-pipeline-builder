@@ -44,7 +44,7 @@ aliases:
   - &delete-develop
     run:
       name: Delete the develop branch
-      command: git push -D -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
   - &delete-test
     run:
       name: Delete the test branch

@@ -3,7 +3,12 @@ import {
     BucketAutoStageInterface,
     CollStatsStageInterface,
     FacetStageInterface,
-    GeoNearStageInterface
+    GeoNearStageInterface,
+    GraphLookupStageInterface,
+    GroupStageInterface,
+    LookupStageInterface,
+    MergeStageInterface,
+    OutStageInterface, ReplaceRootStageInterface, SampleStageInterface, UnionWithStageInterface, UnwindStageInterface
 } from "../";
 
 /**
@@ -42,11 +47,11 @@ export interface StageInterface {
     /**
      * $graphLookup
      */
-    $graphLookup?: any;
+    $graphLookup?: GraphLookupStageInterface;
     /**
      * $group
      */
-    $group?: any;
+    $group?: GroupStageInterface;
     /**
      * $indexStats
      */
@@ -54,7 +59,7 @@ export interface StageInterface {
     /**
      * $limit
      */
-    $limit?: any;
+    $limit?: number;
     /**
      * $listSessions
      */
@@ -62,7 +67,7 @@ export interface StageInterface {
     /**
      * $lookup
      */
-    $lookup?: any;
+    $lookup?: LookupStageInterface;
     /**
      * $match
      */
@@ -70,11 +75,11 @@ export interface StageInterface {
     /**
      * $merge
      */
-    $merge?: any;
+    $merge?: MergeStageInterface;
     /**
      * $out
      */
-    $out?: any;
+    $out?: OutStageInterface;
     /**
      * $planCacheStats
      */
@@ -82,7 +87,7 @@ export interface StageInterface {
     /**
      * $project
      */
-    $project?: any;
+    $project?: { [key: string]: any };
     /**
      * $redact
      */
@@ -90,7 +95,7 @@ export interface StageInterface {
     /**
      * $replaceRoot
      */
-    $replaceRoot?: any;
+    $replaceRoot?: ReplaceRootStageInterface;
     /**
      * $replaceWith
      */
@@ -98,7 +103,7 @@ export interface StageInterface {
     /**
      * $sample
      */
-    $sample?: any;
+    $sample?: SampleStageInterface;
     /**
      * $search
      */
@@ -106,15 +111,15 @@ export interface StageInterface {
     /**
      * $set
      */
-    $set?: any;
+    $set?: { [key: string]: any };
     /**
      * $skip
      */
-    $skip?: any;
+    $skip?: number;
     /**
      * $sort
      */
-    $sort?: any;
+    $sort?: { [key: string]: any };
     /**
      * $sortByCount
      */
@@ -122,13 +127,13 @@ export interface StageInterface {
     /**
      * $unionWith
      */
-    $unionWith?: any;
+    $unionWith?: UnionWithStageInterface;
     /**
      * $unset
      */
-    $unset?: any;
+    $unset?: string | string[];
     /**
      * $unwind
      */
-    $unwind?: any;
+    $unwind?: string | UnwindStageInterface;
 }
