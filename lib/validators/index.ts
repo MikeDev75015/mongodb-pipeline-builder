@@ -5,6 +5,11 @@
  */
 import {LookupStageInterface} from "../interfaces";
 
+/**
+ * Checks the presence of mandatory fields
+ * @param payload The value passed to the Lookup stage
+ * @returns an error message if non-compliant, an empty string if compliant
+ */
 export const lookupPayloadValidator = (payload: LookupStageInterface) => {
     if (!payload.from && !payload.as) {
         return 'The from and as properties are required';
@@ -19,6 +24,11 @@ export const lookupPayloadValidator = (payload: LookupStageInterface) => {
     }
 }
 
+/**
+ * Check that all the fields necessary for an equality payload are present
+ * @param payload The value passed to the Lookup stage
+ * @returns an error message if non-compliant, an empty string if compliant
+ */
 const lookupEqualityValidator = (payload: LookupStageInterface) => {
     if (!payload.localField) {
         return 'The localField property is required when foreignField is specified.';
