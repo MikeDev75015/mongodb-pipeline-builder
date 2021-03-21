@@ -37,6 +37,10 @@ aliases:
     run:
       name: Create a pre release
       command: npm run pre-release
+  - &first-release
+    run:
+      name: Create the first release
+      command: npm run first-release
   - &release-follow-tags
     run:
       name: Commit and push version tag on release
@@ -146,7 +150,7 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  prepare-pre-release:
+  prepare-release:
     docker:
       - image: circleci/node:12
     resource_class: small
@@ -158,7 +162,7 @@ jobs:
           at: .
       - set-git-local-user
       - *checkout-release-branch
-      - *pre-release
+      - *first-release
       - *release-follow-tags
       - slack/notify:
           event: fail
@@ -260,7 +264,7 @@ workflows:
                 - test
                 - release
                 - main
-      - approval-prepare-pre-release:
+      - approval-prepare-release:
           type: approval
           requires:
             - build
@@ -270,7 +274,7 @@ workflows:
             branches:
               only:
                 - develop
-      - prepare-pre-release:
+      - prepare-release:
           context:
             - GIT
             - SLACK
@@ -278,20 +282,20 @@ workflows:
             - build
             - unit_tests
             - build-unit_tests-success
-            - approval-prepare-pre-release
+            - approval-prepare-release
           filters:
             branches:
               only:
                 - develop
       - notify-success-job:
-          name: prepare-pre-release-success
+          name: prepare-release-success
           context: SLACK
           requires:
             - build
             - unit_tests
             - build-unit_tests-success
-            - approval-prepare-pre-release
-            - prepare-pre-release
+            - approval-prepare-release
+            - prepare-release
           filters:
             branches:
               only:
