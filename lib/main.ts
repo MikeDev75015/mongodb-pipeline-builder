@@ -29,7 +29,7 @@ import {lookupPayloadValidator} from "./validators";
 /**
  * The moment.js library for formatting dates
  */
-const moment = require('moment-timezone');
+import moment = require('moment-timezone');
 
 /**
  * The class of the pipeline builder object
@@ -667,7 +667,7 @@ export class PipelineBuilder {
      * @param type Default to ISO
      */
     private readonly getCurrentDate = (type = 'ISO') => {
-        return moment().tz(APP_TIMEZONE).format(DATE_FORMAT[type]);
+        return moment().tz(APP_TIMEZONE? APP_TIMEZONE : 'Europe/Paris').format(DATE_FORMAT[type]);
     }
 
     /**
