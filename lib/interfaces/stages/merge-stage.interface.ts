@@ -1,8 +1,7 @@
+import {StageInterface} from "../core/stage.interface";
 /**
  * Merge Stage Interface
  */
-import {StageInterface} from "../core/stage.interface";
-
 export interface MergeStageInterface {
     /**
      * The output collection. Specify either:
@@ -191,5 +190,12 @@ export interface MergeStageInterface {
     whenNotMatched?: WhenNotMatchedType;
 }
 
+/**
+ * Possible values for WhenMatched
+ */
 export declare type WhenMatchedType = 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
+
+/**
+ * Possible values for WhenNotMatchedType
+ */
 export declare type WhenNotMatchedType = 'insert' | 'discard' | 'fail';
