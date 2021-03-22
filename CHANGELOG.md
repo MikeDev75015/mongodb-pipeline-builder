@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v1.0.1...v1.1.0) (2021-03-22)
+
+
+### Features
+
+* add merge IntoPayload helper ([91b73f1](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/91b73f1a06d983836b2afdefd91ed81d78886906))
+
 ### [1.0.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-72...v1.0.1) (2021-03-21)
 
 ## [1.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v0.0.2-72...v1.0.0) (2021-03-21)
