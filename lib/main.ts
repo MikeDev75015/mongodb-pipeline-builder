@@ -21,14 +21,9 @@ import {
     UnionWithStageInterface,
     UnwindStageInterface,
 } from "./interfaces";
-import {DATE_FORMAT, PAYLOAD_VALIDATION_ENABLED} from "./constants";
+import {PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import {PipelineError} from "./errors";
 import {lookupPayloadValidator} from "./validators";
-
-/**
- * The moment.js library for formatting dates
- */
-import moment from 'moment-timezone';
 
 /**
  * The class of the pipeline builder object
@@ -663,10 +658,9 @@ export class PipelineBuilder {
 
     /**
      * Returns the current date in the expected format if specified. ISO by default.
-     * @param type Default to ISO
      */
-    private readonly getCurrentDate = (type = 'ISO') => {
-        return moment().format(DATE_FORMAT[type]);
+    private readonly getCurrentDate = () => {
+        return new Date().toISOString();
     }
 
     /**
