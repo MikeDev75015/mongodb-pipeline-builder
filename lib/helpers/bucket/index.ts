@@ -38,8 +38,8 @@ export const GroupByPayload = (
     groupBy: any,
     boundaries: any[],
     optional?: {
-        default: string | number,
-        output: any
+        default?: string | number,
+        output?: any
     }
 ) => {
 

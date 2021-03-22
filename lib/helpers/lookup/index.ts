@@ -48,18 +48,16 @@ export const ConditionPayload = (
     const letObject: {[index: string]: any} = {};
     let pipeline: StageInterface[] = [];
 
-    if (optional) {
-        if (optional.pipeline) {
-            pipeline = optional.pipeline;
-        }
+    if (optional && optional.pipeline) {
+        pipeline = optional.pipeline;
+    }
 
-        if (optional.sourceList && optional.sourceList[0]) {
-            optional.sourceList.forEach(s => letObject[s] = '$' + s);
-        }
+    if (optional && optional.sourceList && optional.sourceList[0]) {
+        optional.sourceList.forEach(s => letObject[s] = '$' + s);
+    }
 
-        if (optional.project && Object.keys(optional.project).length) {
-            pipeline = pipeline.concat([{ $project: optional.project }]);
-        }
+    if (optional && optional.project && Object.keys(optional.project).length) {
+        pipeline = pipeline.concat([{ $project: optional.project }]);
     }
 
     const payload: LookupConditionInterface = {
