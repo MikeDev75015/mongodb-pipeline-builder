@@ -60,9 +60,11 @@ describe('$lookup stage helpers', () => {
             expect(ConditionPayload(
                 'from',
                 'as',
-                { _id: 0, test1: 1, test2: 1, test3: 1 },
-                [{ $match: { $expr: { $eq: ["$type", "$$testSource"] } } }],
-                ['testSource']
+                {
+                    project: { _id: 0, test1: 1, test2: 1, test3: 1 },
+                    pipeline: [{ $match: { $expr: { $eq: ["$type", "$$testSource"] } } }],
+                    sourceList: ['testSource']
+                }
             )).toEqual({
                 as: "as",
                 from: "from",
@@ -79,20 +81,10 @@ describe('$lookup stage helpers', () => {
         it('should return a valid $lookup condition stage with "ignore" project type', () => {
             expect(ConditionPayload(
                 'from',
-                'as',
-                { test1: 0, test2: 0, test3: 0 },
-                [{ $match: { $expr: { $eq: ["$type", "$$testSource"] } } }],
-                ['testSource']
+                'as'
             )).toEqual({
                 as: "as",
-                from: "from",
-                let: {
-                    "testSource": "$testSource",
-                },
-                pipeline: [
-                    { $match: { $expr: { $eq: ["$type", "$$testSource"] } } },
-                    { $project: { test1: 0, test2: 0, test3: 0 } }
-                ],
+                from: "from"
             });
         });
     });

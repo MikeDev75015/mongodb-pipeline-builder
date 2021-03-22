@@ -60,17 +60,5 @@ export interface BucketAutoStageInterface {
     granularity?: GranularityValues;
 }
 
-export declare type GranularityValues = 'R5' |
-    'R10' |
-    'R20' |
-    'R40' |
-    'R80' |
-    '1-2-5' |
-    'E6' |
-    'E12' |
-    'E24' |
-    'E48' |
-    'E96' |
-    'E192' |
-    'POWERSOF2' |
-    null;
+export declare type GranularityValues = 'R5' | 'R10' | 'R20' | 'R40' | 'R80' | '1-2-5' | 'E6' | 'E12' | 'E24' | 'E48' |
+    'E96' | 'E192' | 'POWERSOF2';

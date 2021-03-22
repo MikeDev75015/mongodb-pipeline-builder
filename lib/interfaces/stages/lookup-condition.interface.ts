@@ -3,7 +3,7 @@ import {StageInterface} from "../index";
 /**
  * Lookup Condition Payload Interface
  */
-export interface LookupConditionPayloadInterface {
+export interface LookupConditionInterface {
     /**
      * Specifies the collection in the same database to perform the join with. The from collection cannot be sharded.
      */
