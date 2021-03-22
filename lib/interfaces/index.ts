@@ -22,7 +22,7 @@ export { GroupStageInterface } from './stages/group-stage.interface';
 export { LookupStageInterface } from './stages/lookup-stage.interface';
 export { LookupConditionPayloadInterface } from './stages/lookup-condition-payload.interface';
 export { LookupEqualityPayloadInterface } from './stages/lookup-equality-payload.interface';
-export { MergeStageInterface } from './stages/merge-stage.interface';
+export { MergeStageInterface, WhenMatchedType, WhenNotMatchedType } from './stages/merge-stage.interface';
 export { OutStageInterface } from './stages/out-stage.interface';
 export { ReplaceRootStageInterface } from './stages/replace-root-stage.interface';
 export { SampleStageInterface } from './stages/sample-stage.interface';

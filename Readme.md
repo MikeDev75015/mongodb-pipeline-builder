@@ -146,7 +146,7 @@ AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLoo
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
 <p style="font-size: 15px;">
-CollectionPayload | ConditionPayload | EqualityPayload | Field | GroupByAutoPayload | GroupByPayload | IgnorePayload | List | OnlyPayload | SizePayload
+CollectionPayload | ConditionPayload | EqualityPayload | Field | GroupByAutoPayload | GroupByPayload | IgnorePayload | IntoPayload | List | OnlyPayload | SizePayload
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
