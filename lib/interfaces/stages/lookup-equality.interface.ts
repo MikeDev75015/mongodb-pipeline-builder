@@ -1,7 +1,7 @@
 /**
  * Lookup Equality Payload Interface
  */
-export interface LookupEqualityPayloadInterface {
+export interface LookupEqualityInterface {
     /**
      * Specifies the collection in the same database to perform the join with. The from collection cannot be sharded.
      */
