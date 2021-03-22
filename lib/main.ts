@@ -29,7 +29,7 @@ import {lookupPayloadValidator} from "./validators";
 /**
  * The moment.js library for formatting dates
  */
-import moment = require('moment-timezone');
+import moment from 'moment-timezone';
 
 /**
  * The class of the pipeline builder object
