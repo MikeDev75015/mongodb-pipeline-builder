@@ -48,7 +48,6 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "custom-env": "^2.0.1",
     "moment-timezone": "^0.5.33"
   },
   "collectCoverage": true,

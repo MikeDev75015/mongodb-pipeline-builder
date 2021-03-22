@@ -1,4 +1,3 @@
-import {APP_TIMEZONE, LOGS_ENABLED} from './';
 import {
     BucketAutoStageInterface,
     BucketStageInterface,
@@ -97,7 +96,7 @@ export class PipelineBuilder {
 
         this.pipelineName = pipelineName;
         this.debugBuild = { status: setOptions.debug, historyList: [] };
-        this.logsEnabled = setOptions.logsEnabled ? true : (LOGS_ENABLED === 'true');
+        this.logsEnabled = setOptions.logsEnabled;
         this.stageList = [];
         this.stageErrorList = [];
         this.stageValidatorsBundle = {
@@ -667,7 +666,7 @@ export class PipelineBuilder {
      * @param type Default to ISO
      */
     private readonly getCurrentDate = (type = 'ISO') => {
-        return moment().tz(APP_TIMEZONE as string).format(DATE_FORMAT[type]);
+        return moment().format(DATE_FORMAT[type]);
     }
 
     /**
