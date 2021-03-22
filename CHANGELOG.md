@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.0.0...v2.0.1) (2021-03-22)
+
+
+### Bug Fixes
+
+* fix to enable debug mode by modifying import of moment.js library ([a973cb0](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/a973cb076f14686e505bc90940f869b24cce9084))
+
 ## [2.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v1.1.0...v2.0.0) (2021-03-22)
 
 
