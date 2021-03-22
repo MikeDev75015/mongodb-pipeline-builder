@@ -65,17 +65,28 @@ through the stages in sequence.
 
 ### npm i mongodb-pipeline-builder@latest --save
 
-## Usage
+## Usage:
 
+
+### - with require
+<p style="font-size: 15px;">
+const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;<br>
+const { EqualityPayload, List, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
+const { ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
+</p>
+
+### - with import
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
 import { EqualityPayload, List, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
 import { ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 </p>
 
+### Code:
+
 <p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , userId ) ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 123456 ) ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.AddFields(<br>
@@ -97,7 +108,10 @@ const myNewPipeline = [<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$match:&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$expr:&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$eq:&nbsp;[ '$id', userId ]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$eq:&nbsp;[<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'$id',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;123456<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
@@ -132,6 +146,8 @@ const myNewPipeline = [<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 ];<br>
 </p>
+
+### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with Require method</a> ]
 
 ### Soon more complex examples will be available!
 

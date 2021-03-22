@@ -16,6 +16,10 @@ export default {
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
 
+  /*setupFilesAfterEnv: [
+    "<rootDir>/jest/setEnvVars.ts"
+  ],*/
+
   // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: false,
 

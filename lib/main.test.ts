@@ -1,6 +1,5 @@
 import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
-import {LookupStageInterface} from "./interfaces";
 
 describe('should create a new pipeline builder object', () => {
     let
@@ -50,7 +49,6 @@ describe('should create a new pipeline builder object', () => {
         });
 
         describe('Stage Method() => addStage()', () => {
-            const testPayload = { name: 'toto' };
             test.each([
                 ['should add a stage to the pipeline', 'addFields',
                     [{ name: 'toto' }], { name: 'toto' }, '' ],
@@ -146,7 +144,6 @@ describe('should create a new pipeline builder object', () => {
     describe('pipeline Builder Without Debug', () => {
         const pipeLineName = 'builder-test2';
         beforeEach(() => {
-            process.env.LOGS_ENABLED = 'false';
             pipelineBuilderWithoutDebug = new PipelineBuilder(pipeLineName);
         });
 
