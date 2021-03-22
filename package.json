@@ -12,10 +12,8 @@
     "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib",
     "release": "standard-version",
-    "first-release": "npm run release -- --first-release",
     "git-tags": "git push --follow-tags origin main",
-    "publish-latest": "npm publish dist --tag latest",
-    "dev": "git checkout -q main && git branch -q -D develop && git pull -q origin && git checkout -q -b develop && git fetch"
+    "publish-latest": "npm publish dist --tag latest"
   },
   "repository": {
     "type": "git",
@@ -23,17 +21,19 @@
   },
   "keywords": [
     "mongodb",
+    "mongoose",
+    "aggregate",
     "pipeline",
     "builder",
-    "constructor",
-    "aggregate"
+    "helper",
+    "constructor"
   ],
   "author": "Mickaël NODANCHE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MikeDev75015/mongodb-pipeline-builder/issues"
   },
-  "homepage": "https://github.com/MikeDev75015/mongodb-pipeline-builder#readme",
+  "homepage": "https://mikedev75015.github.io",
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
