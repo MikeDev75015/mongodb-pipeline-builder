@@ -1,6 +1,8 @@
 /**
  * Merge Stage Interface
  */
+import {StageInterface} from "../core/stage.interface";
+
 export interface MergeStageInterface {
     /**
      * The output collection. Specify either:
@@ -149,7 +151,7 @@ export interface MergeStageInterface {
      *
      * The user-defined variables in the let field, i.e. $$<uservariable>.<field>.
      */
-    whenMatched?: whenMatched;
+    whenMatched?: WhenMatchedType | StageInterface[];
     /**
      * Optional. Specifies variables accessible for use in the whenMatched pipeline
      *
@@ -186,7 +188,8 @@ export interface MergeStageInterface {
      *
      * Stop and fail the aggregation operation. Any changes already written to the output collection are not reverted.
      */
-    whenNotMatched?: 'insert' | 'discard' | 'fail';
+    whenNotMatched?: WhenNotMatchedType;
 }
 
-declare type whenMatched = 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
+export declare type WhenMatchedType = 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
+export declare type WhenNotMatchedType = 'insert' | 'discard' | 'fail';
