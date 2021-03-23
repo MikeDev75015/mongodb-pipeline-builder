@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * Add a check if a Skip, Limit or Count stage is already in the pipeline ([6913cb3](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/6913cb35f730d8889ed774dd6304a4023c4d1ad2))
-* Add a check if a Skip, Limit or Count step is already in the pipeline ([d6d1fc5](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/d6d1fc5404ef0653d21cf006ec477e9060653d6c))
 
 ## [2.2.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.1.0...v2.2.0) (2021-03-23)
 
@@ -41,8 +40,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 ### ⚠ BREAKING CHANGES
-
-* modify the payload arguments by adding an optional argument containing all optional payload parameters
 
 * modify the payload arguments by adding an optional argument containing all optional payload parameters ([b258e26](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/b258e26dfdb8897ca447af036771e09f63e4b3c0))
 
