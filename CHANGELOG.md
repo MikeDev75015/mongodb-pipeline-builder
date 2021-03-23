@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.0.4...v2.1.0) (2021-03-23)
+
+
+### Features
+
+* add DbCollPayload helper for the Out method ([663f2bf](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/663f2bf86ec6882476bb83e3fb820ba1196396bb))
+
 ### [2.0.4](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.0.3...v2.0.4) (2021-03-22)
 
 ### [2.0.3](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.0.2...v2.0.3) (2021-03-22)
