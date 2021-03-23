@@ -26,7 +26,9 @@
     "pipeline",
     "builder",
     "helper",
-    "constructor"
+    "constructor",
+    "aggregation",
+    "pagination"
   ],
   "author": "Mickaël NODANCHE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
   "license": "MIT",
