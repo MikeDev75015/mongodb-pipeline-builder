@@ -36,7 +36,7 @@ export class PipelineBuilder {
      */
     private readonly defaultOptions: BuilderOptionsInterface = {
         debug: false,
-        logsEnabled: false
+        logs: false
     };
 
     /**
@@ -55,7 +55,7 @@ export class PipelineBuilder {
      * A boolean allowing to display or not the logs
      * @private
      */
-    private readonly logsEnabled: boolean;
+    private readonly logs: boolean;
 
     /**
      * Contains the list of pipeline stages that have been added
@@ -90,15 +90,18 @@ export class PipelineBuilder {
         };
 
         this.pipelineName = pipelineName;
-        this.debugBuild = { status: setOptions.debug, historyList: [] };
-        this.logsEnabled = setOptions.logsEnabled;
+        this.debugBuild = { status: setOptions.debug, actionList: [] };
+        this.logs = setOptions.logs;
         this.stageList = [];
         this.stageErrorList = [];
         this.stageValidatorsBundle = {
             lookup: lookupPayloadValidator
         };
 
-        this.saveActionToDebugHistoryList('constructor', { debug: setOptions.debug }, { logsEnabled: setOptions.logsEnabled }, { debugBuild: this.debugBuild });
+        this.saveActionToDebugHistoryList(
+            'constructor',
+            { pipelineName, options }, { debugBuild: this.debugBuild }
+        );
     }
 
     // basics
@@ -173,8 +176,8 @@ export class PipelineBuilder {
      * Get the list of all actions stored in the debug history list
      */
     public readonly getDebugActionList = () => {
-        this.log('info', 'getDebugActionList', this.debugBuild.historyList);
-        return this.debugBuild.historyList;
+        this.log('info', 'getDebugActionList', this.debugBuild.actionList);
+        return this.debugBuild.actionList;
     }
 
     // stages
@@ -596,7 +599,7 @@ export class PipelineBuilder {
     private readonly toggleDebug = (debugBuildStatus: boolean) => {
         this.debugBuild.status = debugBuildStatus;
         this.saveActionToDebugHistoryList('toggleDebug', { debugBuildStatus });
-        return debugBuildStatus;
+        return this;
     }
 
     /**
@@ -616,13 +619,13 @@ export class PipelineBuilder {
             action: any;
             pipeline: any;
             value?: any;
-        } = { date: this.getCurrentDate(), action: `${this.pipelineName} => ${action}`, pipeline: this.stageList };
+        } = { date: this.getCurrentDate(), action: `${this.pipelineName} => ${action}`, pipeline: [...this.stageList] };
 
         if (argList && argList.length) {
             historyBundle.value = JSON.stringify(argList.length > 1? argList : argList[0]);
         }
 
-        this.debugBuild.historyList.push(historyBundle);
+        this.debugBuild.actionList.push(historyBundle);
         this.log('info', 'saveToDebugActionList', historyBundle);
     }
 
@@ -670,7 +673,7 @@ export class PipelineBuilder {
      * @private
      */
     private readonly log = (type: 'info' | 'warn' | 'error', ...messageList: any[]) => {
-        if (this.logsEnabled) {
+        if (this.logs) {
             console[type](`${this.getCurrentDate()} - ${this.pipelineName}:\n`, ...messageList);
         }
     }
