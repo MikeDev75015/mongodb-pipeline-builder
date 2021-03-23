@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,7 +26,9 @@
     "pipeline",
     "builder",
     "helper",
-    "constructor"
+    "constructor",
+    "aggregation",
+    "pagination"
   ],
   "author": "Mickaël NODANCHE <mikeonline75@gmail.com> (https://cv-mikeonline.web.app)",
   "license": "MIT",
