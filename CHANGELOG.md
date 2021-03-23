@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.2.0...v2.3.0) (2021-03-23)
+
+
+### Features
+
+* Add a check if a Skip, Limit or Count stage is already in the pipeline ([6913cb3](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/6913cb35f730d8889ed774dd6304a4023c4d1ad2))
+* Add a check if a Skip, Limit or Count step is already in the pipeline ([d6d1fc5](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/d6d1fc5404ef0653d21cf006ec477e9060653d6c))
+
 ## [2.2.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.1.0...v2.2.0) (2021-03-23)
 
 
