@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.1.0...v2.2.0) (2021-03-23)
+
+
+### Features
+
+* add a Paging method that will automatically add the necessary stages to paginate the pipeline results ([f78cfb5](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/f78cfb51bef33a229d1e32b45dc4d1ac2f07f98d))
+
 ## [2.1.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.0.4...v2.1.0) (2021-03-23)
 
 
