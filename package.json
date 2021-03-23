@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
