@@ -7,8 +7,9 @@ describe('should create a new pipeline builder object', () => {
         pipelineBuilderWithoutDebug: PipelineBuilder;
 
     describe('pipeline Builder With Debug', () => {
-        const pipeLineName = 'builder-test';
+        let pipeLineName: string;
         beforeEach(() => {
+            pipeLineName = 'builder-test';
             pipelineBuilderWithDebug = new PipelineBuilder(pipeLineName, { debug: true, logs: true});
         });
 
@@ -46,6 +47,74 @@ describe('should create a new pipeline builder object', () => {
                 expect(debugActionList).toHaveLength(1);
                 expect(debugActionList[0].action).toEqual(pipelineBuilderWithDebug.getName() + ' => constructor');
             });
+        });
+
+        describe('Paging()', () => {
+
+            it('should return a new pipeline with a $facet step that contains 2 pipelines, one for paginated documents with 10 elements per page and another for the total count', () => {
+                expect(
+                    pipelineBuilderWithDebug
+                        .addStage('match', {tests: 'unit'})
+                        .Paging(10).getPipeline()
+                ).toEqual([
+                    { $facet: {
+                            count: [
+                                { $match: { tests: "unit" }},
+                                { $count: "totalElements" }
+                            ],
+                            docs: [
+                                { $match: {tests: "unit" } },
+                                { $skip: 0 },
+                                { $limit: 10 }
+                            ]
+                        } }
+                ]);
+            });
+
+            it('should return a new pipeline with a $facet step that contains 2 pipelines, one for paginated documents with 20 elements per page, the page 5 requested and another for the total count', () => {
+                expect(
+                    pipelineBuilderWithDebug
+                        .addStage('match', {tests: 'unit'})
+                        .Paging(20, 5).getPipeline()
+                ).toEqual([
+                    { $facet: {
+                            count: [
+                                { $match: { tests: "unit" }},
+                                { $count: "totalElements" }
+                            ],
+                            docs: [
+                                { $match: {tests: "unit" } },
+                                { $skip: 80 },
+                                { $limit: 20 }
+                            ]
+                        } }
+                ]);
+            });
+
+            it('should throw a new PipelineError', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .addStage('match', {tests: 'unit'})
+                        .Paging(0)
+                ).toThrowError(new PipelineError('You must specify at least 1 element per page.'));
+            });
+
+            it('should throw a new PipelineError', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .addStage('match', {tests: 'unit'})
+                        .Paging(10, 0)
+                ).toThrowError(new PipelineError('The page you are looking for does not exist.'));
+            });
+
+            it('should throw a new PipelineError', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .Paging(10, 1)
+                        .Paging(3, 2)
+                ).toThrowError(new PipelineError('A paging stage has already been added.'));
+            });
+
         });
 
         describe('Stage Methods => addStage()', () => {

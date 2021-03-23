@@ -1,3 +1,4 @@
+/* tslint:disable:no-trailing-whitespace */
 import {
     BucketAutoStageInterface,
     BucketStageInterface,
@@ -76,6 +77,12 @@ export class PipelineBuilder {
     private readonly stageValidatorsBundle: { [key: string]: any };
 
     /**
+     * Contains the $skip and $limit stages for pagination
+     * @private
+     */
+    private pagingStage: StageInterface[];
+
+    /**
      * constructor
      * @param pipelineName The name of the pipeline
      * @param options
@@ -97,6 +104,7 @@ export class PipelineBuilder {
         this.stageValidatorsBundle = {
             lookup: lookupPayloadValidator
         };
+        this.pagingStage = [];
 
         this.saveActionToDebugHistoryList(
             'constructor',
@@ -144,7 +152,9 @@ export class PipelineBuilder {
      */
     public readonly getPipeline = () => {
         this.saveActionToDebugHistoryList('getPipeline');
-        return this.verifyPipelineValidity([...this.stageList]);
+        return !this.pagingStage.length
+            ? this.verifyPipelineValidity([...this.stageList])
+            : this.paginatePipelineResults(this.verifyPipelineValidity([...this.stageList]));
     }
 
     /**
@@ -182,6 +192,34 @@ export class PipelineBuilder {
 
     // stages
     /**
+     * Adds the pipeline stages needed to paginate the results
+     * @param elementsPerPage the number of elements per page to display
+     * @param page the page to display
+     * @constructor
+     */
+    public Paging(elementsPerPage: number, page = 1): this {
+        if (this.pagingStage.length) {
+            throw new PipelineError('A paging stage has already been added.');
+        }
+
+        if (elementsPerPage < 1) {
+            throw new PipelineError('You must specify at least 1 element per page.');
+        }
+
+        if (page < 1) {
+            throw new PipelineError('The page you are looking for does not exist.');
+        }
+
+        page -= 1;
+        this.pagingStage = [
+            { $skip: page * elementsPerPage },
+            { $limit: elementsPerPage }
+        ];
+
+        return this;
+    }
+
+    /**
      * Adds new fields to documents
      *
      * @param value one or more Field helper
@@ -193,7 +231,6 @@ export class PipelineBuilder {
             this.ToObject(value, 'AddFields')
         );
     }
-
     /**
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket
      * boundaries.
@@ -203,7 +240,6 @@ export class PipelineBuilder {
     public Bucket(value: BucketStageInterface): this {
         return this.addStage('bucket', value);
     }
-
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression.
      * Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified
@@ -232,7 +268,6 @@ export class PipelineBuilder {
     public Count(value: string): this {
         return this.addStage('count', value);
     }
-
     /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the
      * creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a
@@ -590,6 +625,22 @@ export class PipelineBuilder {
         }
 
         return this.stageValidatorsBundle[stageType](payload);
+    }
+
+    /**
+     * Allows pagination of pipeline results
+     * @param pipelineToPaginate the pipeline whose results are to be paged
+     * @returns the paging pipeline
+     */
+    private readonly paginatePipelineResults = (pipelineToPaginate: StageInterface[]) => {
+        return [
+            {
+                $facet: {
+                    docs: [ ...pipelineToPaginate, ...this.pagingStage ],
+                    count: [ ...pipelineToPaginate, { $count: 'totalElements'}]
+                }
+            }
+        ];
     }
 
     /**

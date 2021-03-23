@@ -71,14 +71,14 @@ through the stages in sequence.
 ### - with require
 <p style="font-size: 15px;">
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;<br>
-const { EqualityPayload, List, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
+const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
 const { ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
 </p>
 
 ### - with import
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
-import { EqualityPayload, List, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
+import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
 import { ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 </p>
 
@@ -147,7 +147,7 @@ const myNewPipeline = [<br>
 ];<br>
 </p>
 
-### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with Require method</a> ]
+### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]
 
 ### Soon more complex examples will be available!
 
@@ -156,7 +156,10 @@ const myNewPipeline = [<br>
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
 <p style="font-size: 15px;">
-AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind
+MONGODB STAGE:<br>
+AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind<br><br>
+CUSTOM STAGE:<br>
+Paging
 </p>
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
