@@ -199,7 +199,14 @@ export class PipelineBuilder {
      */
     public Paging(elementsPerPage: number, page = 1): this {
         if (this.pagingStage.length) {
-            throw new PipelineError('A paging stage has already been added.');
+            throw new PipelineError('A Paging stage has already been added.');
+        }
+
+        const skipStage = this.stageList.find(s => Object.keys(s)[0] === '$skip');
+        const limitStage = this.stageList.find(s => Object.keys(s)[0] === '$limit');
+        const countStage = this.stageList.find(s => Object.keys(s)[0] === '$count');
+        if (skipStage || limitStage || countStage) {
+            throw new PipelineError('A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.');
         }
 
         if (elementsPerPage < 1) {
