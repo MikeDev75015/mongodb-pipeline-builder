@@ -27,17 +27,17 @@ export const IgnorePayload = (...properties: string[]) => {
 }
 
 /**
- * @deprecated Use the new {@link OnlyPayload} helper instead
+ * Deprecated - Use the new {@link OnlyPayload} helper instead
  */
 export const Only = (...properties: string[]) => {
-    new DeprecatedMethodWarning('Only', 'OnlyPayload');
+    const warning = new DeprecatedMethodWarning('Only', 'OnlyPayload');
     return OnlyPayload(...properties);
 }
 
 /**
- * @deprecated Use the new {@link IgnorePayload} helper instead
+ * Deprecated - Use the new {@link IgnorePayload} helper instead
  */
 export const Ignore = (...properties: string[]) => {
-    new DeprecatedMethodWarning('Ignore', 'IgnorePayload');
+    const warning = new DeprecatedMethodWarning('Ignore', 'IgnorePayload');
     return IgnorePayload(...properties);
 }
