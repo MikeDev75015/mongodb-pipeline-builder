@@ -9,5 +9,5 @@ export interface BuilderOptionsInterface {
     /**
      * A boolean to activate or not the logs
      */
-    logsEnabled: boolean;
+    logs: boolean;
 }

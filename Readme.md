@@ -167,10 +167,11 @@ STAGE HELPERS:<br>
 &nbsp;- BucketAuto ( GroupByAutoPayload )<br>
 &nbsp;- Lookup ( ConditionPayload | EqualityPayload )<br>
 &nbsp;- Merge ( IntoPayload )<br>
+&nbsp;- Out ( DbCollPayload )<br>
 &nbsp;- Project ( IgnorePayload | OnlyPayload )<br>
 &nbsp;- Sample ( SizePayload )<br>
 &nbsp;- UnionWith ( CollectionPayload )<br><br>
-COMMONS HELPERS:<br>
+COMMON HELPERS:<br>
 &nbsp;- Field >> AddFields( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
 &nbsp;- List<br><br>
 ** One or more separated by a comma.
