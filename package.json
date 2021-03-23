@@ -49,17 +49,24 @@
     "tslint": "^6.1.3",
     "typescript": "^4.2.3"
   },
-  "collectCoverage": true,
-  "collectCoverageFrom": [
-    "**/*.(t|j)s"
-  ],
-  "coverageDirectory": "../coverage",
-  "coveragePathIgnorePatterns": [
-    "/node_modules/",
-    "/test/"
-  ],
-  "testEnvironment": "node",
-  "reporters": [
-    "default"
-  ]
+  "jest": {
+    "rootDir": "lib",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "testRegex": ".test.ts$",
+    "coverageDirectory": "../coverage",
+    "coveragePathIgnorePatterns": [
+      "/.circleci/",
+      "/coverage/",
+      "/documentation/",
+      "/node_modules/",
+      "/dist/"
+    ],
+    "testEnvironment": "node",
+    "reporters": [
+      "default"
+    ]
+  }
 }
