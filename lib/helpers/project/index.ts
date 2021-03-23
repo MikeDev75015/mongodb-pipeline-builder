@@ -1,3 +1,5 @@
+import {deprecatedMethodWarning} from "../../warnings";
+
 /**
  * Returns expected project stage Only Object
  * @param properties
@@ -22,4 +24,20 @@ export const IgnorePayload = (...properties: string[]) => {
     const projectIgnoreObject: {[index: string]: any} = {};
     properties.forEach(prop => projectIgnoreObject[prop] = 0);
     return projectIgnoreObject;
+}
+
+/**
+ * Deprecated - Use the new {@link OnlyPayload} helper instead
+ */
+export const Only = (...properties: string[]) => {
+    deprecatedMethodWarning('Only', 'OnlyPayload');
+    return OnlyPayload(...properties);
+}
+
+/**
+ * Deprecated - Use the new {@link IgnorePayload} helper instead
+ */
+export const Ignore = (...properties: string[]) => {
+    deprecatedMethodWarning('Ignore', 'IgnorePayload');
+    return IgnorePayload(...properties);
 }

@@ -7,5 +7,5 @@ dist
 coverage
 documentation
 test-report.xml
-refresh-project.cmd
+000.refresh-local-project.cmd
 
