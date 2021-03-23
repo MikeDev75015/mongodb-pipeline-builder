@@ -91,7 +91,7 @@ describe('should create a new pipeline builder object', () => {
                 ]);
             });
 
-            it('should throw a new PipelineError', () => {
+            it('should throw a new PipelineError if the elements per page is not valid', () => {
                 expect(
                     () => pipelineBuilderWithDebug
                         .addStage('match', {tests: 'unit'})
@@ -99,7 +99,7 @@ describe('should create a new pipeline builder object', () => {
                 ).toThrowError(new PipelineError('You must specify at least 1 element per page.'));
             });
 
-            it('should throw a new PipelineError', () => {
+            it('should throw a new PipelineError if the requested page does not exist', () => {
                 expect(
                     () => pipelineBuilderWithDebug
                         .addStage('match', {tests: 'unit'})
@@ -107,12 +107,36 @@ describe('should create a new pipeline builder object', () => {
                 ).toThrowError(new PipelineError('The page you are looking for does not exist.'));
             });
 
-            it('should throw a new PipelineError', () => {
+            it('should throw a new PipelineError if a Paging stage has already been added', () => {
                 expect(
                     () => pipelineBuilderWithDebug
                         .Paging(10, 1)
                         .Paging(3, 2)
-                ).toThrowError(new PipelineError('A paging stage has already been added.'));
+                ).toThrowError(new PipelineError('A Paging stage has already been added.'));
+            });
+
+            it('should throw a new PipelineError if a Skip stage has already been added', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .Skip(10)
+                        .Paging(3)
+                ).toThrowError(new PipelineError('A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
+            });
+
+            it('should throw a new PipelineError if a Limit stage has already been added', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .Limit(10)
+                        .Paging(1)
+                ).toThrowError(new PipelineError('A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
+            });
+
+            it('should throw a new PipelineError if a Count stage has already been added', () => {
+                expect(
+                    () => pipelineBuilderWithDebug
+                        .Count("total")
+                        .Paging(3, 8)
+                ).toThrowError(new PipelineError('A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
             });
 
         });
