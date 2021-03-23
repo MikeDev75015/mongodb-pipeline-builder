@@ -1,4 +1,4 @@
-import {DeprecatedMethodWarning} from "../../warnings";
+import {deprecatedMethodWarning} from "../../warnings";
 
 /**
  * Returns expected project stage Only Object
@@ -30,7 +30,7 @@ export const IgnorePayload = (...properties: string[]) => {
  * Deprecated - Use the new {@link OnlyPayload} helper instead
  */
 export const Only = (...properties: string[]) => {
-    const warning = new DeprecatedMethodWarning('Only', 'OnlyPayload');
+    deprecatedMethodWarning('Only', 'OnlyPayload');
     return OnlyPayload(...properties);
 }
 
@@ -38,6 +38,6 @@ export const Only = (...properties: string[]) => {
  * Deprecated - Use the new {@link IgnorePayload} helper instead
  */
 export const Ignore = (...properties: string[]) => {
-    const warning = new DeprecatedMethodWarning('Ignore', 'IgnorePayload');
+    deprecatedMethodWarning('Ignore', 'IgnorePayload');
     return IgnorePayload(...properties);
 }
