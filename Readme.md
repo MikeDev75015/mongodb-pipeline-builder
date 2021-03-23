@@ -156,7 +156,7 @@ const myNewPipeline = [<br>
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
 <p style="font-size: 15px;">
-MONGODB STAGE:<br>
+MONGODB STAGES:<br>
 AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind<br><br>
 CUSTOM STAGE:<br>
 Paging
