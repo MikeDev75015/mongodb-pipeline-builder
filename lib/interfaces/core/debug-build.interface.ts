@@ -11,5 +11,5 @@ export interface DebugBuildInterface {
     /**
      * historyList
      */
-    historyList: DebugHistoryInterface[]
+    actionList: DebugHistoryInterface[]
 }

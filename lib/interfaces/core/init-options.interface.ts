@@ -9,5 +9,5 @@ export interface InitOptionsInterface {
     /**
      * A boolean to activate or not the logs
      */
-    logsEnabled?: boolean;
+    logs?: boolean;
 }
