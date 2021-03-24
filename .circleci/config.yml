@@ -29,14 +29,22 @@ aliases:
     run:
       name: Update NPM version
       command: 'sudo npm install -g npm@latest'
+  - &checkout-prerelease-branch
+    run:
+      name: Create a release branch
+      command: git checkout -b prerelease
   - &checkout-release-branch
     run:
       name: Create a release branch
       command: git checkout -b release
-  - &pre-release
+  - &prerelease
     run:
-      name: Create a pre release
-      command: npm run pre-release
+      name: Create a prerelease
+      command: npm run prerelease
+  - &prerelease-follow-tags
+    run:
+      name: Commit and push feature tag on prerelease
+      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git prerelease
   - &release
     run:
       name: Create the release
@@ -55,6 +63,16 @@ aliases:
       command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git test
 
 commands:
+  authenticate-and-publish-prerelease:
+    description: "Authenticate to npm account and publish prerelease package version"
+    steps:
+      - run:
+          name: NPM Account Authentication
+          command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+      - run:
+          name: Publish package on npm
+          command: npm run publish-prerelease
+
   authenticate-and-publish:
     description: "Authenticate to npm account and publish latest package version"
     steps:
@@ -150,6 +168,24 @@ jobs:
           event: fail
           template: basic_fail_1
 
+  prepare-prerelease:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    steps:
+      - checkout
+      - *restore-cache
+      - *install-deps
+      - attach_workspace:
+          at: .
+      - set-git-local-user
+      - *checkout-prerelease-branch
+      - *prerelease
+      - *prerelease-follow-tags
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
   prepare-release:
     docker:
       - image: circleci/node:12
@@ -164,6 +200,22 @@ jobs:
       - *checkout-release-branch
       - *release
       - *release-follow-tags
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  publish-prerelease:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    steps:
+      - checkout
+      - *restore-cache
+      - *install-deps
+      - attach_workspace:
+          at: .
+      - copy-required-files-to-dist
+      - authenticate-and-publish-prerelease
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -239,6 +291,7 @@ workflows:
               ignore:
                 - test
                 - release
+                - prerelease
                 - main
       - unit_tests:
           context:
@@ -251,6 +304,7 @@ workflows:
               ignore:
                 - test
                 - release
+                - prerelease
                 - main
       - notify-success-job:
           name: build-unit_tests-success
@@ -263,6 +317,7 @@ workflows:
               ignore:
                 - test
                 - release
+                - prerelease
                 - main
       - approval-prepare-release:
           type: approval
@@ -301,6 +356,43 @@ workflows:
               only:
                 - develop
 
+      - approval-prepare-prerelease:
+          type: approval
+          requires:
+            - build
+            - unit_tests
+            - build-unit_tests-success
+          filters:
+            branches:
+              only:
+                - feature
+      - prepare-prerelease:
+          context:
+            - GIT
+            - SLACK
+          requires:
+            - build
+            - unit_tests
+            - build-unit_tests-success
+            - approval-prepare-prerelease
+          filters:
+            branches:
+              only:
+                - feature
+      - notify-success-job:
+          name: prepare-prerelease-success
+          context: SLACK
+          requires:
+            - build
+            - unit_tests
+            - build-unit_tests-success
+            - approval-prepare-prerelease
+            - prepare-prerelease
+          filters:
+            branches:
+              only:
+                - feature
+
   update-repository:
     when:
       not: << pipeline.git.tag >>
@@ -336,7 +428,7 @@ workflows:
               only:
                 - main
 
-  publish-release-on-version-tag:
+  publish-release-on-version:
     jobs:
       - build:
           context: SLACK
@@ -380,6 +472,39 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+
+  publish-prerelease-on-feature:
+    jobs:
+      - build:
+          context: SLACK
+          filters:
+            tags:
+              only: /^feature$/
+            branches:
+              ignore: /.*/
+      - publish-prerelease:
+          context:
+            - GIT
+            - SLACK
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^feature$/
+            branches:
+              ignore: /.*/
+      - notify-success-job:
+          name: publish-prerelease-success
+          context: SLACK
+          requires:
+            - build
+            - publish-prerelease
+          filters:
+            tags:
+              only: /^feature$/
+            branches:
+              ignore: /.*/
+
 
   test-workflow:
     when:
