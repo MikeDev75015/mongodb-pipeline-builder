@@ -197,7 +197,7 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - authenticate-and-publish:
+      - authenticate-npm-and-publish:
           branch: << parameters.branch >>
       - slack/notify:
           event: fail
