@@ -17,7 +17,7 @@ aliases:
     run:
       name: Install dependencies
       command: npm install
-  - &build-packages
+  - &build-package
     run:
       name: Build
       command: npm run build
@@ -29,77 +29,90 @@ aliases:
     run:
       name: Update NPM version
       command: 'sudo npm install -g npm@latest'
-  - &checkout-prerelease-branch
-    run:
-      name: Create a release branch
-      command: git checkout -b prerelease
-  - &checkout-release-branch
-    run:
-      name: Create a release branch
-      command: git checkout -b release
-  - &prerelease
-    run:
-      name: Create a prerelease
-      command: npm run prerelease
-  - &prerelease-follow-tags
-    run:
-      name: Commit and push feature tag on prerelease
-      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git prerelease
-  - &release
-    run:
-      name: Create the release
-      command: npm run release
-  - &release-follow-tags
-    run:
-      name: Commit and push version tag on release
-      command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git release
-  - &delete-develop
-    run:
-      name: Delete the develop branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
-  - &delete-prerelease
-    run:
-      name: Delete the prerelease branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git prerelease
-  - &delete-testfeature
-    run:
-      name: Delete the prerelease branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git testfeature
-  - &delete-test
-    run:
-      name: Delete the test branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git test
 
 commands:
-  authenticate-and-publish-prerelease:
-    description: "Authenticate to npm account and publish prerelease package version"
+  git-create-branch-follow-tag:
+    description: "Commit and push the branch tag on the remote"
+    parameters:
+      branch:
+        type: string
+        default: release
+    steps:
+      - run:
+          name: Create the << parameters.branch >> branch
+          command: git checkout -b << parameters.branch >>
+      - run:
+          name: Create the << parameters.branch >> version tag
+          command: npm run tag-<< parameters.branch >>
+      - run:
+          name: Commit and push the << parameters.branch >> tag on remote
+          command: git push --follow-tags -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git << parameters.branch >>
+
+  git-delete-branch:
+    description: "Delete the specific branch on the remote"
+    parameters:
+      branch:
+        type: string
+        default: develop
+    steps:
+      - run:
+          name: Delete the << parameters.branch >> branch on remote
+          command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git << parameters.branch >>
+
+  authenticate-npm-and-publish:
+    description: "Authenticate to npm account and publish new package version"
+    parameters:
+      branch:
+        type: string
+        default: release
     steps:
       - run:
           name: NPM Account Authentication
           command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
       - run:
           name: Publish package on npm
-          command: npm run publish-prerelease
+          command: npm run publish-<< parameters.branch >>
 
-  authenticate-and-publish:
-    description: "Authenticate to npm account and publish latest package version"
+  create-merge-pull-request:
+    description: "Create and merge pull request then delete branch"
+    parameters:
+      branch:
+        type: string
+        default: release
     steps:
       - run:
-          name: NPM Account Authentication
-          command: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+          name: Checkout to the << parameters.branch >> branch
+          command: git checkout << parameters.branch >>
       - run:
-          name: Publish package on npm
-          command: npm run publish-latest
+          name: Create a pull request to merge into the main branch
+          command: gh pr create -H << parameters.branch >> -f -B main
+      - run:
+          name: Merge the pull request and delete the << parameters.branch >> branch
+          command: gh pr merge << parameters.branch >> -m -d
 
-  set-git-local-user:
-    description: "Set the account's default identity"
+  git-config-local-user:
+    description: "Configure the default identity for the git account"
     steps:
       - run: git config credential.helper 'cache --timeout=120'
       - run: git config user.email ${USER_EMAIL}
       - run: git config user.name ${USER_NAME}
 
+  install-github-cli:
+    description: "Installs the latest Github CLI version"
+    steps:
+      - jq/install
+      - run:
+          name: Install Github CLI
+          command: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/cli/cli/releases/latest)
+            VERSION=$(echo $LATEST_RELEASE | jq -r '.tag_name')
+            DEB_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url | select(. | contains("linux_amd64.deb"))')
+            wget --quiet -O gh_latest.deb $DEB_URL
+            sudo apt install ./gh_latest.deb
+          description: Gets latest realease version of Github CLI
+
   copy-required-files-to-dist:
-    description: "Copy the publish required files to lib directory"
+    description: "Copy all the required files to dist directory"
     steps:
       - run:
           name: Copy Readme.md to dist
@@ -114,34 +127,6 @@ commands:
           name: Copy package.json to dist
           command: cp -rf package.json dist
 
-  install-github-cli:
-    description: "Installs latest Github CLI"
-    steps:
-      - jq/install
-      - run:
-          name: Install Github CLI
-          description: Gets latest realease version of Github CLI
-          command: |
-            LATEST_RELEASE=$(curl -s https://api.github.com/repos/cli/cli/releases/latest)
-            VERSION=$(echo $LATEST_RELEASE | jq -r '.tag_name')
-            DEB_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url | select(. | contains("linux_amd64.deb"))')
-            wget --quiet -O gh_latest.deb $DEB_URL
-            sudo apt install ./gh_latest.deb
-
-
-  create-merge-release-pull-request:
-    description: "Create and merge release pull request and also delete branch"
-    steps:
-      - run:
-          name: Checkout to the release branch
-          command: git checkout release
-      - run:
-          name: Create a pull request to merge into the main branch
-          command: gh pr create -H release -f -B main
-      - run:
-          name: Merge the pull request and delete the release branch
-          command: gh pr merge release -m -d
-
 jobs:
   build:
     docker:
@@ -153,7 +138,7 @@ jobs:
       - *restore-cache
       - *install-deps
       - *save-cache
-      - *build-packages
+      - *build-package
       - persist_to_workspace:
           root: .
           paths:
@@ -176,56 +161,23 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  prepare-prerelease:
+  prepare-version:
     docker:
       - image: circleci/node:12
     resource_class: small
+    parameters:
+      branch:
+        type: string
+        default: release
     steps:
       - checkout
       - *restore-cache
       - *install-deps
       - attach_workspace:
           at: .
-      - set-git-local-user
-      - *checkout-prerelease-branch
-      - *prerelease
-      - *prerelease-follow-tags
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  prepare-release:
-    docker:
-      - image: circleci/node:12
-    resource_class: small
-    steps:
-      - checkout
-      - *restore-cache
-      - *install-deps
-      - attach_workspace:
-          at: .
-      - set-git-local-user
-      - *checkout-release-branch
-      - *release
-      - *release-follow-tags
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  publish-prerelease:
-    docker:
-      - image: circleci/node:12
-    resource_class: small
-    steps:
-      - checkout
-      - *restore-cache
-      - *install-deps
-      - attach_workspace:
-          at: .
-      - copy-required-files-to-dist
-      - authenticate-and-publish-prerelease
-      - *delete-prerelease
-      - *delete-testfeature
+      - git-config-local-user
+      - git-create-branch-follow-tag:
+          branch: << parameters.branch >>
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -234,6 +186,10 @@ jobs:
     docker:
       - image: circleci/node:12
     resource_class: small
+    parameters:
+      branch:
+        type: string
+        default: release
     steps:
       - checkout
       - *restore-cache
@@ -241,7 +197,43 @@ jobs:
       - attach_workspace:
           at: .
       - copy-required-files-to-dist
-      - authenticate-and-publish
+      - authenticate-and-publish:
+          branch: << parameters.branch >>
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  clean-repository:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    parameters:
+      branch:
+        type: string
+        default: develop
+    steps:
+      - checkout
+      - git-config-local-user
+      - git-delete-branch:
+          branch: << parameters.branch >>
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  final-repository-operations:
+    docker:
+      - image: circleci/node:12
+    resource_class: small
+    parameters:
+      branch:
+        type: string
+        default: release
+    steps:
+      - checkout
+      - git-config-local-user
+      - install-github-cli
+      - create-merge-pull-request:
+          branch: << parameters.branch >>
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -255,39 +247,18 @@ jobs:
           event: always
           template: basic_success_1
 
-  clean-repository:
-    docker:
-      - image: circleci/node:12
-    resource_class: small
-    steps:
-      - checkout
-      - set-git-local-user
-      - *delete-develop
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  final-repository-operations:
-    docker:
-      - image: circleci/node:12
-    resource_class: small
-    steps:
-      - checkout
-      - set-git-local-user
-      - install-github-cli
-      - create-merge-release-pull-request
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
   clean-test:
     docker:
       - image: circleci/node:12
     resource_class: small
+    parameters:
+      branch:
+        type: string
     steps:
       - checkout
-      - set-git-local-user
-      - *delete-test
+      - git-config-local-user
+      - git-delete-branch:
+          branch: << parameters.branch >>
 
 workflows:
   build-and-test-default:
@@ -301,7 +272,7 @@ workflows:
               ignore:
                 - test
                 - release
-                - prerelease
+                - pre-release
                 - main
       - unit_tests:
           context:
@@ -314,7 +285,7 @@ workflows:
               ignore:
                 - test
                 - release
-                - prerelease
+                - pre-release
                 - main
       - notify-success-job:
           name: build-unit_tests-success
@@ -327,11 +298,10 @@ workflows:
               ignore:
                 - test
                 - release
-                - prerelease
+                - pre-release
                 - main
-                - testfeature
 
-      - approval-prepare-release:
+      - approval-prepare-version:
           type: approval
           requires:
             - build
@@ -341,7 +311,10 @@ workflows:
             branches:
               only:
                 - develop
-      - prepare-release:
+                - feature
+
+      - prepare-version:
+          name: prepare-release-version
           context:
             - GIT
             - SLACK
@@ -349,53 +322,55 @@ workflows:
             - build
             - unit_tests
             - build-unit_tests-success
-            - approval-prepare-release
+            - approval-prepare-version
           filters:
             branches:
               only:
                 - develop
       - notify-success-job:
-          name: prepare-release-success
+          name: prepare-release-version-success
           context: SLACK
           requires:
-            - build
-            - unit_tests
-            - build-unit_tests-success
-            - approval-prepare-release
-            - prepare-release
+            - approval-prepare-version
+            - prepare-version
           filters:
             branches:
               only:
                 - develop
 
-      - prepare-prerelease:
+      - prepare-version:
+          name: prepare-pre-release-version
+          branch: pre-release
           context:
             - GIT
             - SLACK
           requires:
             - build
             - unit_tests
+            - build-unit_tests-success
+            - approval-prepare-version
           filters:
             branches:
               only:
-                - testfeature
+                - feature
       - notify-success-job:
-          name: prepare-prerelease-success
+          name: prepare-pre-release-version-success
           context: SLACK
           requires:
-            - build
-            - unit_tests
-            - prepare-prerelease
+            - approval-prepare-version
+            - prepare-version
           filters:
             branches:
               only:
-                - testfeature
+                - feature
+
 
   update-repository:
     when:
       not: << pipeline.git.tag >>
     jobs:
       - clean-repository:
+          name: clean-origin-develop
           context:
             - GIT
             - SLACK
@@ -403,15 +378,17 @@ workflows:
             branches:
               only:
                 - release
-      - notify-success-job:
-          name: clean-repository-success
-          context: SLACK
-          requires:
-            - clean-repository
+
+      - clean-repository:
+          name: clean-origin-feature
+          branch: feature
+          context:
+            - GIT
+            - SLACK
           filters:
             branches:
               only:
-                - release
+                - pre-release
 
   update-main-code-analysis:
     when:
@@ -426,7 +403,7 @@ workflows:
               only:
                 - main
 
-  publish-release-on-version:
+  publish-release-version:
     jobs:
       - build:
           context: SLACK
@@ -459,7 +436,7 @@ workflows:
             branches:
               ignore: /.*/
       - notify-success-job:
-          name: publish-and-merge-release-success
+          name: process-release-success
           context: SLACK
           requires:
             - build
@@ -471,7 +448,7 @@ workflows:
             branches:
               ignore: /.*/
 
-  publish-prerelease-on-feature:
+  publish-prerelease-version:
     jobs:
       - build:
           context: SLACK
@@ -480,7 +457,8 @@ workflows:
               only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
-      - publish-prerelease:
+      - publish-package:
+          branch: pre-release
           context:
             - GIT
             - SLACK
@@ -491,12 +469,26 @@ workflows:
               only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
+      - final-repository-operations:
+          branch: pre-release
+          context:
+            - GIT
+            - SLACK
+          requires:
+            - build
+            - publish-package
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+\-\d+$/
+            branches:
+              ignore: /.*/
       - notify-success-job:
-          name: publish-prerelease-success
+          name: process-prerelease-success
           context: SLACK
           requires:
             - build
-            - publish-prerelease
+            - publish-package
+            - final-repository-operations
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+\-\d+$/
@@ -515,6 +507,7 @@ workflows:
               only:
                 - test
       - clean-test:
+          branch: test
           context: GIT
           requires:
             - approval-test
