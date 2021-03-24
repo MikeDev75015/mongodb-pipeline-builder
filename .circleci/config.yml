@@ -332,7 +332,7 @@ workflows:
           context: SLACK
           requires:
             - approval-prepare-version
-            - prepare-version
+            - prepare-release-version
           filters:
             branches:
               only:
@@ -358,7 +358,7 @@ workflows:
           context: SLACK
           requires:
             - approval-prepare-version
-            - prepare-version
+            - prepare-pre-release-version
           filters:
             branches:
               only:
