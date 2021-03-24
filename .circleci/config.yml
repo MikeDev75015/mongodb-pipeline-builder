@@ -431,7 +431,7 @@ workflows:
             - SLACK
           requires:
             - build
-            - publish-package
+            - publish-release-package
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+$/
@@ -442,8 +442,8 @@ workflows:
           context: SLACK
           requires:
             - build
-            - publish-package
-            - final-repository-operations
+            - publish-release-package
+            - final-release-operations
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+$/
@@ -480,7 +480,7 @@ workflows:
             - SLACK
           requires:
             - build
-            - publish-package
+            - publish-pre-release-package
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+\-\d+$/
@@ -491,8 +491,8 @@ workflows:
           context: SLACK
           requires:
             - build
-            - publish-package
-            - final-repository-operations
+            - publish-pre-release-package
+            - final-pre-release-operations
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+\-\d+$/
