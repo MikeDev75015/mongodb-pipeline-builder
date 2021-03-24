@@ -3,7 +3,7 @@
 <div style="display: inline-block">
 
 [![NPM version](https://img.shields.io/npm/v/mongodb-pipeline-builder.svg)](https://www.npmjs.com/package/mongodb-pipeline-builder)
-![NPM](https://img.shields.io/npm/l/mongodb-pipeline-builder)
+![NPM](https://img.shields.io/npm/l/mongodb-pipeline-builder?registry_uri=https%3A%2F%2Fregistry.npmjs.com)
 ![npm](https://img.shields.io/npm/dw/mongodb-pipeline-builder)
 </div>
 
