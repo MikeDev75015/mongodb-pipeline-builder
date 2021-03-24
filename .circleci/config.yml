@@ -61,10 +61,10 @@ aliases:
     run:
       name: Delete the prerelease branch
       command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git prerelease
-  - &delete-feature
+  - &delete-testfeature
     run:
       name: Delete the prerelease branch
-      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git feature
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git testfeature
   - &delete-test
     run:
       name: Delete the test branch
@@ -225,7 +225,7 @@ jobs:
       - copy-required-files-to-dist
       - authenticate-and-publish-prerelease
       - *delete-prerelease
-      - *delete-feature
+      - *delete-testfeature
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -377,7 +377,7 @@ workflows:
           filters:
             branches:
               only:
-                - feature
+                - testfeature
       - notify-success-job:
           name: prepare-prerelease-success
           context: SLACK
@@ -389,7 +389,7 @@ workflows:
           filters:
             branches:
               only:
-                - feature
+                - testfeature
 
   update-repository:
     when:
