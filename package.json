@@ -11,7 +11,7 @@
     "test-cov": "jest --runInBand --coverage",
     "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib",
-    "prerelease": "npm run release -- --prerelease feature",
+    "prerelease": "npm run release -- --prerelease",
     "release": "standard-version",
     "git-tags": "git push --follow-tags origin main",
     "publish-prerelease": "npm publish dist --tag prerelease",

@@ -329,6 +329,8 @@ workflows:
                 - release
                 - prerelease
                 - main
+                - testfeature
+
       - approval-prepare-release:
           type: approval
           requires:
@@ -373,7 +375,6 @@ workflows:
           requires:
             - build
             - unit_tests
-            - build-unit_tests-success
           filters:
             branches:
               only:
@@ -384,7 +385,6 @@ workflows:
           requires:
             - build
             - unit_tests
-            - build-unit_tests-success
             - prepare-prerelease
           filters:
             branches:
@@ -477,7 +477,7 @@ workflows:
           context: SLACK
           filters:
             tags:
-              only: /^v(.*)feature\.\d+$/
+              only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
       - publish-prerelease:
@@ -488,7 +488,7 @@ workflows:
             - build
           filters:
             tags:
-              only: /^v(.*)feature\.\d+$/
+              only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
       - notify-success-job:
@@ -499,7 +499,7 @@ workflows:
             - publish-prerelease
           filters:
             tags:
-              only: /^v(.*)feature\.\d+$/
+              only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
 
