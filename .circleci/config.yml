@@ -57,6 +57,14 @@ aliases:
     run:
       name: Delete the develop branch
       command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git develop
+  - &delete-prerelease
+    run:
+      name: Delete the prerelease branch
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git prerelease
+  - &delete-feature
+    run:
+      name: Delete the prerelease branch
+      command: git push -d -q https://${GH_TOKEN}@github.com/MikeDev75015/mongodb-pipeline-builder.git feature
   - &delete-test
     run:
       name: Delete the test branch
@@ -216,6 +224,8 @@ jobs:
           at: .
       - copy-required-files-to-dist
       - authenticate-and-publish-prerelease
+      - *delete-prerelease
+      - *delete-feature
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -356,16 +366,6 @@ workflows:
               only:
                 - develop
 
-      - approval-prepare-prerelease:
-          type: approval
-          requires:
-            - build
-            - unit_tests
-            - build-unit_tests-success
-          filters:
-            branches:
-              only:
-                - feature
       - prepare-prerelease:
           context:
             - GIT
@@ -374,7 +374,6 @@ workflows:
             - build
             - unit_tests
             - build-unit_tests-success
-            - approval-prepare-prerelease
           filters:
             branches:
               only:
@@ -386,7 +385,6 @@ workflows:
             - build
             - unit_tests
             - build-unit_tests-success
-            - approval-prepare-prerelease
             - prepare-prerelease
           filters:
             branches:
@@ -434,7 +432,7 @@ workflows:
           context: SLACK
           filters:
             tags:
-              only: /^v.*/
+              only: /^v\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
       - publish-package:
@@ -445,7 +443,7 @@ workflows:
             - build
           filters:
             tags:
-              only: /^v.*/
+              only: /^v\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
       - final-repository-operations:
@@ -457,7 +455,7 @@ workflows:
             - publish-package
           filters:
             tags:
-              only: /^v.*/
+              only: /^v\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
       - notify-success-job:
@@ -469,7 +467,7 @@ workflows:
             - final-repository-operations
           filters:
             tags:
-              only: /^v.*/
+              only: /^v\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
 
@@ -479,7 +477,7 @@ workflows:
           context: SLACK
           filters:
             tags:
-              only: /^feature$/
+              only: /^v(.*)feature\.\d+$/
             branches:
               ignore: /.*/
       - publish-prerelease:
@@ -490,7 +488,7 @@ workflows:
             - build
           filters:
             tags:
-              only: /^feature$/
+              only: /^v(.*)feature\.\d+$/
             branches:
               ignore: /.*/
       - notify-success-job:
@@ -501,7 +499,7 @@ workflows:
             - publish-prerelease
           filters:
             tags:
-              only: /^feature$/
+              only: /^v(.*)feature\.\d+$/
             branches:
               ignore: /.*/
 
