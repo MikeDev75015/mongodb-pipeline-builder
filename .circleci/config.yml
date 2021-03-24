@@ -109,7 +109,7 @@ commands:
             DEB_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url | select(. | contains("linux_amd64.deb"))')
             wget --quiet -O gh_latest.deb $DEB_URL
             sudo apt install ./gh_latest.deb
-          description: Gets latest realease version of Github CLI
+          description: Gets latest release version of Github CLI
 
   copy-required-files-to-dist:
     description: "Copy all the required files to dist directory"
@@ -413,6 +413,7 @@ workflows:
             branches:
               ignore: /.*/
       - publish-package:
+          name: publish-release-package
           context:
             - GIT
             - SLACK
@@ -424,12 +425,13 @@ workflows:
             branches:
               ignore: /.*/
       - final-repository-operations:
+          name: final-release-operations
           context:
             - GIT
             - SLACK
           requires:
             - build
-            - publish-package
+            - publish-release-package
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+$/
@@ -440,15 +442,15 @@ workflows:
           context: SLACK
           requires:
             - build
-            - publish-package
-            - final-repository-operations
+            - publish-release-package
+            - final-release-operations
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
 
-  publish-prerelease-version:
+  publish-pre-release-version:
     jobs:
       - build:
           context: SLACK
@@ -458,6 +460,7 @@ workflows:
             branches:
               ignore: /.*/
       - publish-package:
+          name: publish-pre-release-package
           branch: pre-release
           context:
             - GIT
@@ -470,13 +473,14 @@ workflows:
             branches:
               ignore: /.*/
       - final-repository-operations:
+          name: final-pre-release-operations
           branch: pre-release
           context:
             - GIT
             - SLACK
           requires:
             - build
-            - publish-package
+            - publish-pre-release-package
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+\-\d+$/
@@ -487,8 +491,8 @@ workflows:
           context: SLACK
           requires:
             - build
-            - publish-package
-            - final-repository-operations
+            - publish-pre-release-package
+            - final-pre-release-operations
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+\-\d+$/

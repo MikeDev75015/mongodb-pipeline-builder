@@ -1,4 +1,4 @@
-import {lookupPayloadValidator} from "./index";
+import {lookupPayloadValidator} from "./lookup-payload.validator";
 
 describe('lookupPayloadValidator', () => {
     test.each([

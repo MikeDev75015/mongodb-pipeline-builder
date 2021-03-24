@@ -1,40 +1,39 @@
-/**
- * Check the mandatory properties of the lookup payload
- * @param payload
- * @constructor
- */
-import {LookupStageInterface} from "../interfaces";
+import {lookupPayloadValidator} from "./stages/lookup-payload.validator";
+import {addFieldsPayloadValidator} from "./stages/addFields-payload.validator";
+import {bucketPayloadValidator} from "./stages/bucket-payload.validator";
 
 /**
- * Checks the presence of mandatory fields
- * @param payload The value passed to the Lookup stage
- * @returns an error message if non-compliant, an empty string if compliant
+ * list of all stage validators implemented
  */
-export const lookupPayloadValidator = (payload: LookupStageInterface) => {
-    if (!payload.from && !payload.as) {
-        return 'The from and as properties are required';
-    } else if (!payload.from) {
-        return 'The from property is required';
-    } else if (!payload.as) {
-        return 'The as property is required';
-    } else if (payload.localField || payload.foreignField) {
-        return lookupEqualityValidator(payload);
-    } else {
-        return '';
-    }
-}
-
-/**
- * Check that all the fields necessary for an equality payload are present
- * @param payload The value passed to the Lookup stage
- * @returns an error message if non-compliant, an empty string if compliant
- */
-const lookupEqualityValidator = (payload: LookupStageInterface) => {
-    if (!payload.localField) {
-        return 'The localField property is required when foreignField is specified.';
-    } else if (!payload.foreignField) {
-        return 'The foreignField property is required when localfield is specified.';
-    } else {
-        return '';
-    }
+export const PAYLOAD_VALIDATION_ENABLED: { [key: string]: any } = {
+    addFields: addFieldsPayloadValidator,
+    bucket: bucketPayloadValidator,
+    bucketAuto: undefined,
+    collStats: undefined,
+    count: undefined,
+    facet: undefined,
+    geoNear: undefined,
+    graphLookup: undefined,
+    group: undefined,
+    indexStats: undefined,
+    limit: undefined,
+    listSessions: undefined,
+    lookup: lookupPayloadValidator,
+    match: undefined,
+    merge: undefined,
+    out: undefined,
+    planCacheStats: undefined,
+    project: undefined,
+    redact: undefined,
+    replaceRoot: undefined,
+    replaceWith: undefined,
+    sample: undefined,
+    search: undefined,
+    set: undefined,
+    skip: undefined,
+    sort: undefined,
+    sortByCount: undefined,
+    unionWith: undefined,
+    unset: undefined,
+    unwind: undefined
 }

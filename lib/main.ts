@@ -22,9 +22,8 @@ import {
     UnionWithStageInterface,
     UnwindStageInterface,
 } from "./interfaces";
-import {PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import {PipelineError} from "./errors";
-import {lookupPayloadValidator} from "./validators";
+import {PAYLOAD_VALIDATION_ENABLED} from "./validators";
 
 /**
  * The class of the pipeline builder object
@@ -101,9 +100,7 @@ export class PipelineBuilder {
         this.logs = setOptions.logs;
         this.stageList = [];
         this.stageErrorList = [];
-        this.stageValidatorsBundle = {
-            lookup: lookupPayloadValidator
-        };
+        this.stageValidatorsBundle = PAYLOAD_VALIDATION_ENABLED;
         this.pagingStage = [];
 
         this.saveActionToDebugHistoryList(
@@ -627,7 +624,7 @@ export class PipelineBuilder {
      * @param payload
      */
     private readonly validatePayload = (stageType: string, payload: any) => {
-        if (!PAYLOAD_VALIDATION_ENABLED.includes(stageType)) {
+        if (!PAYLOAD_VALIDATION_ENABLED[stageType]) {
             return '';
         }
 
