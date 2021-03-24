@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,8 +11,10 @@
     "test-cov": "jest --runInBand --coverage",
     "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib",
+    "prerelease": "standard-version --prerelease",
     "release": "standard-version",
     "git-tags": "git push --follow-tags origin main",
+    "publish-prerelease": "npm publish dist --tag prerelease",
     "publish-latest": "npm publish dist --tag latest"
   },
   "repository": {

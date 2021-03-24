@@ -147,6 +147,19 @@ const myNewPipeline = [<br>
 ];<br>
 </p>
 
+<p style="font-size: 15px;">
+SUPER METHOD:<br>
+GetResult( collection or mongoose model, myNewPipeline )<br><br>
+GetResult is an asynchronous method that gives a very easy way to use your aggregation pipelines on a target (collection, or a mongoose model that have the aggregate method). It gives access to 2 methods:<br>
+GetDocs(): returns the documents found;<br>
+GetCount(): returns the total number of documents found;<br><br>
+Example (in an asynchronous parent method):<br>
+const result = await GetResult( target, pipeline );<br>
+Then you will have access to:<br>
+&nbsp;- result.GetDocs() to get the documents found.<br>
+&nbsp;- result.GetCount() to get the total number of documents found. Often useful when paging with partial results.
+</p>
+
 ### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]
 
 ### Soon more complex examples will be available!
