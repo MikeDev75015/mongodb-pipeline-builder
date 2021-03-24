@@ -61,28 +61,28 @@ readable and much easier to edit. It also allows you to test your pipelines on a
 through the stages in sequence.
 </p>
 
-## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
+## `npm package` <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
 ### npm i mongodb-pipeline-builder@latest --save
 
-## Usage:
+## `Usage:`
 
 
-### - with require
+### `- with require`
 <p style="font-size: 15px;">
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;<br>
 const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
 const { ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
 </p>
 
-### - with import
+### `- with import`
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
 import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
 import { ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 </p>
 
-### Code:
+## `Code:`
 
 <p style="font-size: 15px;">
 const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
@@ -101,7 +101,7 @@ const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
 *** If no helper is available for a stage, use its method and pass it a valid value as a parameter.
 </p>
 
-### is equivalent to:
+### `is equivalent to:`
 
 <p style="font-size: 15px;">
 const myNewPipeline = [<br>
@@ -147,25 +147,24 @@ const myNewPipeline = [<br>
 ];<br>
 </p>
 
+## `GetResult()`
+
 <p style="font-size: 15px;">
-SUPER METHOD:<br>
-GetResult( collection or mongoose model, myNewPipeline )<br><br>
-GetResult is an asynchronous method that gives a very easy way to use your aggregation pipelines on a target (collection, or a mongoose model that have the aggregate method). It gives access to 2 methods:<br>
-GetDocs(): returns the documents found;<br>
-GetCount(): returns the total number of documents found;<br><br>
-Example (in an asynchronous parent method):<br>
+is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection, or a mongoose model having the aggregate method).</p>
+
+### `Example (in an asynchronous parent method):`
+<p style="font-size: 15px;">
 const result = await GetResult( target, pipeline );<br>
 Then you will have access to:<br>
 &nbsp;- result.GetDocs() to get the documents found.<br>
 &nbsp;- result.GetCount() to get the total number of documents found. Often useful when paging with partial results.
 </p>
 
-### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]
+### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]<br>
 
-### Soon more complex examples will be available!
+### `Soon more complex examples will be available!`
 
-
-
+<br>
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
 <p style="font-size: 15px;">
