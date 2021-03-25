@@ -1,14 +1,15 @@
 import {lookupPayloadValidator} from "./stages/lookup-payload.validator";
 import {addFieldsPayloadValidator} from "./stages/addFields-payload.validator";
 import {bucketPayloadValidator} from "./stages/bucket-payload.validator";
+import {bucketAutoPayloadValidator} from "./stages/bucket-auto-payload.validator";
 
 /**
- * list of all stage validators implemented
+ * list of all stage validators
  */
 export const PAYLOAD_VALIDATION_ENABLED: { [key: string]: any } = {
     addFields: addFieldsPayloadValidator,
     bucket: bucketPayloadValidator,
-    bucketAuto: undefined,
+    bucketAuto: bucketAutoPayloadValidator,
     collStats: undefined,
     count: undefined,
     facet: undefined,

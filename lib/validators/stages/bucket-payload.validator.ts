@@ -1,8 +1,8 @@
 import {BucketStageInterface} from "../../interfaces";
 
 /**
- * Checks the presence of mandatory fields
- * @param payload The value passed to the Bucket stage
+ * Checks the presence of mandatory fields and the validity of each field present in the payload
+ * @param payload The value passed to the stage
  * @returns an error message if non-compliant, an empty string if compliant
  */
 export const bucketPayloadValidator = (payload: BucketStageInterface) => {
