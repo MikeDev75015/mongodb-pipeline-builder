@@ -3,6 +3,8 @@ import {addFieldsPayloadValidator} from "./stages/addFields-payload.validator";
 import {bucketPayloadValidator} from "./stages/bucket-payload.validator";
 import {bucketAutoPayloadValidator} from "./stages/bucket-auto-payload.validator";
 import {collStatsPayloadValidator} from "./stages/collStats-payload.validator";
+import {countPayloadValidator} from "./stages/count-payload.validator";
+import {facetPayloadValidator} from "./stages/facet-payload.validator";
 
 /**
  * list of all stage validators
@@ -12,8 +14,8 @@ export const PAYLOAD_VALIDATION_ENABLED: { [key: string]: any } = {
     bucket: bucketPayloadValidator,
     bucketAuto: bucketAutoPayloadValidator,
     collStats: collStatsPayloadValidator,
-    count: undefined,
-    facet: undefined,
+    count: countPayloadValidator,
+    facet: facetPayloadValidator,
     geoNear: undefined,
     graphLookup: undefined,
     group: undefined,
