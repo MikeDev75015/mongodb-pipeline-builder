@@ -10,11 +10,11 @@ export const bucketAutoPayloadValidator = (payload: BucketAutoStageInterface) =>
         'R5', 'R10', 'R20', 'R40', 'R80', '1-2-5', 'E6', 'E12', 'E24', 'E48', 'E96', 'E192', 'POWERSOF2'
     ];
 
-    if (!payload.groupBy && !payload.buckets) {
+    if (payload.groupBy === undefined && payload.buckets === undefined) {
         return 'The groupBy and buckets properties are required.';
-    } else if (!payload.groupBy) {
+    } else if (payload.groupBy === undefined) {
         return 'The groupBy property is required.';
-    } else if (!payload.buckets) {
+    } else if (payload.buckets === undefined) {
         return 'The buckets property is required.';
     } else if (payload.buckets < 1) {
         return 'The buckets value is not valid. You must specify a positive 32-bit integer.';
