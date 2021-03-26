@@ -180,6 +180,7 @@ Paging
 STAGE HELPERS:<br>
 &nbsp;- Bucket ( GroupByPayload )<br>
 &nbsp;- BucketAuto ( GroupByAutoPayload )<br>
+&nbsp;- GeoNear ( NearPayload )<br>
 &nbsp;- Lookup ( ConditionPayload | EqualityPayload )<br>
 &nbsp;- Merge ( IntoPayload )<br>
 &nbsp;- Out ( DbCollPayload )<br>
