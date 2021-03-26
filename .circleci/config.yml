@@ -247,19 +247,6 @@ jobs:
           event: always
           template: basic_success_1
 
-  clean-test:
-    docker:
-      - image: circleci/node:12
-    resource_class: small
-    parameters:
-      branch:
-        type: string
-    steps:
-      - checkout
-      - git-config-local-user
-      - git-delete-branch:
-          branch: << parameters.branch >>
-
 workflows:
   build-and-test-default:
     when:
@@ -510,7 +497,8 @@ workflows:
             branches:
               only:
                 - test
-      - clean-test:
+      - clean-repository:
+          name: clean-origin-test
           branch: test
           context: GIT
           requires:
