@@ -624,10 +624,6 @@ export class PipelineBuilder {
      * @param payload
      */
     private readonly validatePayload = (stageType: string, payload: any) => {
-        if (!PAYLOAD_VALIDATION_ENABLED[stageType]) {
-            return '';
-        }
-
         return this.stageValidatorsBundle[stageType](payload);
     }
 
