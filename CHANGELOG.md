@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.5.0...v2.6.0) (2021-03-29)
+
+
+### Features
+
+* add currentOp OpPayload helper ([b47c269](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/b47c269fe791b73ba678d12f176d75e66dd44939))
+
 ## [2.5.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.4.2...v2.5.0) (2021-03-26)
 
 
