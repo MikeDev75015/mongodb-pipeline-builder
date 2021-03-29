@@ -5,7 +5,8 @@ describe('sort validators', () => {
         const payloadList: any[] = [
             {},
             { tests: undefined },
-            { tests: 'unit' }
+            { tests: 'unit' },
+            [{ tests: 'unit' }]
         ];
         test.each([
             [sortPayloadValidator(payloadList[0]),
@@ -13,6 +14,7 @@ describe('sort validators', () => {
             [sortPayloadValidator(payloadList[1]),
                 'One or more field values are not defined.'],
             [sortPayloadValidator(payloadList[2]), ''],
+            [sortPayloadValidator(payloadList[3]), 'The payload is not valid.'],
         ])('%o should return %s', (
             operation: any,
             expected: any

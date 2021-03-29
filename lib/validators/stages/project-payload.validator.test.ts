@@ -5,7 +5,8 @@ describe('project validators', () => {
         const payloadList: any[] = [
             {},
             { tests: undefined },
-            { tests: 'unit' }
+            { tests: 'unit' },
+            [{ tests: 'unit' }]
         ];
         test.each([
             [projectPayloadValidator(payloadList[0]),
@@ -13,6 +14,7 @@ describe('project validators', () => {
             [projectPayloadValidator(payloadList[1]),
                 'One or more field values are not defined.'],
             [projectPayloadValidator(payloadList[2]), ''],
+            [projectPayloadValidator(payloadList[3]), 'The payload is not valid.'],
         ])('%o should return %s', (
             operation: any,
             expected: any

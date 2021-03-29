@@ -47,10 +47,22 @@ describe('GetResult', () => {
 
     it('should return an object with the GetDocs and GetCount methods as properties that get the documents and' +
         'the total number of documents for a paging aggregate', async () => {
-        const getResult = await GetResult(targetPagingAggregationMock, [{ $match: {} } ]);
+        const getResult = await GetResult(targetPagingAggregationMock, [{ $match: {} }]);
         await expect(getResult).toHaveProperty('GetDocs');
         await expect(getResult).toHaveProperty('GetCount');
         await expect(getResult.GetDocs()).toEqual([]);
         await expect(getResult.GetCount()).toEqual(0);
+    });
+
+    it('should throw a PipelineError message if the operation failed', async () => {
+        await expect(
+            () => GetResult({ aggregate: async () => {
+                throw new Error('The collection does not exist.')
+                }}, [{ $match: {} }])
+        ).rejects.toThrowError(
+            new PipelineError(
+                `An error was encountered while executing the GetResult method:\n - The collection does not exist.`
+            )
+        )
     });
 });

@@ -13,5 +13,6 @@ export class PipelineError extends Error {
      */
     constructor(message?: string) {
         super(message ? message : 'An error occurred while building the pipeline.');
+        this.name = PipelineError.name;
     }
 }

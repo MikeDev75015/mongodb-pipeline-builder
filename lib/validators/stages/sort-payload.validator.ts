@@ -4,6 +4,10 @@
  * @returns an error message if non-compliant, an empty string if compliant
  */
 export const sortPayloadValidator = (payload: { [key: string]: any }) => {
+    if (Array.isArray(payload)) {
+        return 'The payload is not valid.';
+    }
+
     const keyList = Object.keys(payload);
     if (!keyList.length) {
         return 'No fields have been added.';

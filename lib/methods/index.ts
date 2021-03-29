@@ -21,22 +21,27 @@ export const GetResult = async (target: any, pipeline: StageInterface[]) => {
         throw new PipelineError('Application not possible, the pipeline is empty.');
     }
 
-    const result = await target.aggregate(pipeline);
+    try {
+        const result = await target.aggregate(pipeline);
 
-    // Paging result
-    if (result.length === 1 && result[0].docs && result[0].count && result[0].count[0]) {
+        // Paging result
+        if (result.length === 1 && result[0].docs && result[0].count && result[0].count[0]) {
 
+            return {
+                GetDocs: () => result[0].docs,
+                GetCount: () => result[0].count[0].totalElements
+            } as GetResultResponseInterface;
+        }
+
+        // Default result
         return {
-            GetDocs: () => result[0].docs,
-            GetCount: () => result[0].count[0].totalElements
+            GetDocs: () => result,
+            GetCount: () => result.length
         } as GetResultResponseInterface;
-    }
 
-    // Default result
-    return {
-        GetDocs: () => result,
-        GetCount: () => result.length
-    } as GetResultResponseInterface;
+    } catch (e) {
+        throw new PipelineError(`An error was encountered while executing the GetResult method:\n - ${e.message}`)
+    }
 }
 
 
