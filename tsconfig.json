@@ -77,7 +77,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true
   },
   "include": ["lib/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"]

@@ -12,16 +12,17 @@ export { StageTypeEnum, getStageTypeValue, StageLabel } from './core/stage-type.
 /*
 STAGE INTERFACES
  */
-export { BucketStageInterface } from "./stages/bucket-stage.interface";
 export { BucketAutoStageInterface } from './stages/bucket-auto-stage.interface';
+export { BucketStageInterface } from "./stages/bucket-stage.interface";
 export { CollStatsStageInterface } from './stages/coll-stats-stage.interface';
+export { CurrentOpInterface } from './stages/current-op.interface';
 export { FacetStageInterface } from './stages/facet-stage.interface';
 export { GeoNearStageInterface } from './stages/geo-near-stage.interface';
 export { GraphLookupStageInterface } from './stages/graph-lookup-stage.interface';
 export { GroupStageInterface } from './stages/group-stage.interface';
-export { LookupStageInterface } from './stages/lookup-stage.interface';
 export { LookupConditionInterface } from './stages/lookup-condition.interface';
 export { LookupEqualityInterface } from './stages/lookup-equality.interface';
+export { LookupStageInterface } from './stages/lookup-stage.interface';
 export { MergeStageInterface, WhenMatchedType, WhenNotMatchedType } from './stages/merge-stage.interface';
 export { OutStageInterface } from './stages/out-stage.interface';
 export { ReplaceRootStageInterface } from './stages/replace-root-stage.interface';
