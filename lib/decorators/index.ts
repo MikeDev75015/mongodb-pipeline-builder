@@ -40,7 +40,7 @@ export function IsValidName(options?: {
                             case 'noSpecialChar':
                                 testNoSpecialChar(newVal, errorList);
                                 break;
-                            default: errorList.push(`${errorList.length + 1}. Unknown option ${key} key.`);
+                            default: errorList.push(`${errorList.length + 1}. Unknown ${key} decorator option key.`);
                         }
                     });
                 }
