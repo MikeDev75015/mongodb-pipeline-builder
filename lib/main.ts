@@ -24,6 +24,7 @@ import {
 } from "./interfaces";
 import {PipelineError} from "./errors";
 import {PAYLOAD_VALIDATION_ENABLED} from "./validators";
+import {IsValidName} from "./decorators";
 
 /**
  * The class of the pipeline builder object
@@ -45,6 +46,12 @@ export class PipelineBuilder {
      * Contains the name of the pipeline
      * @private
      */
+    @IsValidName({
+        minLength: 4,
+        maxLength: 8,
+        noSpace: true,
+        noSpecialChar: true
+    })
     private readonly pipelineName: string;
 
     /**
