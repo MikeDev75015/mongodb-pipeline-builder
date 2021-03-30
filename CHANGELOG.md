@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.6.3-1...v2.7.0) (2021-03-30)
+
+
+### Features
+
+* add pipeline name decorator validation rules ([1370ea6](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/1370ea6bf90709ead9ca37d1cc3f9a01ac0c625d))
+
 ### [2.6.3-1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.6.3-0...v2.6.3-1) (2021-03-30)
 
 ### [2.6.3-0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.6.2...v2.6.3-0) (2021-03-30)
