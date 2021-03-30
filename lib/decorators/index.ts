@@ -18,7 +18,7 @@ export function IsValidName(options?: {
         };
         const setter = function(newVal: string) {
             try {
-                let errorList: string[] = [];
+                const errorList: string[] = [];
                 const isEmptyString = !newVal.replace(/ /g, '').length;
 
                 if (isEmptyString) {
