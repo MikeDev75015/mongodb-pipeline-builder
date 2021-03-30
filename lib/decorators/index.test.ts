@@ -1,4 +1,5 @@
 import {IsValidName} from "./index";
+import {PipelineError} from "../errors";
 
 class TestDecorator {
     @IsValidName({
@@ -27,48 +28,41 @@ class TestDecorator2 {
 
 describe('decorators', () => {
     describe('IsValidName', () => {
-        let spy: any;
-
-        beforeEach(() => {
-            spy = jest.spyOn(console, 'error');
-        });
 
         it('should throw errors if an option key is unknown', () => {
-            new TestDecorator2('unit');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. Unknown test decorator option key.');
-
+            expect(() => new TestDecorator2('unit')).toThrowError(
+                new PipelineError('1. Unknown test decorator option key.')
+            );
         });
 
         it('should throw errors if the pipeline name is empty', () => {
-            new TestDecorator('');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. The pipeline name cannot be an empty string.');
-
+            expect(() => new TestDecorator('')).toThrowError(
+                new PipelineError('1. The pipeline name cannot be an empty string.')
+            );
         });
 
         it('should throw errors if the pipeline name is lower than min length', async () => {
-            new TestDecorator('too');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. The pipeline name must have at least 4 character(s).');
+            expect(() => new TestDecorator('too')).toThrowError(
+                new PipelineError('1. The pipeline name must have at least 4 character(s).')
+            );
         });
 
         it('should throw errors if the pipeline name is bigger than max length', async () => {
-            new TestDecorator('maxi-pipeline-name');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. The pipeline name must have a maximum of 8 character (s).');
+            expect(() => new TestDecorator('maxi-pipeline-name')).toThrowError(
+                new PipelineError('1. The pipeline name must have a maximum of 8 character(s).')
+            );
         });
 
         it('should throw errors if the pipeline name contain spaces', async () => {
-            new TestDecorator('sp ace');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. The pipeline name cannot contain spaces.');
+            expect(() => new TestDecorator('sp ace')).toThrowError(
+                new PipelineError('1. The pipeline name cannot contain spaces.')
+            );
         });
 
         it('should throw errors if the pipeline name contain special char(s)', async () => {
-            new TestDecorator('$test');
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('1. The pipeline name cannot contain any special character(s) except "-" or "_".');
+            expect(() => new TestDecorator('$test')).toThrowError(
+                new PipelineError('1. The pipeline name cannot contain any special character(s) except "-" or "_".')
+            );
         });
     });
 });
