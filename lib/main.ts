@@ -48,7 +48,7 @@ export class PipelineBuilder {
      */
     @IsValidName({
         minLength: 4,
-        maxLength: 8,
+        maxLength: 12,
         noSpace: true,
         noSpecialChar: true
     })
