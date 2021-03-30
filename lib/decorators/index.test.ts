@@ -5,8 +5,19 @@ class TestDecorator {
         minLength: 4,
         maxLength: 8,
         noSpace: true,
-        noSpecialChar: true
+        noSpecialChar: true,
     })
+    private readonly name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
+
+class TestDecorator2 {
+    @IsValidName({
+        test: 4,
+    } as unknown as {})
     private readonly name: string;
 
     constructor(name: string) {
@@ -20,7 +31,14 @@ describe('decorators', () => {
 
         beforeEach(() => {
             spy = jest.spyOn(console, 'error');
-        })
+        });
+
+        it('should throw errors if an option key is unknown', () => {
+            new TestDecorator2('unit');
+            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy).toHaveBeenCalledWith('1. Unknown test decorator option key.');
+
+        });
 
         it('should throw errors if the pipeline name is empty', () => {
             new TestDecorator('');
