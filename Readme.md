@@ -72,20 +72,50 @@ through the stages in sequence.
 <p style="font-size: 15px;">
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;<br>
 const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
-const { ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
+const { LessThanEqual, ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
 </p>
 
 ### `- with import`
 <p style="font-size: 15px;">
 import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
 import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
-import { ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
+import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 </p>
 
-## `Code:`
+## `Example with paging:`
 
 <p style="font-size: 15px;">
-const myNewPipeline = new PipelineBuilder('name-of-my-new-pipeline')<br>
+const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( LessThanEqual( '$id', 20 ) ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'name', 'weight' ) )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.Paging( 5, 3 ) // 5 per page, page 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
+</p>
+
+### `is equivalent to:`
+
+<p style="font-size: 15px;">
+const myNewPipeline = [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ $facet: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docs: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $match: { $expr: { $lte: [ "$id", 20 ] } } },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $project: { _id: 0, name: 1, weight: 1 } },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $skip: 10 },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $limit: 5 }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $match: { $expr: { $lte: [ "$id", 20 ] } } },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $project: { _id: 0, name: 1, weight: 1 } },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $count: "totalElements" }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} }<br>
+];<br>
+</p>
+
+## `Example without paging:`
+
+<p style="font-size: 15px;">
+const myNewPipeline = new PipelineBuilder('user-skills')<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 123456 ) ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )<br>
@@ -115,7 +145,7 @@ const myNewPipeline = [<br>
 ## `GetResult()`
 
 <p style="font-size: 15px;">
-is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection, or a mongoose model having the aggregate method).</p>
+is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.</p>
 
 ### `Example (in an asynchronous parent method):`
 <p style="font-size: 15px;">
@@ -126,8 +156,6 @@ Then you will have access to:<br>
 </p>
 
 ### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]<br>
-
-### `Soon more complex examples will be available!`
 
 <br>
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
