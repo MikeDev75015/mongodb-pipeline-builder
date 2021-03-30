@@ -1,6 +1,6 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "2.6.2",
+  "version": "2.6.3-0",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,6 +39,9 @@
   "homepage": "https://mikedev75015.github.io",
   "devDependencies": {
     "@babel/core": "^7.13.10",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.5",
+    "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-typescript": "^7.13.0",
     "@compodoc/compodoc": "^1.1.11",
