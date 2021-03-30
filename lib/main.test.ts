@@ -8,7 +8,7 @@ describe('should create a new pipeline builder object', () => {
 
     describe('pipeline Builder With Debug', () => {
         beforeEach(() => {
-            pipelineBuilderWithDebug = new PipelineBuilder('builder-test', { debug: true, logs: true});
+            pipelineBuilderWithDebug = new PipelineBuilder('debug', { debug: true, logs: true});
         });
 
         it('should be defined', () => {
@@ -17,7 +17,7 @@ describe('should create a new pipeline builder object', () => {
 
         describe('getName()', () => {
             it('should return the pipeline builder name passed in the constructor', () => {
-                expect(pipelineBuilderWithDebug.getName()).toContain('builder-test_');
+                expect(pipelineBuilderWithDebug.getName()).toContain('debug_');
             });
         });
 
@@ -153,124 +153,124 @@ describe('should create a new pipeline builder object', () => {
 
             test.each([
                 ['should add a stage to the pipeline', 'addFields',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .AddFields({ tests: 'unit' }),
                     { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'addFields',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .AddFields({ tests: 'unit' }, { test: 'unit' }),
                     { tests: 'unit', test: 'unit' }],
 
                 ['should add a stage to the pipeline', 'bucket',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Bucket({groupBy: '$name', boundaries: ['a', 'l', 'z']}),
                     {groupBy: '$name', boundaries: ['a', 'l', 'z']}],
                 ['should add a stage to the pipeline', 'bucketAuto',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .BucketAuto({ groupBy: '$age', buckets: 5 }), { groupBy: '$age', buckets: 5 }],
                 ['should add a stage to the pipeline', 'collStats',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .CollStats(
                         { latencyStats: { histograms: false }, storageStats: { scale: 2 }, count: {}, queryExecStats: {} }
                     ), { latencyStats: { histograms: false }, storageStats: { scale: 2 }, count: {}, queryExecStats: {} }],
                 ['should add a stage to the pipeline', 'count',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Count('testCount'), 'testCount'],
                 ['should add a stage to the pipeline', 'facet',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Facet({ output1: [], output2: [] }), { output1: [], output2: [] }],
                 ['should add a stage to the pipeline', 'geoNear',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .GeoNear({ near: [20, 5], distanceField: 'distance' }),
                     { near: [20, 5], distanceField: 'distance' }],
                 ['should add a stage to the pipeline', 'graphLookup',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .GraphLookup(
                         { from: 'tests', startWith: [15,30,45], connectFromField:'testId', connectToField: 'id',
                             as: 'pts' }
                     ), { from: 'tests', startWith: [15,30,45], connectFromField:'testId', connectToField: 'id',
                     as: 'pts' }],
                 ['should add a stage to the pipeline', 'group',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Group({ _id: 'unit', tests: { $push: 'num'} }),
                     { _id: 'unit', tests: { $push: 'num'} }],
                 ['should add a stage to the pipeline', 'indexStats',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .IndexStats({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'limit',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Limit(200), 200],
                 ['should add a stage to the pipeline', 'listSessions',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .ListSessions({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'lookup',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Lookup({ from: 'unit', as: 'test' }), { from: 'unit', as: 'test' }],
                 ['should add a stage to the pipeline', 'match',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Match({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'merge',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Merge({ into: 'unit' }), { into: 'unit' }],
                 ['should add a stage to the pipeline', 'out',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Out({ db: 'tests', coll: 'unit' }), { db: 'tests', coll: 'unit' }],
                 ['should add a stage to the pipeline', 'planCacheStats',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .PlanCacheStats({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'project',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Project({ tests: 1 }), { tests: 1 }],
                 ['should add a stage to the pipeline', 'redact',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Redact({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'replaceRoot',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .ReplaceRoot({ newRoot: { tests: 'unit' } }), { newRoot: { tests: 'unit' } }],
                 ['should add a stage to the pipeline', 'replaceWith',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .ReplaceWith({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'sample',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Sample({ size: 3 }), { size: 3 }],
                 ['should add a stage to the pipeline', 'search',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Search({ tests: 'unit' }), { tests: 'unit' }],
 
                 ['should add a stage to the pipeline', 'set',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Set({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'set',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Set({ tests: 'unit' }, { test: 'unit' }), { tests: 'unit', test: 'unit' }],
 
                 ['should add a stage to the pipeline', 'skip',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Skip(100), 100],
 
                 ['should add a stage to the pipeline', 'sort',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Sort({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'sort',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Sort({ tests: 'unit' }, { test: 'unit' }), { tests: 'unit', test: 'unit' }],
 
                 ['should add a stage to the pipeline', 'sortByCount',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .SortByCount({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'unionWith',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .UnionWith({ coll: 'unit' }), { coll: 'unit' }],
 
                 ['should add a stage to the pipeline', 'unset',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Unset('toto'), 'toto'],
                 ['should add a stage to the pipeline', 'unset',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Unset('toto', 'test', 'unit'), ['toto', 'test', 'unit']],
 
                 ['should add a stage to the pipeline', 'unwind',
-                    new PipelineBuilder('builder-test', { debug: true, logs: true})
+                    new PipelineBuilder('debug', { debug: true, logs: true})
                         .Unwind('$tests' ), '$tests'],
 
             ])('%s: $%s => %o', (
@@ -291,7 +291,7 @@ describe('should create a new pipeline builder object', () => {
 
     describe('pipeline Builder Without Debug', () => {
         beforeEach(() => {
-            pipelineBuilderWithoutDebug = new PipelineBuilder('builder-test2');
+            pipelineBuilderWithoutDebug = new PipelineBuilder('no-debug');
         });
 
         it('should throw a PipelineError if the pipeline is empty', () => {
