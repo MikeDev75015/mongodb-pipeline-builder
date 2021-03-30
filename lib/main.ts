@@ -30,6 +30,8 @@ import {PAYLOAD_VALIDATION_ENABLED} from "./validators";
  */
 export class PipelineBuilder {
 
+    private static counter = 0;
+
     /**
      * Default builder options
      * @private
@@ -95,7 +97,9 @@ export class PipelineBuilder {
             ...options
         };
 
-        this.pipelineName = pipelineName;
+        PipelineBuilder.counter++;
+
+        this.pipelineName = `${pipelineName}_${PipelineBuilder.counter}`;
         this.debugBuild = { status: setOptions.debug, actionList: [] };
         this.logs = setOptions.logs;
         this.stageList = [];
@@ -105,7 +109,7 @@ export class PipelineBuilder {
 
         this.saveActionToDebugHistoryList(
             'constructor',
-            { pipelineName, options }, { debugBuild: this.debugBuild }
+            { pipelineName: this.pipelineName, counter: PipelineBuilder.counter, options }, { debugBuild: this.debugBuild }
         );
     }
 
