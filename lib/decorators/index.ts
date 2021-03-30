@@ -10,48 +10,43 @@ export function IsValidName(options?: {
     noSpace?: boolean,
     noSpecialChar?: boolean
 }) {
-    console.log('add IsValidName decorator - options:\n', options);
     return function (target: Object | any, propertyKey: string) {
         let value: string;
         const getter = function() {
             return value;
         };
         const setter = function(newVal: string) {
-            try {
-                const errorList: string[] = [];
-                const isEmptyString = !newVal.replace(/ /g, '').length;
+            const errorList: string[] = [];
+            const isEmptyString = !newVal.replace(/ /g, '').length;
 
-                if (isEmptyString) {
-                    errorList.push(`${errorList.length + 1}. The pipeline name cannot be an empty string.`);
-                }
+            if (isEmptyString) {
+                errorList.push(`${errorList.length + 1}. The pipeline name cannot be an empty string.`);
+            }
 
-                if (!isEmptyString && options) {
-                    Object.keys(options).forEach(key => {
-                        switch (key) {
-                            case 'minLength':
-                                testMinLength(newVal, options.minLength as number, errorList);
-                                break;
-                            case 'maxLength':
-                                testMaxLength(newVal, options.maxLength as number, errorList);
-                                break;
-                            case 'noSpace':
-                                testNoSpace(newVal, errorList);
-                                break;
-                            case 'noSpecialChar':
-                                testNoSpecialChar(newVal, errorList);
-                                break;
-                            default: errorList.push(`${errorList.length + 1}. Unknown ${key} decorator option key.`);
-                        }
-                    });
-                }
+            if (!isEmptyString && options) {
+                Object.keys(options).forEach(key => {
+                    switch (key) {
+                        case 'minLength':
+                            testMinLength(newVal, options.minLength as number, errorList);
+                            break;
+                        case 'maxLength':
+                            testMaxLength(newVal, options.maxLength as number, errorList);
+                            break;
+                        case 'noSpace':
+                            testNoSpace(newVal, errorList);
+                            break;
+                        case 'noSpecialChar':
+                            testNoSpecialChar(newVal, errorList);
+                            break;
+                        default: errorList.push(`${errorList.length + 1}. Unknown ${key} decorator option key.`);
+                    }
+                });
+            }
 
-                if (errorList.length) {
-                    throw new PipelineError(errorList.join('\n'));
-                } else {
-                    value = newVal.trim();
-                }
-            } catch (e) {
-                console.error(e.message);
+            if (errorList.length) {
+                throw new PipelineError(errorList.join('\n'));
+            } else {
+                value = newVal.trim();
             }
         };
 
@@ -73,7 +68,7 @@ export function IsValidName(options?: {
  * @param errorList
  */
 function testMinLength(newVal: string, minLength: number, errorList: string[]) {
-    if (newVal.length < minLength) {
+    if (newVal.replace(/_\d+$/g, '').length < minLength) {
         errorList.push(`${errorList.length + 1}. The pipeline name must have at least ${minLength} character(s).`);
     }
 }
@@ -85,8 +80,8 @@ function testMinLength(newVal: string, minLength: number, errorList: string[]) {
  * @param errorList
  */
 function testMaxLength(newVal: string, maxLength: number, errorList: string[]) {
-    if (newVal.length > maxLength) {
-        errorList.push(`${errorList.length + 1}. The pipeline name must have a maximum of ${maxLength} character (s).`);
+    if (newVal.replace(/_\d+$/g, '').length > maxLength) {
+        errorList.push(`${errorList.length + 1}. The pipeline name must have a maximum of ${maxLength} character(s).`);
     }
 }
 
