@@ -31,6 +31,10 @@ import {IsValidName} from "./decorators";
  */
 export class PipelineBuilder {
 
+    /**
+     * Static variable that counts the number of instances created
+     * @private
+     */
     private static counter = 0;
 
     /**
