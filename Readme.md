@@ -147,12 +147,21 @@ const myNewPipeline = [<br>
 <p style="font-size: 15px;">
 is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.</p>
 
-### `Example (in an asynchronous parent method):`
+### `Example :`
 <p style="font-size: 15px;">
-const result = await GetResult( target, pipeline );<br>
+const result = await GetResult( target, pipeline );<br><br>
 Then you will have access to:<br>
-&nbsp;- result.GetDocs() to get the documents found.<br>
-&nbsp;- result.GetCount() to get the total number of documents found. Often useful when paging with partial results.
+&nbsp;- result.GetDocs(); to get the documents found.<br>
+&nbsp;- result.GetCount(); to get the total number of documents found. Often useful when paging with partial results.
+</p>
+
+### `Or :`
+<p style="font-size: 15px;">
+GetResult( target, pipeline )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then( result => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- result.GetDocs();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- result.GetCount();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;});
 </p>
 
 ### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]<br>
