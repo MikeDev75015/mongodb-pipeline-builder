@@ -195,8 +195,8 @@ const myNewPipeline = [
   },
   {
     $addFields: {
-      skills: $arrayElemAt("$profile.skills", 0),
-      availability: $arrayElemAt("$profile.availability", 0)
+      skills: { $arrayElemAt("$profile.skills", 0) },
+      availability: { $arrayElemAt("$profile.availability", 0) }
     }
   },
   {
