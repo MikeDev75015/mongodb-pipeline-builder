@@ -63,106 +63,171 @@ through the stages in sequence.
 
 ## `npm package` <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-### npm i mongodb-pipeline-builder@latest --save
+### `npm i mongodb-pipeline-builder@latest --save`
 
-## `Usage:`
+## Usage:
 
 
-### `- with require`
-<p style="font-size: 15px;">
-const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;<br>
-const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');<br>
+### - with require
+
+```typescript
+const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;
+const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');
 const { LessThanEqual, ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
-</p>
+```
 
-### `- with import`
-<p style="font-size: 15px;">
-import { PipelineBuilder } from 'mongodb-pipeline-builder';<br>
-import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';<br>
+### - with import
+
+
+```typescript
+import { PipelineBuilder } from 'mongodb-pipeline-builder';
+import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';
 import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
-</p>
+```
 
 ## `Example with paging:`
 
-<p style="font-size: 15px;">
-const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( LessThanEqual( '$id', 20 ) ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'name', 'weight' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Paging( 5, 3 ) // 5 per page, page 3<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
-</p>
 
-### `is equivalent to:`
+```typescript
+const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
+                        .Match( Expression( LessThanEqual( '$id', 20 ) ) )
+                        .Project( OnlyPayload( 'name', 'weight' ) )
+                        .Paging( 5, 3 ) // 5 per page, page 3
+                        .getPipeline();
+```
 
-<p style="font-size: 15px;">
-const myNewPipeline = [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $facet: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docs: [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $match: { $expr: { $lte: [ "$id", 20 ] } } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $project: { _id: 0, name: 1, weight: 1 } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $skip: 10 },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $limit: 5 }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count: [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $match: { $expr: { $lte: [ "$id", 20 ] } } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $project: { _id: 0, name: 1, weight: 1 } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ $count: "totalElements" }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;} }<br>
-];<br>
-</p>
+### is equivalent to:
 
-## `Example without paging:`
 
-<p style="font-size: 15px;">
-const myNewPipeline = new PipelineBuilder('user-skills')<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Match( Expression( Equal( '$id' , 123456 ) ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.AddFields(<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.Unset(&nbsp;'profile'&nbsp;)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.getPipeline();
-</p>
+```typescript
+const myNewPipeline = [
+  {
+    $facet: {
+      docs: [
+        {
+          $match: {
+            $expr: {
+              $lte: ["$id", 20]
+            }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            name: 1,
+            weight: 1
+          }
+        },
+        {
+          $skip: 10
+        },
+        {
+          $limit: 5
+        }
+      ],
+      count: [
+        {
+          $match: {
+            $expr: {
+              $lte: ["$id", 20]
+            }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            name: 1,
+            weight: 1
+          }
+        },
+        {
+          $count: "totalElements"
+        }
+      ]
+    }
+  }
+];
 
-### `is equivalent to:`
+```
 
-<p style="font-size: 15px;">
-const myNewPipeline = [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $match:&nbsp;{ $expr:&nbsp;{ $eq:&nbsp;[ '$id', 123456 ] } } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $lookup:&nbsp;{ from:&nbsp;'profiles', as:&nbsp;'profile', localField:&nbsp;'profileId', foreignField:&nbsp;'id' } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $project:&nbsp;{ _id:&nbsp;0, firstname:&nbsp;1, lastname:&nbsp;1, email:&nbsp;1 } },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $addFields:&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;skills:&nbsp;{ $arrayElemAt('$profile.skills', 0) },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;availability:&nbsp;{ $arrayElemAt('$profile.availability', 0) }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;} },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{ $unset:&nbsp;'profile' }<br>
-];<br>
-</p>
+## Example without paging:
 
-## `GetResult()`
+
+```typescript
+const myNewPipeline = new PipelineBuilder('user-skills')
+	.Match(Expression(Equal('$id', 123456)))
+	.Lookup(EqualityPayload('profiles', 'profile', 'profileId', 'id'))
+	.Project(OnlyPayload('firstname', 'lastname', 'email'))
+	.AddFields(
+		Field('skills', ArrayElemAt('$profile.skills', 0)),
+		Field('availability', ArrayElemAt('$profile.availability', 0))
+	)
+	.Unset('profile')
+	.getPipeline();
+```
+
+### is equivalent to:
+
+```typescript
+const myNewPipeline = [
+  {
+    $match: {
+      $expr: {
+        $eq: ["$id", 123456]
+      }
+    }
+  },
+  {
+    $lookup: {
+      from: "profiles",
+      as: "profile",
+      localField: "profileId",
+      foreignField: "id"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      lastname: 1,
+      email: 1
+    }
+  },
+  {
+    $addFields: {
+      skills: { $arrayElemAt["$profile.skills", 0] },
+      availability: { $arrayElemAt["$profile.availability", 0] }
+    }
+  },
+  {
+    $unset: "profile"
+  }
+];
+
+```
+
+## GetResult()
 
 <p style="font-size: 15px;">
 is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.</p>
 
-### `Example :`
+### Example :
+`const result = await GetResult( target, pipeline );`
 <p style="font-size: 15px;">
-const result = await GetResult( target, pipeline );<br><br>
 Then you will have access to:<br>
 &nbsp;- result.GetDocs(); to get the documents found.<br>
 &nbsp;- result.GetCount(); to get the total number of documents found. Often useful when paging with partial results.
 </p>
 
-### `Or :`
-<p style="font-size: 15px;">
-GetResult( target, pipeline )<br>
-&nbsp;&nbsp;&nbsp;&nbsp;.then( result => {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- result.GetDocs();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- result.GetCount();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;});
-</p>
+### Or :
+```typescript
+GetResult(target, pipeline)
+	.then(result => {
+		result.GetDocs();
+		result.GetCount();
+	});
+```
+
 
 ### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]<br>
 
