@@ -195,8 +195,8 @@ const myNewPipeline = [
   },
   {
     $addFields: {
-      skills: { $arrayElemAt["$profile.skills", 0] },
-      availability: { $arrayElemAt["$profile.availability", 0] }
+      skills: { $arrayElemAt: ["$profile.skills", 0] },
+      availability: { $arrayElemAt: ["$profile.availability", 0] }
     }
   },
   {
@@ -209,14 +209,19 @@ const myNewPipeline = [
 ## GetResult()
 
 <p style="font-size: 15px;">
-is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.</p>
+is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.
+</p>
 
 ### Example :
-`const result = await GetResult( target, pipeline );`
+```typescript
+const result = await GetResult( target, pipeline );
+```
+
 <p style="font-size: 15px;">
-Then you will have access to:<br>
-&nbsp;- result.GetDocs(); to get the documents found.<br>
-&nbsp;- result.GetCount(); to get the total number of documents found. Often useful when paging with partial results.
+Then you will have access to:
+
+&nbsp;- `result.GetDocs();` to get the documents found.<br>
+&nbsp;- `result.GetCount();` to get the total number of documents found. Often useful when paging with partial results.
 </p>
 
 ### Or :
