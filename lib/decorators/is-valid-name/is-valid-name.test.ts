@@ -1,5 +1,5 @@
-import {IsValidName} from "./index";
-import {PipelineError} from "../errors";
+import {IsValidName} from "./is-valid-name";
+import {PipelineError} from "../../errors";
 
 class TestDecorator {
     @IsValidName({
