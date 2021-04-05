@@ -61,9 +61,9 @@ readable and much easier to edit. It also allows you to test your pipelines on a
 through the stages in sequence.
 </p>
 
-## `npm package` <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
+## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-### `npm i mongodb-pipeline-builder@latest --save`
+> npm i mongodb-pipeline-builder --save
 
 ## Usage:
 
@@ -85,15 +85,15 @@ import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/he
 import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 ```
 
-## `Example with paging:`
+## Example with paging:
 
 
 ```typescript
 const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
-                        .Match( Expression( LessThanEqual( '$id', 20 ) ) )
-                        .Project( OnlyPayload( 'name', 'weight' ) )
-                        .Paging( 5, 3 ) // 5 per page, page 3
-                        .getPipeline();
+    .Match( Expression( LessThanEqual( '$id', 20 ) ) )
+    .Project( OnlyPayload( 'name', 'weight' ) )
+    .Paging( 5, 3 ) // 5 per page, page 3
+    .getPipeline();
 ```
 
 ### is equivalent to:
@@ -147,7 +147,6 @@ const myNewPipeline = [
     }
   }
 ];
-
 ```
 
 ## Example without paging:
@@ -203,53 +202,58 @@ const myNewPipeline = [
     $unset: "profile"
   }
 ];
-
 ```
+
+___
 
 ## GetResult()
 
 <p style="font-size: 15px;">
-is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.
+is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.<br><br>
+Then you will have access to:<br>
+&nbsp;&nbsp;- GetDocs() to get the documents found.<br>
+&nbsp;&nbsp;- GetCount() to get the total number of documents found. Often useful when paging with partial results.
 </p>
 
 ### Example :
 ```typescript
 const result = await GetResult( target, pipeline );
+result.GetDocs();
+result.GetCount();
 ```
-
-<p style="font-size: 15px;">
-Then you will have access to:
-
-&nbsp;- `result.GetDocs();` to get the documents found.<br>
-&nbsp;- `result.GetCount();` to get the total number of documents found. Often useful when paging with partial results.
-</p>
 
 ### Or :
 ```typescript
-GetResult(target, pipeline)
-	.then(result => {
-		result.GetDocs();
-		result.GetCount();
-	});
+GetResult(target, pipeline).then(result => {
+    result.GetDocs();
+    result.GetCount();
+});
 ```
 
+___
 
-### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try on NPM RunKit with require method</a> ]<br>
 
-<br>
+### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try the lib on NPM RunKit with the require method</a> ]<br>
+
+
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
+`MONGODB STAGES:`
 <p style="font-size: 15px;">
-MONGODB STAGES:<br>
-AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind<br><br>
-CUSTOM STAGE:<br>
+AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind
+</p>
+
+`CUSTOM STAGE:`
+<p style="font-size: 15px;">
 Paging
 </p>
 
+___
+
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
+`STAGE HELPERS * :`
 <p style="font-size: 15px;">
-STAGE HELPERS * :<br>
 &nbsp;- Bucket ( GroupByPayload )<br>
 &nbsp;- BucketAuto ( GroupByAutoPayload )<br>
 &nbsp;- CurrentOp ( OpPayload )<br>
@@ -259,13 +263,17 @@ STAGE HELPERS * :<br>
 &nbsp;- Out ( DbCollPayload )<br>
 &nbsp;- Project ( IgnorePayload | OnlyPayload )<br>
 &nbsp;- Sample ( SizePayload )<br>
-&nbsp;- UnionWith ( CollectionPayload )<br><br>
-COMMON HELPERS:<br>
+&nbsp;- UnionWith ( CollectionPayload )
+
+`COMMON HELPERS:`
+<p style="font-size: 15px;">
 &nbsp;- Field >> AddFields( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
-&nbsp;- List<br><br>
+&nbsp;- List
+<p>
 * If no helper is available for a stage, use its method and pass it a valid value as a parameter.<br>
 ** One or more separated by a comma.
-</p>
+
+___
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
 
