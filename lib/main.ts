@@ -23,7 +23,7 @@ import {
     UnwindStageInterface,
 } from "./interfaces";
 import {PipelineError} from "./errors";
-import {PAYLOAD_VALIDATION_ENABLED} from "./validators";
+import {PAYLOAD_VALIDATION_ENABLED} from "./constants";
 import {IsValidName} from "./decorators";
 
 /**
@@ -103,24 +103,27 @@ export class PipelineBuilder {
         pipelineName: string,
         options: InitOptionsInterface = {}
     ) {
+        PipelineBuilder.counter++;
         const setOptions: BuilderOptionsInterface = {
             ...this.defaultOptions,
             ...options
         };
 
-        PipelineBuilder.counter++;
-
         this.pipelineName = `${pipelineName}_${PipelineBuilder.counter}`;
         this.debugBuild = { status: setOptions.debug, actionList: [] };
         this.logs = setOptions.logs;
-        this.stageList = [];
-        this.stageErrorList = [];
         this.stageValidatorsBundle = PAYLOAD_VALIDATION_ENABLED;
+        this.stageErrorList = [];
+        this.stageList = [];
         this.pagingStage = [];
 
         this.saveActionToDebugHistoryList(
             'constructor',
-            { pipelineName: this.pipelineName, counter: PipelineBuilder.counter, options }, { debugBuild: this.debugBuild }
+            {
+                pipelineName: this.pipelineName,
+                counter: PipelineBuilder.counter,
+                options
+            }, { debugBuild: this.debugBuild }
         );
     }
 
