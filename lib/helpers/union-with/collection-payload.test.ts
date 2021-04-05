@@ -1,4 +1,4 @@
-import {CollectionPayload} from "./index";
+import {CollectionPayload} from "./collection-payload";
 
 describe('unionWith helpers', () => {
     test.each([

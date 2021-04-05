@@ -1,4 +1,4 @@
-import {GroupByAutoPayload} from "./index";
+import {GroupByAutoPayload} from "./group-by-auto-payload";
 
 describe('bucket helpers', () => {
     describe('GroupByPayload', () => {
