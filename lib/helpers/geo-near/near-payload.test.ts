@@ -1,4 +1,4 @@
-import {NearPayload} from "./index";
+import {NearPayload} from "./near-payload";
 
 describe('NearPayload', () => {
     test.each([

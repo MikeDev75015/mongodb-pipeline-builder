@@ -1,4 +1,4 @@
-import {OpPayload} from "./index";
+import {OpPayload} from "./op-payload";
 import {CurrentOpInterface} from "../../interfaces";
 
 describe('currentOp helpers', () => {

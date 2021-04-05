@@ -1,4 +1,4 @@
-import {SizePayload} from "./index";
+import {SizePayload} from "./size-payload";
 
 describe('sample helpers', () => {
     describe('SizePayload', () => {

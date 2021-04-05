@@ -1,4 +1,4 @@
-import {DbCollPayload} from "./index";
+import {DbCollPayload} from "./db-coll-payload";
 
 describe('out helpers', () => {
     describe('DbCollPayload', () => {

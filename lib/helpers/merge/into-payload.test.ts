@@ -1,4 +1,4 @@
-import {IntoPayload} from "./index";
+import {IntoPayload} from "./into-payload";
 import {MergeStageInterface, StageInterface, WhenMatchedType, WhenNotMatchedType} from "../../interfaces";
 
 describe('merge helpers', () => {
