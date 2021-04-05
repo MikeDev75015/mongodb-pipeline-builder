@@ -154,15 +154,15 @@ const myNewPipeline = [
 
 ```typescript
 const myNewPipeline = new PipelineBuilder('user-skills')
-	.Match(Expression(Equal('$id', 123456)))
-	.Lookup(EqualityPayload('profiles', 'profile', 'profileId', 'id'))
-	.Project(OnlyPayload('firstname', 'lastname', 'email'))
-	.AddFields(
-		Field('skills', ArrayElemAt('$profile.skills', 0)),
-		Field('availability', ArrayElemAt('$profile.availability', 0))
-	)
-	.Unset('profile')
-	.getPipeline();
+    .Match(Expression(Equal('$id', 123456)))
+    .Lookup(EqualityPayload('profiles', 'profile', 'profileId', 'id'))
+    .Project(OnlyPayload('firstname', 'lastname', 'email'))
+    .AddFields(
+        Field('skills', ArrayElemAt('$profile.skills', 0)),
+        Field('availability', ArrayElemAt('$profile.availability', 0))
+    )
+    .Unset('profile')
+    .getPipeline();
 ```
 
 ### is equivalent to:
@@ -194,8 +194,12 @@ const myNewPipeline = [
   },
   {
     $addFields: {
-      skills: { $arrayElemAt: ["$profile.skills", 0] },
-      availability: { $arrayElemAt: ["$profile.availability", 0] }
+      skills: {
+          $arrayElemAt: ["$profile.skills", 0]
+      },
+      availability: {
+          $arrayElemAt: ["$profile.availability", 0]
+      }
     }
   },
   {
@@ -270,7 +274,7 @@ ___
 &nbsp;- Field >> AddFields( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
 &nbsp;- List
 <p>
-* If no helper is available for a stage, use its method and pass it a valid value as a parameter.<br>
+* If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
 ** One or more separated by a comma.
 
 ___
