@@ -1,4 +1,4 @@
-import {deprecatedMethodWarning} from "./index";
+import {deprecatedMethodWarning} from "./deprecated-method-warning";
 
 describe('deprecatedMethodWarning', () => {
     let warning: any;
@@ -11,6 +11,6 @@ describe('deprecatedMethodWarning', () => {
     it('should be defined with a deprecated method Warning message', () => {
         warning = deprecatedMethodWarning('OldRef', 'NewRef');
         expect(spyConsole).toHaveBeenCalledTimes(1);
-        expect(spyConsole).toHaveBeenCalledWith(`Warning: The OldRef method is deprecated, please use NewRef instead.`);
+        expect(spyConsole).toHaveBeenCalledWith(`Warning: The OldRef method is deprecated and will be removed in the future version, please use NewRef instead.`);
     });
 });
