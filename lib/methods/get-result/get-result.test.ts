@@ -1,5 +1,5 @@
-import {GetResult} from "./index";
-import {PipelineError} from "../errors";
+import {GetResult} from "./get-result";
+import {PipelineError} from "../../errors";
 
 const targetAggregationMock = {
     aggregate: () => []
@@ -46,12 +46,13 @@ describe('GetResult', () => {
     });
 
     it('should return an object with the GetDocs and GetCount methods as properties that get the documents and' +
-        'the total number of documents for a paging aggregate', async () => {
-        const getResult = await GetResult(targetPagingAggregationMock, [{ $match: {} }]);
-        await expect(getResult).toHaveProperty('GetDocs');
-        await expect(getResult).toHaveProperty('GetCount');
-        await expect(getResult.GetDocs()).toEqual([]);
-        await expect(getResult.GetCount()).toEqual(0);
+        'the total number of documents for a paging aggregate', () => {
+        GetResult(targetPagingAggregationMock, [{ $match: {} }]).then(getPagingResult => {
+            expect(getPagingResult).toHaveProperty('GetDocs');
+            expect(getPagingResult).toHaveProperty('GetCount');
+            expect(getPagingResult.GetDocs()).toEqual([]);
+            expect(getPagingResult.GetCount()).toEqual(0);
+        })
     });
 
     it('should throw a PipelineError message if the operation failed', async () => {
