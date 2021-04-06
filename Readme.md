@@ -100,53 +100,21 @@ const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
 
 
 ```typescript
-const myNewPipeline = [
-  {
+const myNewPipeline = [ {
     $facet: {
-      docs: [
-        {
-          $match: {
-            $expr: {
-              $lte: ["$id", 20]
-            }
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            name: 1,
-            weight: 1
-          }
-        },
-        {
-          $skip: 10
-        },
-        {
-          $limit: 5
-        }
-      ],
-      count: [
-        {
-          $match: {
-            $expr: {
-              $lte: ["$id", 20]
-            }
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            name: 1,
-            weight: 1
-          }
-        },
-        {
-          $count: "totalElements"
-        }
-      ]
+        docs: [
+            { $match: { $expr: { $lte: ["$id", 20] } } },
+            { $project: { _id: 0, name: 1, weight: 1 } },
+            { $skip: 10 },
+            { $limit: 5 }
+        ],
+        count: [
+            { $match: { $expr: { $lte: ["$id", 20] } } },
+            { $project: { _id: 0, name: 1, weight: 1 } },
+            { $count: "totalElements" }
+        ]
     }
-  }
-];
+} ];
 ```
 
 ## Example without paging:
@@ -169,42 +137,14 @@ const myNewPipeline = new PipelineBuilder('user-skills')
 
 ```typescript
 const myNewPipeline = [
-  {
-    $match: {
-      $expr: {
-        $eq: ["$id", 123456]
-      }
-    }
-  },
-  {
-    $lookup: {
-      from: "profiles",
-      as: "profile",
-      localField: "profileId",
-      foreignField: "id"
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      firstname: 1,
-      lastname: 1,
-      email: 1
-    }
-  },
-  {
-    $addFields: {
-      skills: {
-          $arrayElemAt: ["$profile.skills", 0]
-      },
-      availability: {
-          $arrayElemAt: ["$profile.availability", 0]
-      }
-    }
-  },
-  {
-    $unset: "profile"
-  }
+    { $match: { $expr: { $eq: ["$id", 123456] } } },
+    { $lookup: { from: "profiles", as: "profile", localField: "profileId", foreignField: "id" } },
+    { $project: { _id: 0, firstname: 1, lastname: 1, email: 1 } },
+    { $addFields: {
+        skills: { $arrayElemAt: ["$profile.skills", 0] },
+        availability: { $arrayElemAt: ["$profile.availability", 0] }
+    } },
+    { $unset: "profile" }
 ];
 ```
 
@@ -228,10 +168,10 @@ result.GetCount();
 
 ### Or :
 ```typescript
-GetResult(target, pipeline).then(result => {
+GetResult( target, pipeline ).then( result => {
     result.GetDocs();
     result.GetCount();
-});
+} );
 ```
 
 ___
