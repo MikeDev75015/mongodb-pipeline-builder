@@ -297,8 +297,11 @@ export class PipelineBuilder {
      * @param value
      * @constructor
      */
-    public Facet(value: FacetStageInterface): this {
-        return this.addStage('facet', value);
+    public Facet(...value: { [key: string]: StageInterface[] }[]): this {
+        return this.addStage(
+            'facet',
+            this.ToObject(value, 'Facet')
+        );
     }
 
     /**

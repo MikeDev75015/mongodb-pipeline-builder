@@ -178,7 +178,7 @@ describe('should create a new pipeline builder object', () => {
                         .Count('testCount'), 'testCount'],
                 ['should add a stage to the pipeline', 'facet',
                     new PipelineBuilder('debug', { debug: true, logs: true})
-                        .Facet({ output1: [], output2: [] }), { output1: [], output2: [] }],
+                        .Facet({ output1: [] }, { output2: [] }), { output1: [], output2: [] }],
                 ['should add a stage to the pipeline', 'geoNear',
                     new PipelineBuilder('debug', { debug: true, logs: true})
                         .GeoNear({ near: [20, 5], distanceField: 'distance' }),
