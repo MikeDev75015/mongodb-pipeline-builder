@@ -5,7 +5,6 @@ import {
     BuilderOptionsInterface,
     CollStatsStageInterface,
     DebugBuildInterface,
-    FacetStageInterface,
     GeoNearStageInterface,
     getStageTypeValue,
     GraphLookupStageInterface,
