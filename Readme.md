@@ -63,7 +63,7 @@ through the stages in sequence.
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-> npm i mongodb-pipeline-builder --save
+### `npm i -S mongodb-pipeline-builder`
 
 ## Usage:
 
@@ -121,15 +121,15 @@ const myNewPipeline = [ {
 
 
 ```typescript
-const myNewPipeline = new PipelineBuilder('user-skills')
-    .Match(Expression(Equal('$id', 123456)))
-    .Lookup(EqualityPayload('profiles', 'profile', 'profileId', 'id'))
-    .Project(OnlyPayload('firstname', 'lastname', 'email'))
+const myNewPipeline = new PipelineBuilder( 'user-skills' )
+    .Match( Expression( Equal( '$id', 123456 ) ) )
+    .Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )
+    .Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )
     .AddFields(
-        Field('skills', ArrayElemAt('$profile.skills', 0)),
-        Field('availability', ArrayElemAt('$profile.availability', 0))
+        Field( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),
+        Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) )
     )
-    .Unset('profile')
+    .Unset( 'profile' )
     .getPipeline();
 ```
 
@@ -182,12 +182,12 @@ ___
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
 
-`MONGODB STAGES:`
+## `MONGODB STAGES:`
 <p style="font-size: 15px;">
 AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind
 </p>
 
-`CUSTOM STAGE:`
+## `CUSTOM STAGE:`
 <p style="font-size: 15px;">
 Paging
 </p>
@@ -196,7 +196,7 @@ ___
 
 <p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
 
-`STAGE HELPERS * :`
+## `STAGE HELPERS * :`
 <p style="font-size: 15px;">
 &nbsp;- Bucket ( GroupByPayload )<br>
 &nbsp;- BucketAuto ( GroupByAutoPayload )<br>
@@ -209,13 +209,15 @@ ___
 &nbsp;- Sample ( SizePayload )<br>
 &nbsp;- UnionWith ( CollectionPayload )
 
-`COMMON HELPERS:`
+## `COMMON HELPERS:`
 <p style="font-size: 15px;">
-&nbsp;- Field >> AddFields( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
+&nbsp;- Field: AddFields( Field ** ) | Facet( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
 &nbsp;- List
 <p>
+
+<p style="font-style: italic">
 * If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
-** One or more separated by a comma.
+** One or more Field helper(s) separated by a comma.
 
 ___
 

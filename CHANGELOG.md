@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.7.7...v3.0.0) (2021-04-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add the possibility of using one or more Field
+helper(s)
+
+* change the Facet payload ([459bf0a](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/459bf0acc89132a595653c76e74136de786a3c2f))
+
 ### [2.7.7](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.7.6...v2.7.7) (2021-04-06)
 
 ### [2.7.6](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.7.5...v2.7.6) (2021-04-05)
