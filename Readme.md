@@ -211,13 +211,13 @@ ___
 
 ## `COMMON HELPERS:`
 <p style="font-size: 15px;">
-&nbsp;- Field: AddFields( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
+&nbsp;- Field: AddFields( Field ** ) | Facet( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
 &nbsp;- List
 <p>
 
 <p style="font-style: italic">
 * If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
-** One or more separated by a comma.
+** One or more Field helper(s) separated by a comma.
 
 ___
 
