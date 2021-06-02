@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.0.0...v3.1.0) (2021-06-02)
+
+
+### Features
+
+* add the ability to pass a single object with multiple properties in the Facet method ([8401905](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/84019059b220d1d11681d545e2411fd6bdba563b))
+* add the possibility of testing undefined values ([9afca54](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/9afca54f5ab471236fd7710b4490ae86ee30e4eb))
+
 ## [3.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v2.7.7...v3.0.0) (2021-04-06)
 
 
