@@ -4,7 +4,7 @@ describe('IsUndefined', () => {
     const valueToTest: any[] = [
         undefined,
         { name: 'toto', test: undefined },
-        [ 2, 4, undefined, 8 ],
+        [ 2, 4, undefined, 8, true ],
         [ { unit: undefined }, { name: 'toto' }, { tests: [ undefined ] } ],
         { test: [ { toto: undefined } ], unit: { tests: undefined }, undefined }
     ];
