@@ -297,6 +297,7 @@ export class PipelineBuilder {
      * @constructor
      */
     public Facet(...value: { [key: string]: StageInterface[] }[]): this {
+      console.log('Facet value', value);
         return this.addStage(
             'facet',
             this.ToObject(value, 'Facet')
@@ -726,7 +727,11 @@ export class PipelineBuilder {
         }
 
         const objectToReturn: { [key: string]: any } = {};
-        list.forEach(element => objectToReturn[Object.keys(element)[0]] = Object.values(element)[0]);
+        list.forEach((element) => {
+          for (const key of Object.keys(element)) {
+            objectToReturn[key] = element[key];
+          }
+        });
         return objectToReturn;
     }
 
