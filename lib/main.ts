@@ -297,7 +297,6 @@ export class PipelineBuilder {
      * @constructor
      */
     public Facet(...value: { [key: string]: StageInterface[] }[]): this {
-      console.log('Facet value', value);
         return this.addStage(
             'facet',
             this.ToObject(value, 'Facet')
