@@ -36,7 +36,7 @@ export function IsUndefined(v: any): TestResultResponse {
     hasUndefinedValue: false,
     propertyList: []
   };
-  
+
   return testValueOfV(v, testResult);
 }
 
@@ -46,11 +46,11 @@ export function IsUndefined(v: any): TestResultResponse {
  */
 function getTypeOfV(v: any): string {
   let vType: string = typeof v;
-  
+
   if (vType === 'object' && Array.isArray(v)) {
     vType = 'array';
   }
-  
+
   return vType;
 }
 
@@ -63,7 +63,7 @@ function getTypeOfV(v: any): string {
  */
 function testValueOfV(v: any, testResult: TestResultResponse, depth = 0, key = ''): TestResultResponse {
   const vType: string = getTypeOfV(v);
-  
+
   switch (vType) {
     case 'string':
       break;
@@ -77,14 +77,14 @@ function testValueOfV(v: any, testResult: TestResultResponse, depth = 0, key = '
     case 'array':
       testResult = testArrayValues(v, testResult, depth, key);
       break;
-    
+
     default:
       testResult.hasUndefinedValue = true;
       testResult.propertyList = key
         ? testResult.propertyList.concat([{ name: key, depth }])
         : testResult.propertyList;
   }
-  
+
   return testResult;
 }
 
@@ -101,12 +101,12 @@ function testObjectProperties(
   depth: number,
   key: string
 ): TestResultResponse {
-  
+
   Object.keys(object)
         .forEach(k => {
           testResult = testValueOfV(object[k], testResult, (depth + 1), (key ? key + ' > ' : '') + k);
         });
-  
+
   return testResult;
 }
 
@@ -123,10 +123,10 @@ function testArrayValues(
   depth: number,
   key: string
 ): TestResultResponse {
-  
+
   array.forEach((v, i) => {
     testResult = testValueOfV(v, testResult, (depth + 1), ((key ? key + ' > indexArray_' : 'indexArray_') + i));
   });
-  
+
   return testResult;
 }

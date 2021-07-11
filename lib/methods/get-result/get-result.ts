@@ -32,10 +32,10 @@ export const GetResult = async (
       : unknownStageNameList[0] + ' pipeline stage is'
     } unknown or not valid.`);
   }
-  
+
   try {
     const result: any[] = await target.aggregate(pipeline);
-    
+
     // Paging result
     if (
       result.length === 1 &&
@@ -53,7 +53,7 @@ export const GetResult = async (
         GetCount: () => pagingResult.count[0].totalElements
       } as GetPagingResultResponse;
     }
-    
+
     // Default result
     return {
       GetDocs: (element?: number | 'last') => {
@@ -68,7 +68,7 @@ export const GetResult = async (
       },
       GetCount: () => result.length
     } as GetResultResponse;
-    
+
   } catch (e) {
     throw new PipelineError(`An error was encountered while executing the GetResult method:\n - ${e.message}`);
   }

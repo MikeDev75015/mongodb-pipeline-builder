@@ -7,7 +7,7 @@ export interface GetPagingResultResponse {
    * @constructor
    */
   GetDocs(): any[];
-  
+
   /**
    * The method used to obtain the total number of documents found
    * @constructor
