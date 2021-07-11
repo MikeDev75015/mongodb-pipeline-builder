@@ -150,7 +150,7 @@ const myNewPipeline = [
 
 ___
 
-## GetResult()
+## GetResult(): Promise<{ GetDocs(): any[]; GetCount(): number; }>
 
 <p style="font-size: 15px;">
 is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.<br><br>
@@ -159,19 +159,33 @@ Then you will have access to:<br>
 &nbsp;&nbsp;- GetCount() to get the total number of documents found. Often useful when paging with partial results.
 </p>
 
-### Example :
+### Example:
 ```typescript
+// in an asynchronous function
 const result = await GetResult( target, pipeline );
 result.GetDocs();
 result.GetCount();
 ```
 
-### Or :
+### Or:
 ```typescript
 GetResult( target, pipeline ).then( result => {
     result.GetDocs();
     result.GetCount();
 } );
+```
+
+### GetDocs() possibilities without pagination:
+
+<p style="font-size: 15px;">
+When you are not using pagination, you can retrieve a particular document by specifying its index as an argument of the GetDocs method.<br>Just pass "last" to get the last document. If the specified index is greater than the index of the last document, GetDocs() will return the last document.
+</p>
+
+```typescript
+// if GetDocs() returns [document0, document1, document2, document3, ..., document51]
+result.GetDocs(2); // will return document to index 2, document2
+result.GetDocs('last'); // will return the last document, document51
+result.GetDocs(99); // will return the last document, document51
 ```
 
 ___
