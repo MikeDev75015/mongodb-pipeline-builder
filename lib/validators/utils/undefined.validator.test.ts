@@ -1,4 +1,4 @@
-import {IsUndefined, ResultProperty, TestResultInterface} from "./undefined.validator";
+import {IsUndefined, ResultProperty, TestResultResponse} from "./undefined.validator";
 
 describe('IsUndefined', () => {
     const valueToTest: any[] = [
@@ -24,7 +24,7 @@ describe('IsUndefined', () => {
         ] }],
     ])('%o should return %o', (
         value: any,
-        expected: TestResultInterface
+        expected: TestResultResponse
     ) => {
         const operation = IsUndefined(value);
         expect(operation.hasUndefinedValue).toEqual(expected.hasUndefinedValue);
