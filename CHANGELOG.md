@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.1.2...v3.2.0) (2021-07-11)
+
+
+### Features
+
+* add the ability to get a particular item when using the GetDocs, increase the reliability of the pipeline parameter of the GetResult method ([ee6d745](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/ee6d7453db77898c592be025c14a80dd934e9fb3))
+
 ### [3.1.2](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.1.1...v3.1.2) (2021-07-09)
 
 ### [3.1.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.1.0...v3.1.1) (2021-06-08)
