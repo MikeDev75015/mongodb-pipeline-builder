@@ -57,7 +57,7 @@ export const GetResult = async (
     // Default result
     return {
       GetDocs: (element?: number | 'last') => {
-        if (!element) {
+        if (element === undefined) {
           return result;
         }
         const lastIndex = result.length - 1;
