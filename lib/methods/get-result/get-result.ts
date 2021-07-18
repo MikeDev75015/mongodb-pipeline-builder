@@ -45,12 +45,12 @@ export const GetResult = async (
       result[0].count[0].totalElements !== undefined &&
       result[0].count[0].totalElements >= 0
     ) {
-      const pagingResult: { docs: any[]; count: { totalElements: number }[]; } = result[0];
+      const { docs, count } = result[0];
       return {
         GetDocs: () => {
-          return pagingResult.docs;
+          return docs;
         },
-        GetCount: () => pagingResult.count[0].totalElements
+        GetCount: () => count[0].totalElements
       } as GetPagingResultResponse;
     }
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.2](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.1...v3.2.2) (2021-07-18)
+
+
+### Bug Fixes
+
+* correct the value returned by the GetDocs method for a pagination result ([f83f4f0](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/f83f4f08e91c5065df1d1edb1ba79100cc231f22))
+
 ### [3.2.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.0...v3.2.1) (2021-07-14)
 
 
