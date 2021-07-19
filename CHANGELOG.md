@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.3](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.2...v3.2.3) (2021-07-19)
+
+
+### Bug Fixes
+
+* correct the path to index.js and index.d.ts files in package.json ([2ecd7a5](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/2ecd7a56462d8959b78163f697d5c576bbd39d0c))
+
 ### [3.2.2](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.1...v3.2.2) (2021-07-18)
 
 
