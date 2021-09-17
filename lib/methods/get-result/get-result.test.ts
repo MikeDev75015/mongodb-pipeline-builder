@@ -37,6 +37,7 @@ const pagingPipelineMock = [{
 }];
 
 const pagingCountMock = [{ totalElements: 21 }];
+const pagingCountMock2 = [{ totalElements: 20 }];
 
 
 describe('GetResult', () => {
@@ -184,5 +185,6 @@ describe('getTotalPageNumber', () => {
 
   it('should return the total page number', () => {
     expect(getTotalPageNumber(pagingCountMock, pagingPipelineMock)).toEqual(5);
+    expect(getTotalPageNumber(pagingCountMock2, pagingPipelineMock)).toEqual(4);
   });
 });
