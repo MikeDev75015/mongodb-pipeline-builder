@@ -20,6 +20,9 @@ export const GetResult = async (
   if (!target.aggregate) {
     throw new PipelineError('Application not possible, the aggregate method does not exist on the chosen target.');
   }
+  if (!pipeline) {
+    throw new PipelineError('Application not possible, the pipeline is not valid.');
+  }
   if (!pipeline.length) {
     throw new PipelineError('Application not possible, the pipeline is empty.');
   }
