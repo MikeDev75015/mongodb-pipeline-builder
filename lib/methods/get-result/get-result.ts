@@ -53,7 +53,27 @@ export const GetResult = async (
         GetDocs: () => {
           return docs;
         },
-        GetCount: () => count[0].totalElements
+        GetCount: () => count[0].totalElements,
+        GetTotalPageNumber: (): number => {
+          try {
+            if (!count[0].totalElements) {
+              return 0;
+            }
+
+            const totalElements = count[0].totalElements as number;
+            const limitStage = (pipeline[0].$facet!.docs as StageInterface[]).find((s) => s.$limit);
+            const elementsPerPage = limitStage!.$limit as number;
+
+            return totalElements % elementsPerPage
+              ? Math.floor(totalElements / elementsPerPage) + 1
+              : Math.floor(totalElements / elementsPerPage);
+
+          } catch (err) {
+            console.warn('An error occurred while trying to calculate the total page count.');
+            console.error(err);
+            return -1;
+          }
+        }
       } as GetPagingResultResponse;
     }
 
