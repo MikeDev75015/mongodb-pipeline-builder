@@ -69,9 +69,12 @@ export const GetResult = async (
   }
 };
 
-const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
-  if (!count[0].totalElements) {
-    return 0;
+export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
+  if (
+    !count || !count.length || count[0].totalElements === undefined ||
+    !pipeline || !pipeline.length
+  ) {
+    return -1;
   }
 
   const totalElements = count[0].totalElements as number;
@@ -87,7 +90,7 @@ const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number =>
     : Math.floor(totalElements / elementsPerPage);
 }
 
-const getDocsOfDefaultResult = (result: any[], element?: number | 'last') => {
+export const getDocsOfDefaultResult = (result: any[], element?: number | 'last') => {
   if (element === undefined) {
     return result;
   }
