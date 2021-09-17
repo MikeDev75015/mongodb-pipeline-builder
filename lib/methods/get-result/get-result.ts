@@ -20,6 +20,9 @@ export const GetResult = async (
   if (!target.aggregate) {
     throw new PipelineError('Application not possible, the aggregate method does not exist on the chosen target.');
   }
+  if (!pipeline) {
+    throw new PipelineError('Application not possible, the pipeline is not valid.');
+  }
   if (!pipeline.length) {
     throw new PipelineError('Application not possible, the pipeline is empty.');
   }
@@ -50,22 +53,14 @@ export const GetResult = async (
         GetDocs: () => {
           return docs;
         },
-        GetCount: () => count[0].totalElements
+        GetCount: () => count[0].totalElements,
+        GetTotalPageNumber: (): number => getTotalPageNumber(count, pipeline),
       } as GetPagingResultResponse;
     }
 
     // Default result
     return {
-      GetDocs: (element?: number | 'last') => {
-        if (element === undefined) {
-          return result;
-        }
-        const lastIndex = result.length - 1;
-        if (element > lastIndex || element === 'last') {
-          return result[lastIndex];
-        }
-        return result[element];
-      },
+      GetDocs: (element?: number | 'last') => getDocsOfDefaultResult(result, element),
       GetCount: () => result.length
     } as GetResultResponse;
 
@@ -73,5 +68,37 @@ export const GetResult = async (
     throw new PipelineError(`An error was encountered while executing the GetResult method:\n - ${e.message}`);
   }
 };
+
+export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
+  if (
+    !count || !count.length || count[0].totalElements === undefined ||
+    !pipeline || !pipeline.length
+  ) {
+    return -1;
+  }
+
+  const totalElements = count[0].totalElements as number;
+  const limitStage = pipeline[0].$facet ? pipeline[0].$facet.docs.find((s) => s.$limit) : undefined;
+  const elementsPerPage = limitStage ? limitStage.$limit as number : undefined;
+
+  if (!elementsPerPage) {
+    return -1;
+  }
+
+  return totalElements % elementsPerPage
+    ? Math.floor(totalElements / elementsPerPage) + 1
+    : Math.floor(totalElements / elementsPerPage);
+}
+
+export const getDocsOfDefaultResult = (result: any[], element?: number | 'last') => {
+  if (element === undefined) {
+    return result;
+  }
+  const lastIndex = result.length - 1;
+  if (element > lastIndex || element === 'last') {
+    return result[lastIndex];
+  }
+  return result[element];
+}
 
 

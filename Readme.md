@@ -150,35 +150,41 @@ const myNewPipeline = [
 
 ___
 
-## GetResult(): Promise<{ GetDocs(): any[]; GetCount(): number; }>
+# The GetResult method
+#### GetResult(): Promise<GetResultResponse | GetPagingResultResponse>
 
 <p style="font-size: 15px;">
-is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with or without paging.<br><br>
-Then you will have access to:<br>
+is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with pagination or without.
+<p>
+
+## GetResultResponse
+
+<p style="font-size: 15px;">
+When you are not using pagination, the GetResult method returns a GetResultResponse object that contains two methods:<br>
 &nbsp;&nbsp;- GetDocs() to get the documents found.<br>
-&nbsp;&nbsp;- GetCount() to get the total number of documents found. Often useful when paging with partial results.
+&nbsp;&nbsp;- GetCount() to get the total number of documents found.
 </p>
 
-### Example:
+
 ```typescript
 // in an asynchronous function
 const result = await GetResult( target, pipeline );
-result.GetDocs();
-result.GetCount();
+result.GetDocs(); // => any[]
+result.GetCount(); // => number
 ```
 
-### Or:
+#### Or:
 ```typescript
 GetResult( target, pipeline ).then( result => {
-    result.GetDocs();
-    result.GetCount();
+    result.GetDocs(); // => any[]
+    result.GetCount(); // => number
 } );
 ```
 
-### GetDocs() possibilities without pagination:
+### GetDocs() method possibilities:
 
 <p style="font-size: 15px;">
-When you are not using pagination, you can retrieve a particular document by specifying its index as an argument of the GetDocs method.<br>Just pass "last" to get the last document. If the specified index is greater than the index of the last document, GetDocs() will return the last document.
+You can retrieve a particular document by specifying its index as an argument of the GetDocs method.<br>Just pass "last" to get the last document. If the specified index is greater than the index of the last document, GetDocs() will return the last document.
 </p>
 
 ```typescript
@@ -187,6 +193,34 @@ result.GetDocs(2); // will return document to index 2, document2
 result.GetDocs('last'); // will return the last document, document51
 result.GetDocs(99); // will return the last document, document51
 ```
+
+## GetPagingResultResponse
+
+<p style="font-size: 15px;">
+When you use paging, the GetResult method returns a GetPagingResultResponse object that contains three methods:<br>
+&nbsp;&nbsp;- GetDocs() to get the documents found.<br>
+&nbsp;&nbsp;- GetCount() to get the total number of documents found.<br>
+&nbsp;&nbsp;- GetTotalPageNumber() to get the total number of pages.
+</p>
+
+
+```typescript
+// in an asynchronous function
+const result = await GetResult( target, pipeline );
+result.GetDocs(); // => any[]
+result.GetCount(); // => number
+result.GetTotalPageNumber(); // => number
+```
+
+#### Or:
+```typescript
+GetResult( target, pipeline ).then( result => {
+    result.GetDocs(); // => any[]
+    result.GetCount(); // => number
+    result.GetTotalPageNumber(); // => number
+} );
+```
+
 
 ___
 

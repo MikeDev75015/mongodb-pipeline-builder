@@ -13,4 +13,11 @@ export interface GetPagingResultResponse {
    * @constructor
    */
   GetCount(): number;
+
+  /**
+   * The method used to obtain the total number of page
+   * @returns the total page number or -1 if it fails to calculate
+   * @constructor
+   */
+  GetTotalPageNumber(): number;
 }

@@ -46,7 +46,7 @@ export const ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOf
  * variable name specified in as.
  * @constructor
  */
-export const Filter = (array: any, condition: boolean, as = 'this') => ({ $filter: { input: array, as: as, cond: condition } });
+export const Filter = (array: any, condition: any, as = 'this') => ({ $filter: { input: array, as, cond: condition } });
 /**
  * Returns the first element in an array.
  * @param array
@@ -77,7 +77,7 @@ export const In = (elementToFind: any, array: any) => ({ $in: [ elementToFind, a
  * @constructor
  */
 export const IndexOfArray = (array: any, elementToFind: any, startIndex = 0, endIndex?: number) => ({
-    $indexOfArray: [ array, elementToFind, startIndex, (endIndex ? endIndex : { $size: array }) ]
+    $indexOfArray: [ array, elementToFind, startIndex, endIndex ]
 });
 /**
  * Determines if the operand is an array. Returns a boolean.
@@ -101,7 +101,7 @@ export const Last = (array: any) => ({ $last: array });
  * element individually with the variable name specified in as.
  * @constructor
  */
-export const MapOperator = (array: any, apply: any, as = 'this') => ({ $map: { input: array, as: as, in: apply } });
+export const MapOperator = (array: any, apply: any, as = 'this') => ({ $map: { input: array, as, in: apply } });
 /**
  * Converts a document to an array. The return array contains an element for each field/value pair in the original
  * document. Each element in the return array is a document that contains two fields k and v:
@@ -142,7 +142,7 @@ export const Range = (startIndex: number, endIndex: number, step = 1) => ({
  * @constructor
  */
 export const Reduce = (array: any, initialValue: any, apply: any) => ({
-    $reduce: { input: array, initialValue: initialValue, in: apply }
+    $reduce: { input: array, initialValue, in: apply }
 });
 /**
  * Accepts an array expression as an argument and returns an array with the elements in reverse order.
