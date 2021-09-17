@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.3...v3.3.0) (2021-09-17)
+
+
+### Features
+
+* add the GetTotalPageNumber method to the methods that can be used when paging with the GetResult method ([c885926](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/c885926eefcaa80b641f4062d5cf9e90438130fe))
+
+
+### Bug Fixes
+
+* correct some array operators ([6e50682](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/6e506823967a2b28cfd4e161d6a7bf1fd102e9a4))
+
 ### [3.2.3](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.2.2...v3.2.3) (2021-07-19)
 
 
