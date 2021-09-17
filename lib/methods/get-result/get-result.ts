@@ -69,6 +69,11 @@ export const GetResult = async (
   }
 };
 
+/**
+ * Calculates the total number of pages for a pagination result
+ * @param count The result of the pipeline count of the stage facet
+ * @param pipeline The pipeline applied to the target
+ */
 export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
   if (
     !count || !count.length || count[0].totalElements === undefined ||
@@ -90,6 +95,11 @@ export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): nu
     : Math.floor(totalElements / elementsPerPage);
 }
 
+/**
+ * Apply the arguments of the GetDocs method of a default result
+ * @param result The default result when pagination is not used
+ * @param element The argument passed as a parameter of the GetDocs method of a result without pagination
+ */
 export const getDocsOfDefaultResult = (result: any[], element?: number | 'last') => {
   if (element === undefined) {
     return result;
