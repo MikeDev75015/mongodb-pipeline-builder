@@ -54,41 +54,13 @@ export const GetResult = async (
           return docs;
         },
         GetCount: () => count[0].totalElements,
-        GetTotalPageNumber: (): number => {
-          try {
-            if (!count[0].totalElements) {
-              return 0;
-            }
-
-            const totalElements = count[0].totalElements as number;
-            const limitStage = (pipeline[0].$facet!.docs as StageInterface[]).find((s) => s.$limit);
-            const elementsPerPage = limitStage!.$limit as number;
-
-            return totalElements % elementsPerPage
-              ? Math.floor(totalElements / elementsPerPage) + 1
-              : Math.floor(totalElements / elementsPerPage);
-
-          } catch (err) {
-            console.warn('An error occurred while trying to calculate the total page count.');
-            console.error(err);
-            return -1;
-          }
-        }
+        GetTotalPageNumber: (): number => getTotalPageNumber(count, pipeline),
       } as GetPagingResultResponse;
     }
 
     // Default result
     return {
-      GetDocs: (element?: number | 'last') => {
-        if (element === undefined) {
-          return result;
-        }
-        const lastIndex = result.length - 1;
-        if (element > lastIndex || element === 'last') {
-          return result[lastIndex];
-        }
-        return result[element];
-      },
+      GetDocs: (element?: number | 'last') => getDocsOfDefaultResult(result, element),
       GetCount: () => result.length
     } as GetResultResponse;
 
@@ -96,5 +68,34 @@ export const GetResult = async (
     throw new PipelineError(`An error was encountered while executing the GetResult method:\n - ${e.message}`);
   }
 };
+
+const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
+  if (!count[0].totalElements) {
+    return 0;
+  }
+
+  const totalElements = count[0].totalElements as number;
+  const limitStage = pipeline[0].$facet ? pipeline[0].$facet.docs.find((s) => s.$limit) : undefined;
+  const elementsPerPage = limitStage ? limitStage.$limit as number : undefined;
+
+  if (!elementsPerPage) {
+    return -1;
+  }
+
+  return totalElements % elementsPerPage
+    ? Math.floor(totalElements / elementsPerPage) + 1
+    : Math.floor(totalElements / elementsPerPage);
+}
+
+const getDocsOfDefaultResult = (result: any[], element?: number | 'last') => {
+  if (element === undefined) {
+    return result;
+  }
+  const lastIndex = result.length - 1;
+  if (element > lastIndex || element === 'last') {
+    return result[lastIndex];
+  }
+  return result[element];
+}
 
 
