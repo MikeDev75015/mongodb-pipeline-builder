@@ -49,16 +49,23 @@
 
 <div style="text-align: center; width: 100%;">
 
-# `mongodb-pipeline-builder`
+[-> Technical documentation <-](https://mikedev75015.github.io/mongodb-pipeline-builder)
+
+# mongodb-pipeline-builder
 
 </div>
 
-<a id="doc-link" style="display: block; cursor: pointer;" href="https://mikedev75015.github.io/mongodb-pipeline-builder" target="_blank">Technical documentation</a>
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
-is a pipeline builder for the db.collection.aggregate method and db.aggregate method. It will simplify pipelines by making them more
-readable and much easier to edit. It also allows you to test your pipelines on a dataset in order to verify them. Pipeline stages appear in an array. Documents pass
-through the stages in sequence.
+
+**mongodb-pipeline-builder** is a pipeline builder for the [db.collection.aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/) method and db.aggregate method.
+
+- Simplify pipelines by making them more readable
+- Pipelines are easier to edit. 
+- Pipelines are testable on a dataset. 
+- Pipeline stages appear in an array. 
+- Sequential stages for documents
+
 </p>
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
@@ -68,7 +75,7 @@ through the stages in sequence.
 ## Usage:
 
 
-### - with require
+### Using `require()`
 
 ```typescript
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;
@@ -76,7 +83,7 @@ const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builde
 const { LessThanEqual, ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
 ```
 
-### - with import
+### Using `import`
 
 
 ```typescript
@@ -85,7 +92,7 @@ import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/he
 import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
 ```
 
-## Example with paging:
+## Pagination example
 
 
 ```typescript
@@ -96,7 +103,7 @@ const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
     .getPipeline();
 ```
 
-### is equivalent to:
+*is equivalent to*
 
 
 ```typescript
@@ -117,8 +124,7 @@ const myNewPipeline = [ {
 } ];
 ```
 
-## Example without paging:
-
+## No pagination example
 
 ```typescript
 const myNewPipeline = new PipelineBuilder( 'user-skills' )
@@ -133,7 +139,7 @@ const myNewPipeline = new PipelineBuilder( 'user-skills' )
     .getPipeline();
 ```
 
-### is equivalent to:
+*is equivalent to*
 
 ```typescript
 const myNewPipeline = [
@@ -150,45 +156,56 @@ const myNewPipeline = [
 
 ___
 
-# The GetResult method
-#### GetResult(): Promise<GetResultResponse | GetPagingResultResponse>
+#  GetResult method
+
+```typescript
+GetResult(): Promise<GetResultResponse | GetPagingResultResponse>
+```
 
 <p style="font-size: 15px;">
-is an asynchronous method that provides a very easy way to use your aggregation pipelines on a target (collection or mongoose model having the aggregation method) with pagination or without.
+
+`GetResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method) with either pagination or not.
+
 <p>
 
 ## GetResultResponse
 
 <p style="font-size: 15px;">
-When you are not using pagination, the GetResult method returns a GetResultResponse object that contains two methods:<br>
-&nbsp;&nbsp;- GetDocs() to get the documents found.<br>
-&nbsp;&nbsp;- GetCount() to get the total number of documents found.
+
+Without pagination, the `GetResult()` method returns a GetResultResponse object that contains two methods:<br>
+
+- `GetDocs(): any[]` to get the documents found.
+- `GetCount(): number` to get the total number of documents found.
+
 </p>
 
 
 ```typescript
-// in an asynchronous function
-const result = await GetResult( target, pipeline );
-result.GetDocs(); // => any[]
-result.GetCount(); // => number
+const result = await GetResult( target, pipeline ); 
+result.GetDocs(); // () => any[]
+result.GetCount(); // () => number
 ```
 
-#### Or:
+*Or*
 ```typescript
 GetResult( target, pipeline ).then( result => {
-    result.GetDocs(); // => any[]
-    result.GetCount(); // => number
+    result.GetDocs(); // () => any[]
+    result.GetCount(); // () => number
 } );
 ```
 
-### GetDocs() method possibilities:
+### `GetDocs()` method possibilities:
 
 <p style="font-size: 15px;">
-You can retrieve a particular document by specifying its index as an argument of the GetDocs method.<br>Just pass "last" to get the last document. If the specified index is greater than the index of the last document, GetDocs() will return the last document.
+A particular document can be retrieved by specifying its index as an argument of the `GetDocs()` method.
+
+To get the last document, the argument to provide is the string `'last'`. 
+
+If the specified index is greater than the index of the last document, `GetDocs()` will return the last document.
 </p>
 
 ```typescript
-// if GetDocs() returns [document0, document1, document2, document3, ..., document51]
+// GetDocs() -> [document0, document1, document2, document3, ..., document51]
 result.GetDocs(2); // will return document to index 2, document2
 result.GetDocs('last'); // will return the last document, document51
 result.GetDocs(99); // will return the last document, document51
@@ -197,27 +214,28 @@ result.GetDocs(99); // will return the last document, document51
 ## GetPagingResultResponse
 
 <p style="font-size: 15px;">
-When you use paging, the GetResult method returns a GetPagingResultResponse object that contains three methods:<br>
-&nbsp;&nbsp;- GetDocs() to get the documents found.<br>
-&nbsp;&nbsp;- GetCount() to get the total number of documents found.<br>
-&nbsp;&nbsp;- GetTotalPageNumber() to get the total number of pages.
+
+With pagination,  `GetResult()` returns a `GetPagingResultResponse` object that contains three methods:
+- `GetDocs()` to get the documents found.
+- `GetCount()` to get the total number of documents found.
+- `GetTotalPageNumber()` to get the total number of pages.
+
 </p>
 
 
 ```typescript
-// in an asynchronous function
-const result = await GetResult( target, pipeline );
-result.GetDocs(); // => any[]
-result.GetCount(); // => number
-result.GetTotalPageNumber(); // => number
+const result = await GetResult(target, pipeline);
+result.GetDocs(); // () => any[]
+result.GetCount(); // () => number
+result.GetTotalPageNumber(); // () => number
 ```
 
-#### Or:
+*Or*
 ```typescript
-GetResult( target, pipeline ).then( result => {
-    result.GetDocs(); // => any[]
-    result.GetCount(); // => number
-    result.GetTotalPageNumber(); // => number
+GetResult(target, pipeline).then( result => {
+    result.GetDocs(); // () => any[]
+    result.GetCount(); // () => number
+    result.GetTotalPageNumber(); // () => number
 } );
 ```
 
@@ -225,56 +243,84 @@ GetResult( target, pipeline ).then( result => {
 ___
 
 
-### [ <a href="https://npm.runkit.com/mongodb-pipeline-builder" target="_blank">Try the lib on NPM RunKit with the require method</a> ]<br>
+[-> Try the lib on NPM RunKit with the require method <-](https://npm.runkit.com/mongodb-pipeline-builder)
+
+[-> Aggregation Pipeline Stages <-](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
 
-<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Stages</a> ]</p>
+## MONGODB NATIVE STAGES:
+- AddFields 
+- Bucket 
+- BucketAuto 
+- CollStats 
+- Count 
+- Facet 
+- GeoNear 
+- GraphLookup 
+- Group 
+- IndexStats 
+- Limit 
+- ListSessions 
+- Lookup 
+- Match 
+- Merge 
+- Out 
+- PlanCacheStats 
+- Project 
+- Redact 
+- ReplaceRoot 
+- ReplaceWith 
+- Sample 
+- Search 
+- Set 
+- Skip 
+- Sort 
+- SortByCount 
+- UnionWith 
+- Unset 
+- Unwind
 
-## `MONGODB STAGES:`
-<p style="font-size: 15px;">
-AddFields | Bucket | BucketAuto | CollStats | Count | Facet | GeoNear | GraphLookup | Group | IndexStats | Limit | ListSessions | Lookup | Match | Merge | Out | PlanCacheStats | Project | Redact | ReplaceRoot | ReplaceWith | Sample | Search | Set | Skip | Sort | SortByCount | UnionWith | Unset | Unwind
-</p>
+## CUSTOM STAGE:
 
-## `CUSTOM STAGE:`
-<p style="font-size: 15px;">
-Paging
-</p>
+- Paging
 
 ___
 
-<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/" target="_blank">Aggregation Pipeline Helpers</a> ]</p>
+<div style="text-align: center; width: 100%;">
 
-## `STAGE HELPERS * :`
-<p style="font-size: 15px;">
-&nbsp;- Bucket ( GroupByPayload )<br>
-&nbsp;- BucketAuto ( GroupByAutoPayload )<br>
-&nbsp;- CurrentOp ( OpPayload )<br>
-&nbsp;- GeoNear ( NearPayload )<br>
-&nbsp;- Lookup ( ConditionPayload | EqualityPayload )<br>
-&nbsp;- Merge ( IntoPayload )<br>
-&nbsp;- Out ( DbCollPayload )<br>
-&nbsp;- Project ( IgnorePayload | OnlyPayload )<br>
-&nbsp;- Sample ( SizePayload )<br>
-&nbsp;- UnionWith ( CollectionPayload )
+[-> Aggregation Pipeline Helpers <-](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
-## `COMMON HELPERS:`
-<p style="font-size: 15px;">
-&nbsp;- Field: AddFields( Field ** ) | Facet( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
-&nbsp;- List
-<p>
+</div> 
+
+## STAGE HELPERS <span style="color: red">*</span> :
+
+- Bucket ( GroupByPayload )
+- BucketAuto ( GroupByAutoPayload )
+- CurrentOp ( OpPayload )
+- GeoNear ( NearPayload )
+- Lookup ( ConditionPayload | EqualityPayload )
+- Merge ( IntoPayload )
+- Out ( DbCollPayload )
+- Project ( IgnorePayload | OnlyPayload )
+- Sample ( SizePayload )
+- UnionWith ( CollectionPayload )
+
+## COMMON HELPERS:
+
+- Field: AddFields( Field ** ) | Facet( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
+- List
+
 
 <p style="font-style: italic">
-* If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
+<span style="color: red">*</span> If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
 ** One or more Field helper(s) separated by a comma.
-
+</p>
 ___
+<div style="text-align: center; width: 100%;">
 
-<p style="font-size: 14px; white-space: nowrap;">[ <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/" target="_blank">Aggregation Pipeline Operators</a> ]</p>
+[-> Aggregation Pipeline Operators <-](https://docs.mongodb.com/manual/reference/operator/aggregation/)
 
+</div>
 <p style="font-size: 15px;">
 Absolute | Accumulator | Acos | Acosh | Add | AddToSet | AllElementsTrue | And | AnyElementTrue | ArrayElemAt | ArrayToObject | Asin | Asinh | Atan | Atan2 | Atanh | Avg | BinarySize | BsonSize | Ceil | Compare | Concat | ConcatArrays | Cond | Convert | Cos | Cosh | DateFromParts | DateFromString | DateToParts | DateToString | DayOfMonth | DayOfWeek | DayOfYear | DegreesToRadians | Divide | Equal | Exponent | Expression | Filter | First | Floor | FunctionOperator | GreaterThan | GreaterThanEqual | Hour | IfNull | In | IndexOfArray | IndexOfBytes | IndexOfCP | IsArray | IsNumber | IsoDayOfWeek | IsoWeek | IsoWeekYear | Last | LessThan | LessThanEqual | Let | Literal | Log | Log10 | Ltrim | MapOperator | Max | MergeObjects | Meta | Millisecond | Min | Minute | Mod | Month | Multiply | NaturalLog | Not | NotEqual | ObjectToArray | Or | Pow | Push | RadiansToDegrees | Rand | Range | Reduce | RegexFind | RegexFindAll | RegexMatch | ReplaceAll | ReplaceOne | ReverseArray | Round | Rtrim | SampleRate | Second | SetDifference | SetEquals | SetIntersection | SetIsSubset | SetUnion | Sin | Sinh | Size | Slice | Split | Sqrt | StdDevPop | StdDevSamp | StrCaseCmp | StrLenBytes | StrLenCP | Substr | SubstrBytes | SubstrCP | Subtract | Sum | Switch | Tan | Tanh | ToBool | ToDate | ToDecimal | ToDouble | ToInt | ToLong | ToLower | ToObjectId | ToString | ToUpper | Trim | Trunc | Type | Week | Year | Zip
 </p>
-<br><br><br><br>
-
-
-
