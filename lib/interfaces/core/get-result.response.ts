@@ -7,7 +7,7 @@ export interface GetResultResponse {
    * @param element Optional. Contains the index of the desired element or 'last' for the last element
    * @constructor
    */
-  GetDocs(element?: number | 'last'): any[] | any;
+  GetDocs<T>(element?: number | 'last'): T;
 
   /**
    * The method used to obtain the total number of documents found
