@@ -74,7 +74,7 @@ export const GetResult = async (
  * @param count The result of the pipeline count of the stage facet
  * @param pipeline The pipeline applied to the target
  */
-export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): number => {
+export const getTotalPageNumber = (count: { totalElements: number; }[], pipeline: StageInterface[]): number => {
   if (
     !count || !count.length || count[0].totalElements === undefined ||
     !pipeline || !pipeline.length
@@ -82,7 +82,7 @@ export const getTotalPageNumber = (count: any[], pipeline: StageInterface[]): nu
     return -1;
   }
 
-  const totalElements = count[0].totalElements as number;
+  const totalElements = count[0].totalElements;
   const limitStage = pipeline[0].$facet ? pipeline[0].$facet.docs.find((s) => s.$limit) : undefined;
   const elementsPerPage = limitStage ? limitStage.$limit as number : undefined;
 
