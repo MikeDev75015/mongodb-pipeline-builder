@@ -58,7 +58,7 @@
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
 
-**mongodb-pipeline-builder** is a pipeline builder for the [db.collection.aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/) method and db.aggregate method.
+**mongodb-pipeline-builder** is a pipeline builder for the [db.collection.aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/) method, the db.aggregate method and the mongoose model aggregate method.
 
 - Simplify pipelines by making them more readable
 - Pipelines are easier to edit. 
@@ -79,8 +79,8 @@
 
 ```typescript
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;
-const { EqualityPayload, OnlyPayload, Field } = require('mongodb-pipeline-builder/helpers');
-const { LessThanEqual, ArrayElemAt, Equal, Expression } = require('mongodb-pipeline-builder/operators');
+const { LookupEqualityHelper, ProjectOnlyHelper, Field } = require('mongodb-pipeline-builder/helpers');
+const { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } = require('mongodb-pipeline-builder/operators');
 ```
 
 ### Using `import`
@@ -88,8 +88,8 @@ const { LessThanEqual, ArrayElemAt, Equal, Expression } = require('mongodb-pipel
 
 ```typescript
 import { PipelineBuilder } from 'mongodb-pipeline-builder';
-import { EqualityPayload, OnlyPayload, Field } from 'mongodb-pipeline-builder/helpers';
-import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-builder/operators';
+import { LookupEqualityHelper, ProjectOnlyHelper, Field } from 'mongodb-pipeline-builder/helpers';
+import { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } from 'mongodb-pipeline-builder/operators';
 ```
 
 ## Pagination example
@@ -97,8 +97,8 @@ import { LessThanEqual, ArrayElemAt, Equal, Expression } from 'mongodb-pipeline-
 
 ```typescript
 const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
-    .Match( Expression( LessThanEqual( '$id', 20 ) ) )
-    .Project( OnlyPayload( 'name', 'weight' ) )
+    .Match( $Expression( $LessThanEqual( '$id', 20 ) ) )
+    .Project( ProjectOnlyHelper( 'name', 'weight' ) )
     .Paging( 5, 3 ) // 5 per page, page 3
     .getPipeline();
 ```
@@ -117,7 +117,6 @@ const myNewPipeline = [ {
         ],
         count: [
             { $match: { $expr: { $lte: ["$id", 20] } } },
-            { $project: { _id: 0, name: 1, weight: 1 } },
             { $count: "totalElements" }
         ]
     }
@@ -128,12 +127,12 @@ const myNewPipeline = [ {
 
 ```typescript
 const myNewPipeline = new PipelineBuilder( 'user-skills' )
-    .Match( Expression( Equal( '$id', 123456 ) ) )
-    .Lookup( EqualityPayload( 'profiles', 'profile', 'profileId', 'id' ) )
-    .Project( OnlyPayload( 'firstname', 'lastname', 'email' ) )
+    .Match( $Expression( $Equal( '$id', 123456 ) ) )
+    .Lookup( LookupEqualityHelper( 'profiles', 'profile', 'profileId', 'id' ) )
+    .Project( ProjectOnlyHelper( 'firstname', 'lastname', 'email' ) )
     .AddFields(
-        Field( 'skills', ArrayElemAt( '$profile.skills', 0 ) ),
-        Field( 'availability', ArrayElemAt( '$profile.availability', 0 ) )
+        Field( 'skills', $ArrayElemAt( '$profile.skills', 0 ) ),
+        Field( 'availability', $ArrayElemAt( '$profile.availability', 0 ) )
     )
     .Unset( 'profile' )
     .getPipeline();
@@ -156,15 +155,22 @@ const myNewPipeline = [
 
 ___
 
-#  GetResult method
+#  GetResult method (No pagination)
 
 ```typescript
-GetResult(): Promise<GetResultResponse | GetPagingResultResponse>
+GetResult<T = any>(): Promise<GetResultResponse<T>>
 ```
 
 <p style="font-size: 15px;">
 
-`GetResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method) with either pagination or not.
+`GetResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method).
+
+<p>
+
+### Welcome
+<p style="font-size: 11px;">
+
+`<T = any>` It is now possible to **type** the response.
 
 <p>
 
@@ -172,50 +178,72 @@ GetResult(): Promise<GetResultResponse | GetPagingResultResponse>
 
 <p style="font-size: 15px;">
 
-Without pagination, the `GetResult()` method returns a GetResultResponse object that contains two methods:<br>
+Without pagination, the `GetResult<T>()` method returns a GetResultResponse object that contains two methods:<br>
 
-- `GetDocs(): any[]` to get the documents found.
+- `GetDocs(): T[]` to get the documents found.
+- `GetElement(): T` to get a particular document.
 - `GetCount(): number` to get the total number of documents found.
 
 </p>
 
 
 ```typescript
-const result = await GetResult( target, pipeline ); 
-result.GetDocs(); // () => any[]
+const result = await GetResult<DocType>( target, pipeline ); 
+result.GetDocs(); // () => DocType[]
+result.GetElement(); // () => DocType
 result.GetCount(); // () => number
 ```
 
-*Or*
+*$Or*
 ```typescript
-GetResult( target, pipeline ).then( result => {
-    result.GetDocs(); // () => any[]
+GetResult<DocType>( target, pipeline ).then( result => {
+    result.GetDocs(); // () => DocType[]
+    result.GetElement(); // () => DocType
     result.GetCount(); // () => number
 } );
 ```
 
-### `GetDocs()` method possibilities:
+### `GetElement(index: number | 'last')` method possibilities:
 
 <p style="font-size: 15px;">
 A particular document can be retrieved by specifying its index as an argument of the `GetDocs()` method.
 
 To get the last document, the argument to provide is the string `'last'`. 
 
-If the specified index is greater than the index of the last document, `GetDocs()` will return the last document.
+If the specified index is greater than the index of the last document, `GetElement()` will return undefined.
 </p>
 
 ```typescript
-// GetDocs() -> [document0, document1, document2, document3, ..., document51]
-result.GetDocs(2); // will return document to index 2, document2
-result.GetDocs('last'); // will return the last document, document51
-result.GetDocs(99); // will return the last document, document51
+// GetDocs() -> [document1, document2, document3, ..., document51]
+result.GetElement(2); // will return document to index 2, document1
+result.GetElement('last'); // will return the last document, document51
+result.GetElement(99); // will return undefined
 ```
+
+#  GetPagingResult method (Pagination)
+
+```typescript
+GetPagingResult<T = any>(): Promise<GetPagingResultResponse<T>>
+```
+
+<p style="font-size: 15px;">
+
+`GetPagingResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method) for pagination.
+
+<p>
+
+### Again
+<p style="font-size: 11px;">
+
+`<T = any>` It is also possible to **type** the response.
+
+<p>
 
 ## GetPagingResultResponse
 
 <p style="font-size: 15px;">
 
-With pagination,  `GetResult()` returns a `GetPagingResultResponse` object that contains three methods:
+With pagination,  `GetResult<T>()` returns a `GetPagingResultResponse` object that contains three methods:
 - `GetDocs()` to get the documents found.
 - `GetCount()` to get the total number of documents found.
 - `GetTotalPageNumber()` to get the total number of pages.
@@ -224,16 +252,16 @@ With pagination,  `GetResult()` returns a `GetPagingResultResponse` object that 
 
 
 ```typescript
-const result = await GetResult(target, pipeline);
-result.GetDocs(); // () => any[]
+const result = await GetResult<DocType>(target, pipeline);
+result.GetDocs(); // () => DocType[]
 result.GetCount(); // () => number
 result.GetTotalPageNumber(); // () => number
 ```
 
-*Or*
+*$Or*
 ```typescript
-GetResult(target, pipeline).then( result => {
-    result.GetDocs(); // () => any[]
+GetResult<DocType>(target, pipeline).then( result => {
+    result.GetDocs(); // () => DocType[]
     result.GetCount(); // () => number
     result.GetTotalPageNumber(); // () => number
 } );
@@ -247,6 +275,10 @@ ___
 
 [-> Aggregation Pipeline Stages <-](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
+
+## SPECIAL STAGE:
+
+- Paging
 
 ## MONGODB NATIVE STAGES:
 - AddFields 
@@ -280,10 +312,6 @@ ___
 - Unset 
 - Unwind
 
-## CUSTOM STAGE:
-
-- Paging
-
 ___
 
 <div style="text-align: center; width: 100%;">
@@ -294,16 +322,16 @@ ___
 
 ## STAGE HELPERS <span style="color: red">*</span> :
 
-- Bucket ( GroupByPayload )
-- BucketAuto ( GroupByAutoPayload )
-- CurrentOp ( OpPayload )
-- GeoNear ( NearPayload )
-- Lookup ( ConditionPayload | EqualityPayload )
-- Merge ( IntoPayload )
-- Out ( DbCollPayload )
-- Project ( IgnorePayload | OnlyPayload )
-- Sample ( SizePayload )
-- UnionWith ( CollectionPayload )
+- Bucket ( BucketGroupByHelper )
+- BucketAuto ( BucketAutoGroupByHelper )
+- CurrentOp ( CurrentOpHelper )
+- GeoNear ( GeoNearHelper )
+- Lookup ( LookupConditionHelper | LookupEqualityHelper )
+- Merge ( MergeIntoHelper )
+- Out ( OutDbCollHelper )
+- Project ( ProjectIgnoreHelper | ProjectOnlyHelper )
+- Sample ( SampleSizeHelper )
+- UnionWith ( UnionWithCollectionHelper )
 
 ## COMMON HELPERS:
 
@@ -322,5 +350,5 @@ ___
 
 </div>
 <p style="font-size: 15px;">
-Absolute | Accumulator | Acos | Acosh | Add | AddToSet | AllElementsTrue | And | AnyElementTrue | ArrayElemAt | ArrayToObject | Asin | Asinh | Atan | Atan2 | Atanh | Avg | BinarySize | BsonSize | Ceil | Compare | Concat | ConcatArrays | Cond | Convert | Cos | Cosh | DateFromParts | DateFromString | DateToParts | DateToString | DayOfMonth | DayOfWeek | DayOfYear | DegreesToRadians | Divide | Equal | Exponent | Expression | Filter | First | Floor | FunctionOperator | GreaterThan | GreaterThanEqual | Hour | IfNull | In | IndexOfArray | IndexOfBytes | IndexOfCP | IsArray | IsNumber | IsoDayOfWeek | IsoWeek | IsoWeekYear | Last | LessThan | LessThanEqual | Let | Literal | Log | Log10 | Ltrim | MapOperator | Max | MergeObjects | Meta | Millisecond | Min | Minute | Mod | Month | Multiply | NaturalLog | Not | NotEqual | ObjectToArray | Or | Pow | Push | RadiansToDegrees | Rand | Range | Reduce | RegexFind | RegexFindAll | RegexMatch | ReplaceAll | ReplaceOne | ReverseArray | Round | Rtrim | SampleRate | Second | SetDifference | SetEquals | SetIntersection | SetIsSubset | SetUnion | Sin | Sinh | Size | Slice | Split | Sqrt | StdDevPop | StdDevSamp | StrCaseCmp | StrLenBytes | StrLenCP | Substr | SubstrBytes | SubstrCP | Subtract | Sum | Switch | Tan | Tanh | ToBool | ToDate | ToDecimal | ToDouble | ToInt | ToLong | ToLower | ToObjectId | ToString | ToUpper | Trim | Trunc | Type | Week | Year | Zip
+$Absolute | $Accumulator | $Acos | $Acosh | $Add | $AddToSet | $AllElementsTrue | $And | $AnyElementTrue | $ArrayElemAt | $ArrayToObject | $Asin | $Asinh | $Atan | $Atan2 | $Atanh | $Avg | $BinarySize | $BsonSize | $Ceil | $Compare | $Concat | $ConcatArrays | $Cond | $Convert | $Cos | $Cosh | $DateFromParts | $DateFromString | $DateToParts | $DateToString | $DayOfMonth | $DayOfWeek | $DayOfYear | $DegreesToRadians | $Divide | $Equal | $Exponent | $Expression | $Filter | $First | $Floor | $FunctionOperator | $GreaterThan | $GreaterThanEqual | $Hour | $IfNull | $In | $IndexOfArray | $IndexOfBytes | $IndexOfCP | $IsArray | $IsNumber | $IsoDayOfWeek | $IsoWeek | $IsoWeekYear | $Last | $LessThan | $LessThanEqual | $Let | $Literal | $Log | $Log10 | $Ltrim | $Map | $Max | $MergeObjects | $Meta | $Millisecond | $Min | $Minute | $Mod | $Month | $Multiply | $NaturalLog | $Not | $NotEqual | $ObjectToArray | $Or | $Pow | $Push | $RadiansToDegrees | $Rand | $Range | $Reduce | $RegexFind | $RegexFindAll | $RegexMatch | $ReplaceAll | $ReplaceOne | $ReverseArray | $Round | $Rtrim | $SampleRate | $Second | $SetDifference | $SetEquals | $SetIntersection | $SetIsSubset | $SetUnion | $Sin | $Sinh | $Size | $Slice | $Split | $Sqrt | $StdDevPop | $StdDevSamp | $StrCaseCmp | $StrLenBytes | $StrLenCP | $Substr | $SubstrBytes | $SubstrCP | $Subtract | $Sum | $Switch | $Tan | $Tanh | $ToBool | $ToDate | $ToDecimal | $ToDouble | $ToInt | $ToLong | $ToLower | $ToObjectId | $ToString | $ToUpper | $Trim | $Trunc | $Type | $Week | $Year | $Zip
 </p>

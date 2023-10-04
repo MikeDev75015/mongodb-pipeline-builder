@@ -10,14 +10,14 @@
  *
  * @param year Required if not using isoWeekYear. Calendar year. Can be any expression that evaluates to a number.
  * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
- * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
+ * the lower bound for this value is 1. $In previous versions of MongoDB, the lower bound was 0.
  * Value range: 1-12. if the number specified is outside this range, $dateFromParts incorporates the difference in the
  * date calculation.
  * Value range: 1-31. Starting in MongoDB 4.0, if the number specified is outside this range, $dateFromParts
  * incorporates the difference in the date calculation.
- * @param isoWeekYear Required if not using year. ISO Week Date Year. Can be any expression that evaluates to a number.
+ * @param isoWeekYear Required if not using year. ISO $Week Date $Year. Can be any expression that evaluates to a number.
  * Value range: 1-9999. If the number specified is outside this range, $dateFromParts errors. Starting in MongoDB 4.4,
- * the lower bound for this value is 1. In previous versions of MongoDB, the lower bound was 0.
+ * the lower bound for this value is 1. $In previous versions of MongoDB, the lower bound was 0.
  * number. Value range: 1-53. If the number specified is outside this range, $dateFromParts incorporates the difference
  * in the date calculation.
  * expression that evaluates to a number. Value range: 1-7. If the number specified is outside
@@ -34,7 +34,7 @@
  * @param options
  * @constructor
  */
-export const DateFromParts = (
+export const $DateFromParts = (
     year?: any, isoWeekYear?: any, timezone?: any,
     yearBundle = { month: 1, day: 1 },
     isoWeekYearBundle = { isoWeek: 1, isoDayOfWeek: 1 },
@@ -82,15 +82,15 @@ export const DateFromParts = (
  * is null or missing, then $dateFromString outputs null.
  * @constructor
  */
-export const DateFromString = (
+export const $DateFromString = (
     dateString: any, formatString = '%Y-%m-%dT%H:%M:%S.%LZ', timezone?: any, onError?: any, onNull?: any
 ) => ({
     $dateFromString: {
-        dateString: dateString,
+        dateString,
         format: formatString,
-        timezone: timezone,
-        onError: onError,
-        onNull: onNull
+        timezone,
+        onError,
+        onNull
     }
 });
 
@@ -101,7 +101,7 @@ export const DateFromString = (
  * @param iso8601
  * @constructor
  */
-export const DateToParts = (dateExpression: any, timezone?: any, iso8601 = false) => ({
+export const $DateToParts = (dateExpression: any, timezone?: any, iso8601 = false) => ({
     $dateToParts: {
         'date' : dateExpression,
         'timezone' : timezone,
@@ -116,14 +116,14 @@ export const DateToParts = (dateExpression: any, timezone?: any, iso8601 = false
  * @param onNull
  * @constructor
  */
-export const DateToString = (
+export const $DateToString = (
     dateExpression: any, formatString = '%Y-%m-%dT%H:%M:%S.%LZ', timezone?: any, onNull?: any
 ) => ({
     $dateToString: {
         date: dateExpression,
         format: formatString,
-        timezone: timezone,
-        onNull: onNull
+        timezone,
+        onNull
     }
 });
 /**
@@ -132,43 +132,43 @@ export const DateToString = (
  * @param timezone
  * @constructor
  */
-export const DayOfMonth = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $DayOfMonth = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const DayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $DayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the day of the year for a date as a number between 1 and 366 (leap year).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const DayOfYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $DayOfYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the hour for a date as a number between 0 and 23.
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Hour = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Hour = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const IsoDayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $IsoDayOfWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
- * Returns the week number in ISO 8601 format, ranging from 1 to 53. Week numbers start at 1 with the week (Monday
+ * Returns the week number in ISO 8601 format, ranging from 1 to 53. $Week numbers start at 1 with the week (Monday
  * through Sunday) that contains the year’s first Thursday.
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const IsoWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $IsoWeek = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the year number in ISO 8601 format. The year starts with the Monday of week 1 (ISO 8601) and ends with the
  * Sunday of the last week (ISO 8601).
@@ -176,41 +176,41 @@ export const IsoWeek = (dateExpression: any, timezone: any) => ({ date: dateExpr
  * @param timezone
  * @constructor
  */
-export const IsoWeekYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $IsoWeekYear = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the milliseconds of a date as a number between 0 and 999.
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Millisecond = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Millisecond = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the minute for a date as a number between 0 and 59.
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Minute = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Minute = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the month for a date as a number between 1 (January) and 12 (December).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Month = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Month = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Second = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Second = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Converts value to a Date.
  * @param expression
  * @constructor
  */
-export const ToDate = (expression: any) => ({ $toDate: expression });
+export const $ToDate = (expression: any) => ({ $toDate: expression });
 /**
  * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the
  * year) and 53 (leap year).
@@ -218,11 +218,11 @@ export const ToDate = (expression: any) => ({ $toDate: expression });
  * @param timezone
  * @constructor
  */
-export const Week = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Week = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });
 /**
  * Returns the year for a date as a number (e.g. 2014).
  * @param dateExpression
  * @param timezone
  * @constructor
  */
-export const Year = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone: timezone });
+export const $Year = (dateExpression: any, timezone: any) => ({ date: dateExpression, timezone });

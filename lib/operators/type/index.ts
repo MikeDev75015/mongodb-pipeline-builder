@@ -1,4 +1,4 @@
-// Type Expression Operators
+// $Type Expression Operators
 
 /**
  * Converts a value to a specified type.
@@ -8,13 +8,13 @@
  * @param onNull
  * @constructor
  */
-export const Convert = (input: any, to: any, onError?: any, onNull?: any) => ({
+export const $Convert = (input: any, to: any, onError?: any, onNull?: any) => ({
     $convert:
         {
-            input: input,
-            to: to,
-            onError: onError,  // Optional.
-            onNull: onNull    // Optional.
+            input,
+            to,
+            onError,  // Optional.
+            onNull    // Optional.
         }
 });
 /**
@@ -24,46 +24,46 @@ export const Convert = (input: any, to: any, onError?: any, onNull?: any) => ({
  * @param expression
  * @constructor
  */
-export const IsNumber = (expression: any) => ({ $isNumber: expression });
+export const $IsNumber = (expression: any) => ({ $isNumber: expression });
 /**
  * Converts value to a boolean.
  * @param expression
  * @constructor
  */
-export const ToBool = (expression: any) => ({ $toBool: expression });
+export const $ToBool = (expression: any) => ({ $toBool: expression });
 /**
  * Converts value to a Decimal128.
  * @param expression
  * @constructor
  */
-export const ToDecimal = (expression: any) => ({ $toDecimal: expression });
+export const $ToDecimal = (expression: any) => ({ $toDecimal: expression });
 /**
  * Converts value to a double.
  * @param expression
  * @constructor
  */
-export const ToDouble = (expression: any) => ({ $toDouble: expression });
+export const $ToDouble = (expression: any) => ({ $toDouble: expression });
 /**
  * Converts value to an integer.
  * @param expression
  * @constructor
  */
-export const ToInt = (expression: any) => ({ $toInt: expression });
+export const $ToInt = (expression: any) => ({ $toInt: expression });
 /**
  * Converts value to a long.
  * @param expression
  * @constructor
  */
-export const ToLong = (expression: any) => ({ $toLong: expression });
+export const $ToLong = (expression: any) => ({ $toLong: expression });
 /**
  * Converts value to an ObjectId.
  * @param expression
  * @constructor
  */
-export const ToObjectId = (expression: any) => ({ $toObjectId: expression });
+export const $ToObjectId = (expression: any) => ({ $toObjectId: expression });
 /**
  * Return the BSON data type of the field.
  * @param expression
  * @constructor
  */
-export const Type = (expression: any) => ({ $type: expression });
+export const $Type = (expression: any) => ({ $type: expression });

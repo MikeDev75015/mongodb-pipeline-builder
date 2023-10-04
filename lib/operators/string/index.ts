@@ -6,7 +6,7 @@
  * @param expressions
  * @constructor
  */
-export const Concat = (...expressions: any) => ({ $concat: expressions });
+export const $Concat = (...expressions: any) => ({ $concat: expressions });
 /**
  * Searches a string for an occurrence of a substring and returns the UTF-8 byte index of the first occurrence. If the
  * substring is not found, returns -1.
@@ -16,7 +16,7 @@ export const Concat = (...expressions: any) => ({ $concat: expressions });
  * @param endIndex
  * @constructor
  */
-export const IndexOfBytes = (stringExpression: any, substringExpression: any, startIndex: any, endIndex: any) => ({
+export const $IndexOfBytes = (stringExpression: any, substringExpression: any, startIndex: any, endIndex: any) => ({
     $indexOfBytes: [ stringExpression, substringExpression, startIndex, endIndex ]
 });
 /**
@@ -28,7 +28,7 @@ export const IndexOfBytes = (stringExpression: any, substringExpression: any, st
  * @param endIndex
  * @constructor
  */
-export const IndexOfCP = (stringExpression: any, substringExpression: any, startIndex: any, endIndex: any) => ({
+export const $IndexOfCP = (stringExpression: any, substringExpression: any, startIndex: any, endIndex: any) => ({
     $indexOfCP: [ stringExpression, substringExpression, startIndex, endIndex ]
 });
 /**
@@ -37,28 +37,28 @@ export const IndexOfCP = (stringExpression: any, substringExpression: any, start
  * @param chars
  * @constructor
  */
-export const Ltrim = (input: any, chars: any) => ({ $ltrim: { input: input,  chars: chars } });
+export const $Ltrim = (input: any, chars: any) => ({ $ltrim: { input,  chars } });
 /**
  * Applies a regular expression (regex) to a string and returns information on the first matched substring.
  * @param input
  * @param regex
  * @constructor
  */
-export const RegexFind = (input: any, regex: any) => ({ $regexFind: { input: input , regex: regex } });
+export const $RegexFind = (input: any, regex: any) => ({ $regexFind: { input , regex } });
 /**
  * Applies a regular expression (regex) to a string and returns information on the all matched substrings.
  * @param input
  * @param regex
  * @constructor
  */
-export const RegexFindAll = (input: any, regex: any) => ({ $regexFindAll: { input: input , regex: regex } });
+export const $RegexFindAll = (input: any, regex: any) => ({ $regexFindAll: { input , regex } });
 /**
  * Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
  * @param input
  * @param regex
  * @constructor
  */
-export const RegexMatch = (input: any, regex: RegExp) => ({ $regexMatch: { input: input, regex: regex } });
+export const $RegexMatch = (input: any, regex: RegExp) => ({ $regexMatch: { input, regex } });
 /**
  * Replaces the first instance of a matched string in a given input.
  * @param input
@@ -66,8 +66,8 @@ export const RegexMatch = (input: any, regex: RegExp) => ({ $regexMatch: { input
  * @param replacement
  * @constructor
  */
-export const ReplaceOne = (input: any, find: any, replacement: any) => ({
-    $replaceOne: { input: input, find: find, replacement: replacement }
+export const $ReplaceOne = (input: any, find: any, replacement: any) => ({
+    $replaceOne: { input, find, replacement }
 });
 /**
  * Replaces all instances of a matched string in a given input.
@@ -76,8 +76,8 @@ export const ReplaceOne = (input: any, find: any, replacement: any) => ({
  * @param replacement
  * @constructor
  */
-export const ReplaceAll = (input: any, find: any, replacement: any) => ({
-    $replaceAll: { input: input, find: find, replacement: replacement }
+export const $ReplaceAll = (input: any, find: any, replacement: any) => ({
+    $replaceAll: { input, find, replacement }
 });
 /**
  * Removes whitespace or the specified characters from the end of a string.
@@ -85,7 +85,7 @@ export const ReplaceAll = (input: any, find: any, replacement: any) => ({
  * @param chars
  * @constructor
  */
-export const Rtrim = (input: any, chars: any) => ({ $rtrim: { input: input,  chars: chars } });
+export const $Rtrim = (input: any, chars: any) => ({ $rtrim: { input,  chars } });
 /**
  * Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found
  * within the string, returns an array containing the original string.
@@ -93,19 +93,19 @@ export const Rtrim = (input: any, chars: any) => ({ $rtrim: { input: input,  cha
  * @param delimiter
  * @constructor
  */
-export const Split = (stringExpression: any, delimiter: any) => ({ $split: [ stringExpression, delimiter ] });
+export const $Split = (stringExpression: any, delimiter: any) => ({ $split: [stringExpression, delimiter ] });
 /**
  * Returns the number of UTF-8 encoded bytes in a string.
  * @param stringExpression
  * @constructor
  */
-export const StrLenBytes = (stringExpression: any) => ({ $strLenBytes: stringExpression });
+export const $StrLenBytes = (stringExpression: any) => ({ $strLenBytes: stringExpression });
 /**
  * Returns the number of UTF-8 code points in a string.
  * @param stringExpression
  * @constructor
  */
-export const StrLenCP = (stringExpression: any) => ({ $strLenCP: stringExpression });
+export const $StrLenCP = (stringExpression: any) => ({ $strLenCP: stringExpression });
 /**
  * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is
  * greater than the second, and -1 if the first string is less than the second.
@@ -113,7 +113,7 @@ export const StrLenCP = (stringExpression: any) => ({ $strLenCP: stringExpressio
  * @param expression2
  * @constructor
  */
-export const StrCaseCmp = (expression1: any, expression2: any) => ({ $strcasecmp: [ expression1, expression2 ] });
+export const $StrCaseCmp = (expression1: any, expression2: any) => ({ $strcasecmp: [expression1, expression2 ] });
 /**
  * Deprecated. Use $substrBytes or $substrCP.
  * @param stringExpression
@@ -121,7 +121,7 @@ export const StrCaseCmp = (expression1: any, expression2: any) => ({ $strcasecmp
  * @param stringLength
  * @constructor
  */
-export const Substr = (stringExpression: any, startIndex: any, stringLength: any) => ({
+export const $Substr = (stringExpression: any, startIndex: any, stringLength: any) => ({
     $substr: [ stringExpression, startIndex, stringLength ]
 });
 /**
@@ -132,7 +132,7 @@ export const Substr = (stringExpression: any, startIndex: any, stringLength: any
  * @param byteCount
  * @constructor
  */
-export const SubstrBytes = (stringExpression: any, byteIndex: any, byteCount: any) => ({
+export const $SubstrBytes = (stringExpression: any, byteIndex: any, byteCount: any) => ({
     $substrBytes: [ stringExpression, byteIndex, byteCount ]
 });
 /**
@@ -143,7 +143,7 @@ export const SubstrBytes = (stringExpression: any, byteIndex: any, byteCount: an
  * @param codePointCount
  * @constructor
  */
-export const SubstrCP = (stringExpression: any, codePointIndex: any, codePointCount: any) => ({
+export const $SubstrCP = (stringExpression: any, codePointIndex: any, codePointCount: any) => ({
     $substrCP: [ stringExpression, codePointIndex, codePointCount ]
 });
 /**
@@ -151,23 +151,23 @@ export const SubstrCP = (stringExpression: any, codePointIndex: any, codePointCo
  * @param expression
  * @constructor
  */
-export const ToLower = (expression: any) => ({ $toLower: expression });
+export const $ToLower = (expression: any) => ({ $toLower: expression });
 /**
  * Converts value to a string.
  * @param expression
  * @constructor
  */
-export const ToString = (expression: any) => ({ $toString: expression });
+export const $ToString = (expression: any) => ({ $toString: expression });
 /**
  * Removes whitespace or the specified characters from the beginning and end of a string.
  * @param input
  * @param chars
  * @constructor
  */
-export const Trim = (input: any, chars: any) => ({ $trim: { input: input,  chars: chars } });
+export const $Trim = (input: any, chars: any) => ({ $trim: { input,  chars } });
 /**
  * Converts a string to uppercase. Accepts a single argument expression.
  * @param expression
  * @constructor
  */
-export const ToUpper = (expression: any) => ({ $toUpper: expression });
+export const $ToUpper = (expression: any) => ({ $toUpper: expression });

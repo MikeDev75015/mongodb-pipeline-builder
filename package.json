@@ -1,20 +1,21 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "3.4.0-0",
+  "version": "4.0.0-0",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "prepare": "npm run build",
+    "dev": "ts-node tests/index.ts",
     "build": "tsc",
     "test": "jest --runInBand",
     "test-cov": "jest --runInBand --coverage",
     "test:ci": "CI=true npm test -- --coverage --testResultsProcessor=jest-sonar-reporter",
     "compodoc": "npx compodoc -p tsconfig.json lib --theme postmark",
     "tag-pre-release": "standard-version --prerelease",
-    "publish-pre-release": "npm publish dist --tag prerelease",
+    "publish-pre-release": "npm publish --tag prerelease",
     "tag-release": "standard-version",
-    "publish-release": "npm publish dist --tag latest"
+    "publish-release": "npm publish --tag latest"
   },
   "repository": {
     "type": "git",
@@ -38,13 +39,13 @@
   },
   "homepage": "https://mikedev75015.github.io",
   "devDependencies": {
-    "@babel/core": "^7.13.10",
+    "@babel/core": "^7.23.0",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-decorators": "^7.13.5",
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-typescript": "^7.13.0",
-    "@compodoc/compodoc": "^1.1.11",
+    "@compodoc/compodoc": "^1.1.18",
     "@types/jest": "^26.0.20",
     "jest": "^26.6.3",
     "jest-sonar-reporter": "^2.0.0",

@@ -11,7 +11,7 @@
  * @param index can be any valid expression that resolves to an integer:
  * @constructor
  */
-export const ArrayElemAt = (array: any, index: number) => ({ $arrayElemAt: [ array, index ] });
+export const $ArrayElemAt = (array: any, index: number) => ({ $arrayElemAt: [array, index ] });
 /**
  * Converts an array into a single document; the array must be either:
  * - An array of two-element arrays where the first element is the field name, and the second element is the field value:
@@ -25,7 +25,7 @@ export const ArrayElemAt = (array: any, index: number) => ({ $arrayElemAt: [ arr
  * contains “k” and “v” fields.
  * @constructor
  */
-export const ArrayToObject = (literal: boolean, array: any) => literal
+export const $ArrayToObject = (literal: boolean, array: any) => literal
     ? ({ $arrayToObject: { $literal: array } })
     : ({ $arrayToObject: array });
 /**
@@ -34,7 +34,7 @@ export const ArrayToObject = (literal: boolean, array: any) => literal
  * @param arrayOfArrays can be any valid expression as long as they resolve to an array.
  * @constructor
  */
-export const ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOfArrays });
+export const $ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOfArrays });
 /**
  * Selects a subset of an array to return based on the specified condition. Returns an array with only those elements
  * that match the condition. The returned elements are in the original order.
@@ -46,20 +46,20 @@ export const ConcatArrays = (...arrayOfArrays: any) => ({ $concatArrays: arrayOf
  * variable name specified in as.
  * @constructor
  */
-export const Filter = (array: any, condition: any, as = 'this') => ({ $filter: { input: array, as, cond: condition } });
+export const $Filter = (array: any, condition: any, as = 'this') => ({ $filter: { input: array, as, cond: condition } });
 /**
  * Returns the first element in an array.
  * @param array
  * @constructor
  */
-export const First = (array: any) => ({ $first: array });
+export const $First = (array: any) => ({ $first: array });
 /**
  * Returns a boolean indicating whether a specified value is in an array.
  * @param elementToFind can be any valid expression.
  * @param array can be any valid expression that resolves to an array.
  * @constructor
  */
-export const In = (elementToFind: any, array: any) => ({ $in: [ elementToFind, array ] });
+export const $In = (elementToFind: any, array: any) => ({ $in: [elementToFind, array ] });
 /**
  * Searches an array for an occurrence of a specified value and returns the array index (zero-based) of the first
  * occurrence. If the value is not found, returns -1. If the array expression resolves to a value of null or refers to a
@@ -76,7 +76,7 @@ export const In = (elementToFind: any, array: any) => ({ $in: [ elementToFind, a
  * value as the <start> index value instead of the <end> value.
  * @constructor
  */
-export const IndexOfArray = (array: any, elementToFind: any, startIndex = 0, endIndex?: number) => ({
+export const $IndexOfArray = (array: any, elementToFind: any, startIndex = 0, endIndex?: number) => ({
     $indexOfArray: [ array, elementToFind, startIndex, endIndex ]
 });
 /**
@@ -84,14 +84,14 @@ export const IndexOfArray = (array: any, elementToFind: any, startIndex = 0, end
  * @param elementToVerify can be any valid expression.
  * @constructor
  */
-export const IsArray = (elementToVerify: any) => ({ $isArray: elementToVerify });
+export const $IsArray = (elementToVerify: any) => ({ $isArray: elementToVerify });
 /**
  * Returns the last element in an array. The $last operator is an alias for the following $arrayElemAt expression:
  * { $arrayElemAt: [ array, -1 ] }
  * @param array can be any valid expression as long as it resolves to an array, null, or missing.
  * @constructor
  */
-export const Last = (array: any) => ({ $last: array });
+export const $Last = (array: any) => ({ $last: array });
 /**
  * Applies an expression to each item in an array and returns an array with the applied results.
  * @param array can be any expression that resolves to an array.
@@ -101,7 +101,7 @@ export const Last = (array: any) => ({ $last: array });
  * element individually with the variable name specified in as.
  * @constructor
  */
-export const MapOperator = (array: any, apply: any, as = 'this') => ({ $map: { input: array, as, in: apply } });
+export const $Map = (array: any, apply: any, as = 'this') => ({ $map: { input: array, as, in: apply } });
 /**
  * Converts a document to an array. The return array contains an element for each field/value pair in the original
  * document. Each element in the return array is a document that contains two fields k and v:
@@ -112,7 +112,7 @@ export const MapOperator = (array: any, apply: any, as = 'this') => ({ $map: { i
  * $objectToArray does not recursively apply to the embedded document fields.
  * @constructor
  */
-export const ObjectToArray = (object: any) => ({ $objectToArray: object });
+export const $ObjectToArray = (object: any) => ({ $objectToArray: object });
 /**
  * Returns an array whose elements are a generated sequence of numbers. $range generates the sequence from the specified
  * starting number by successively incrementing the starting number by the specified step value up to but not including
@@ -124,7 +124,7 @@ export const ObjectToArray = (object: any) => ({ $objectToArray: object });
  * non-zero integer. Defaults to 1.
  * @constructor
  */
-export const Range = (startIndex: number, endIndex: number, step = 1) => ({
+export const $Range = (startIndex: number, endIndex: number, step = 1) => ({
     $range: [ startIndex, endIndex, step ]
 });
 /**
@@ -141,7 +141,7 @@ export const Range = (startIndex: number, endIndex: number, step = 1) => ({
  * right-to-left.
  * @constructor
  */
-export const Reduce = (array: any, initialValue: any, apply: any) => ({
+export const $Reduce = (array: any, initialValue: any, apply: any) => ({
     $reduce: { input: array, initialValue, in: apply }
 });
 /**
@@ -149,13 +149,13 @@ export const Reduce = (array: any, initialValue: any, apply: any) => ({
  * @param array can be any valid expression as long as it resolves to an array.
  * @constructor
  */
-export const ReverseArray = (array: any) => ({ $reverseArray: array });
+export const $ReverseArray = (array: any) => ({ $reverseArray: array });
 /**
  * Counts and returns the total number of items in an array.
  * @param array can be any expression as long as it resolves to an array.
  * @constructor
  */
-export const Size = (array: any) => ({ $size: array });
+export const $Size = (array: any) => ({ $size: array });
 /**
  * Returns a subset of an array.
  * @param array can be any valid expression as long as it resolves to an array.
@@ -169,7 +169,7 @@ export const Size = (array: any) => ({ $size: array });
  * from the position. If negative, $slice returns up to the last n elements in the array.
  * @constructor
  */
-export const Slice = (array: any, numberOfElement: number, position = 0) => ({
+export const $Slice = (array: any, numberOfElement: number, position = 0) => ({
     $slice: [ array, position, numberOfElement ]
 });
 /**
@@ -187,7 +187,7 @@ export const Slice = (array: any, numberOfElement: number, position = 0) => ({
  * must specify a default for each input array or else $zip will return an error.
  * @constructor
  */
-export const Zip = (arrayOfArrays: any, longestLength = false, defaultArray?: any) => ({
+export const $Zip = (arrayOfArrays: any, longestLength = false, defaultArray?: any) => ({
     $zip: {
         inputs: arrayOfArrays,
         useLongestLength: longestLength,

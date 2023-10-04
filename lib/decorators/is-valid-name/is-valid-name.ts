@@ -12,12 +12,10 @@ export function IsValidName(options?: {
     noSpace?: boolean,
     noSpecialChar?: boolean
 }) {
-    return function (target: Object | any, propertyKey: string) {
+    return (target: object | any, propertyKey: string) => {
         let value: string;
-        const getter = function() {
-            return value;
-        };
-        const setter = function(newVal: string) {
+        const getter = () => value;
+        const setter = (newVal: string) => {
             const errorList: string[] = [];
             const isEmptyString = !newVal.replace(/ /g, '').length;
 

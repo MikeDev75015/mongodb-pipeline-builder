@@ -1,5 +1,5 @@
 /**
- * test Min Length
+ * test $Min Length
  * @param newVal
  * @param minLength
  * @param errorList
@@ -11,7 +11,7 @@ export function testMinLength(newVal: string, minLength: number, errorList: stri
 }
 
 /**
- * test Max Length
+ * test $Max Length
  * @param newVal
  * @param maxLength
  * @param errorList

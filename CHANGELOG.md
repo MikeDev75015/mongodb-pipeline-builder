@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.4.0-0...v4.0.0-0) (2023-10-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* **global:**   * Replacing the Payload suffix with Helper
+  * Added $ symbol for all operators
+  * Renaming MapOperator to $Map
+  * Update GetResult, add the possibility to type the response, simplify GetDocs method and add GetElement method for non-paginated responses
+  * Add GetPagingResult for paginated responses
+
+* **global:** rename several files, improve code ([0599fe3](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/0599fe379baa3acff46a7dfef0b128f80ec261cc))
+
 ## [3.4.0-0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v3.3.1...v3.4.0-0) (2022-01-21)
 
 

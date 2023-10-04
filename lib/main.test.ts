@@ -2,9 +2,8 @@ import { PipelineBuilder } from "./";
 import { PipelineError } from "./errors";
 
 describe('should create a new pipeline builder object', () => {
-    let
-        pipelineBuilderWithDebug: PipelineBuilder,
-        pipelineBuilderWithoutDebug: PipelineBuilder;
+  let pipelineBuilderWithDebug: PipelineBuilder;
+  let pipelineBuilderWithoutDebug: PipelineBuilder;
 
     describe('pipeline Builder With Debug', () => {
         beforeEach(() => {
