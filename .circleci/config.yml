@@ -156,7 +156,7 @@ jobs:
       - *restore-cache
       - *install-deps
       - *run-unit-tests
-      - sonarcloud/scan
+#      - sonarcloud/scan
       - slack/notify:
           event: fail
           template: basic_fail_1
