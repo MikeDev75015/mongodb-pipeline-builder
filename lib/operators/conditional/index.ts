@@ -10,7 +10,7 @@
  * @param falseCase
  * @constructor
  */
-export const Cond = (booleanExpression: any, trueCase: any, falseCase: any) => ({
+export const $Cond = (booleanExpression: any, trueCase: any, falseCase: any) => ({
     $cond: [ booleanExpression, trueCase, falseCase ]
 });
 /**
@@ -21,7 +21,7 @@ export const Cond = (booleanExpression: any, trueCase: any, falseCase: any) => (
  * @param replaceWith
  * @constructor
  */
-export const IfNull = (value: any, replaceWith: any) => ({ $ifNull: [ value, replaceWith ] });
+export const $IfNull = (value: any, replaceWith: any) => ({ $ifNull: [value, replaceWith ] });
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a
  * specified expression and breaks out of the control flow.
@@ -29,7 +29,7 @@ export const IfNull = (value: any, replaceWith: any) => ({ $ifNull: [ value, rep
  * @param defaultCase
  * @constructor
  */
-export const Switch = (branchList: { branchCase: any; thenDo: any; }[], defaultCase: any) => ({
+export const $Switch = (branchList: { branchCase: any; thenDo: any; }[], defaultCase: any) => ({
     $switch: {
         branches: branchList,
         default: defaultCase

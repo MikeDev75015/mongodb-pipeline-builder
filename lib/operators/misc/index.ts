@@ -1,40 +1,40 @@
-// Literal Expression Operator
+// $Literal Expression Operator
 /**
  * Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For
  * example, use a $literal expression to a string that starts with a $ to avoid parsing as a field path.
  * @param value
  * @constructor
  */
-export const Literal = (value: any) => ({ $literal: value });
+export const $Literal = (value: any) => ({ $literal: value });
 
 // Miscellaneous Operators
 /**
  * Returns a random float between 0 and 1
  * @constructor
  */
-export const Rand = () => ({ $rand: {} });
+export const $Rand = () => ({ $rand: {} });
 /**
  * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the
  * quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
  * @param nonNegativeFloat
  * @constructor
  */
-export const SampleRate = (nonNegativeFloat: any) => ({ $sampleRate: nonNegativeFloat });
+export const $SampleRate = (nonNegativeFloat: any) => ({ $sampleRate: nonNegativeFloat });
 
-// Object Expression Operators
+// Object $Expression Operators
 /**
  * Allows the use of aggregation expressions within the query language. The arguments can be any valid aggregation
  * expression.
  * @param expression
  * @constructor
  */
-export const Expression = (expression: any) => ({ $expr: expression });
+export const $Expression = (expression: any) => ({ $expr: expression });
 /**
  * Combines multiple documents into a single document.
  * @param documents
  * @constructor
  */
-export const MergeObjects = (...documents: any) => ({ $mergeObjects: documents });
+export const $MergeObjects = (...documents: any) => ({ $mergeObjects: documents });
 
 // Text Expression Operator
 /**
@@ -42,7 +42,7 @@ export const MergeObjects = (...documents: any) => ({ $mergeObjects: documents }
  * @param metaDataKeyword
  * @constructor
  */
-export const Meta = (metaDataKeyword: any) => ({ $meta: metaDataKeyword });
+export const $Meta = (metaDataKeyword: any) => ({ $meta: metaDataKeyword });
 
 // Variable Expression Operators
 /**
@@ -54,6 +54,6 @@ export const Meta = (metaDataKeyword: any) => ({ $meta: metaDataKeyword });
  * @param expression
  * @constructor
  */
-export const Let = (vars: any, expression: any) => ({
-    $let: { vars: vars, in: expression }
+export const $Let = (vars: any, expression: any) => ({
+    $let: { vars, in: expression }
 });

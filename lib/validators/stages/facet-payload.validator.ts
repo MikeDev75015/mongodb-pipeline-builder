@@ -1,10 +1,10 @@
-import {FacetStageInterface, getStageTypeValue, StageLabel} from "../../interfaces";
+import {FacetStage, getPipelineStageTypeValue, PipelineStageLabel} from "../../interfaces";
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
  * @param payload The value passed to the stage
  * @returns an error message if non-compliant, an empty string if compliant
  */
-export const facetPayloadValidator = (payload: FacetStageInterface) => {
+export const facetPayloadValidator = (payload: FacetStage) => {
     if (!Object.keys(payload).length) {
         return 'You must specify at least one output field with its sub-pipeline.'
     }
@@ -20,7 +20,7 @@ export const facetPayloadValidator = (payload: FacetStageInterface) => {
 
     const invalidStageList = Object.keys(payload).filter(
         k => !!(payload[k].find(
-            s => (!getStageTypeValue(Object.keys(s)[0].substr(1) as StageLabel))
+            s => (!getPipelineStageTypeValue(Object.keys(s)[0].substr(1) as PipelineStageLabel))
         ))
     );
     if (invalidStageList.length) {

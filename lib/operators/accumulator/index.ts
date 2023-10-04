@@ -10,46 +10,46 @@
  * @param expression
  * @constructor
  */
-export const AddToSet = (expression: any) => ({ $addToSet: expression });
+export const $AddToSet = (expression: any) => ({ $addToSet: expression });
 /**
  * Returns an average of numerical values. Ignores non-numeric values.
  * @param expression
  * @constructor
  */
-export const Avg = (expression: any) => ({ $avg: expression });
+export const $Avg = (expression: any) => ({ $avg: expression });
 /**
  * Returns the highest expression value for each group.
  * @param expression
  * @constructor
  */
-export const Max = (expression: any) => ({ $max: expression });
+export const $Max = (expression: any) => ({ $max: expression });
 /**
  * Returns the lowest expression value for each group.
  * @param expression
  * @constructor
  */
-export const Min = (expression: any) => ({ $min: expression });
+export const $Min = (expression: any) => ({ $min: expression });
 /**
  * Returns an array of expression values for each group.
  * @param expression
  * @constructor
  */
-export const Push = (expression: any) => ({ $push: expression });
+export const $Push = (expression: any) => ({ $push: expression });
 /**
  * Returns the population standard deviation of the input values.
  * @param expression
  * @constructor
  */
-export const StdDevPop = (expression: any) => ({ $stdDevPop: expression });
+export const $StdDevPop = (expression: any) => ({ $stdDevPop: expression });
 /**
  * Returns the sample standard deviation of the input values.
  * @param expression
  * @constructor
  */
-export const StdDevSamp = (expression: any) => ({ $stdDevSamp: expression });
+export const $StdDevSamp = (expression: any) => ({ $stdDevSamp: expression });
 /**
  * Returns a sum of numerical values. Ignores non-numeric values.
  * @param expression
  * @constructor
  */
-export const Sum = (expression: any) => ({ $sum: expression });
+export const $Sum = (expression: any) => ({ $sum: expression });
