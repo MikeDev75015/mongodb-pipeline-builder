@@ -1,12 +1,12 @@
 /**
  * The interface that represent the contract for a paginated GetResult response
  */
-export interface GetPagingResultResponse {
+export interface GetPagingResultResponse<T> {
   /**
    * The method used to obtain the documents found
    * @constructor
    */
-  GetDocs<T>(): T;
+  GetDocs(): T[];
 
   /**
    * The method used to obtain the total number of documents found

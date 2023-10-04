@@ -15,6 +15,7 @@ class TestDecorator {
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class TestDecorator2 {
     @IsValidName({
         test: 4,

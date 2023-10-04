@@ -1,11 +1,11 @@
-import {BucketAutoStageInterface} from "../../interfaces";
+import {BucketAutoStage} from "../../interfaces";
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
  * @param payload The value passed to the stage
  * @returns an error message if non-compliant, an empty string if compliant
  */
-export const bucketAutoPayloadValidator = (payload: BucketAutoStageInterface) => {
+export const bucketAutoPayloadValidator = (payload: BucketAutoStage) => {
     const granularityValueList = [
         'R5', 'R10', 'R20', 'R40', 'R80', '1-2-5', 'E6', 'E12', 'E24', 'E48', 'E96', 'E192', 'POWERSOF2'
     ];

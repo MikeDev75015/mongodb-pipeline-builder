@@ -1,1 +1,1 @@
-export {GetResult} from "./get-result/get-result";
+export { GetResult, GetPagingResult } from './get-result/get-result';

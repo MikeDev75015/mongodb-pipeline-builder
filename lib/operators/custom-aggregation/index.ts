@@ -37,14 +37,14 @@
  * @param langCode is the language used in the $accumulator code. Currently, the only supported value for lang is js.
  * @constructor
  */
-export const Accumulator = (
+export const $Accumulator = (
     initCode: any, accumulateCode: any, accumulateArgs: any, mergeCode: any, finalizeCode: any, initArgs = [], langCode = 'js'
 ) => ({
     $accumulator: {
         init: initCode,
-        initArgs: initArgs,        // Optional
+        initArgs,        // Optional
         accumulate: accumulateCode,
-        accumulateArgs: accumulateArgs,
+        accumulateArgs,
         merge: mergeCode,
         finalize: finalizeCode,                    // Optional
         lang: langCode
@@ -67,7 +67,7 @@ export const Accumulator = (
  * @param langCode
  * @constructor
  */
-export const FunctionOperator = (bodyCode: any, array: any, langCode = 'js') => ({
+export const $FunctionOperator = (bodyCode: any, array: any, langCode = 'js') => ({
     $function: {
         body: bodyCode,
         args: array,
