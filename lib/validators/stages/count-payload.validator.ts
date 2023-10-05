@@ -8,7 +8,7 @@ export const countPayloadValidator = (payload: string) => {
         return 'The value must be a non-empty string.';
     }
 
-    if (payload.charAt(0) === '$') {
+    if (payload.startsWith('$')) {
         return 'The value must not start with $.';
     }
 

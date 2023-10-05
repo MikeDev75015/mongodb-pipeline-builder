@@ -49,11 +49,11 @@ export const BucketGroupByHelper = (
         output: { "count": { $sum: 1 } }
     } as BucketStage;
 
-    if (optional && optional.default) {
+    if (optional?.default) {
         payload.default = optional.default;
     }
 
-    if (optional && optional.output) {
+    if (optional?.output) {
         payload.output = optional.output;
     }
 

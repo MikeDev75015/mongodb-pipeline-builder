@@ -11,8 +11,8 @@ export class PipelineError extends Error {
      * constructor
      * @param message
      */
-    constructor(message?: string) {
-        super(message ? message : 'An error occurred while building the pipeline.');
+    constructor(message = 'An error occurred while building the pipeline.') {
+        super(message);
         this.name = PipelineError.name;
     }
 }

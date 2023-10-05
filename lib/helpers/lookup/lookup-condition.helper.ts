@@ -30,15 +30,15 @@ export const LookupConditionHelper = (
     const letObject: {[index: string]: any} = {};
     let pipeline: PipeLineStage[] = [];
 
-    if (optional && optional.pipeline) {
+    if (optional?.pipeline) {
         pipeline = optional.pipeline;
     }
 
-    if (optional && optional.sourceList && optional.sourceList[0]) {
+    if (optional?.sourceList && optional.sourceList[0]) {
         optional.sourceList.forEach(s => letObject[s] = '$' + s);
     }
 
-    if (optional && optional.project && Object.keys(optional.project).length) {
+    if (optional?.project && Object.keys(optional.project).length) {
         pipeline = pipeline.concat([{ $project: optional.project }]);
     }
 

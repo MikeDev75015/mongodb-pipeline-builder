@@ -20,7 +20,7 @@ export const facetPayloadValidator = (payload: FacetStage) => {
 
     const invalidStageList = Object.keys(payload).filter(
         k => !!(payload[k].find(
-            s => (!getPipelineStageTypeValue(Object.keys(s)[0].substr(1) as PipelineStageLabel))
+            s => (!getPipelineStageTypeValue(Object.keys(s)[0].substring(1) as PipelineStageLabel))
         ))
     );
     if (invalidStageList.length) {

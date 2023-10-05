@@ -25,11 +25,9 @@ export const GetResult = async <T = any>(
       result[0].docs &&
       result[0].count &&
       result[0].count[0] &&
-      result[0].count[0].totalElements !== undefined &&
-      result[0].count[0].totalElements >= 0
+      result[0].count[0].totalElements !== undefined
     ) {
       throwError('Application not possible, use the GetPagingResult method.');
-      return {} as GetResultResponse<T>;
     }
 
     // Default result
@@ -69,7 +67,6 @@ export const GetPagingResult = async <T = any>(
       result[0].count[0].totalElements === undefined
     ) {
       throwError('Application not possible, use the GetResult method.');
-      return {} as GetPagingResultResponse<T>;
     }
 
     // Default result
@@ -92,8 +89,8 @@ export const GetPagingResult = async <T = any>(
  */
 export const getTotalPageNumber = (count: { totalElements: number; }[], pipeline: PipeLineStage[]): number => {
   if (
-    !count || !count.length || count[0].totalElements === undefined ||
-    !pipeline || !pipeline.length
+    !count?.length || count[0].totalElements === undefined ||
+    !pipeline?.length
   ) {
     return -1;
   }
@@ -138,7 +135,7 @@ const checkArgsValidity = (target: any, pipeline: PipeLineStage[]) => {
     throw new PipelineError('Application not possible, the pipeline is empty.');
   }
   // @ts-ignore
-  const unknownStageList: any[] = pipeline.filter((s) => !PipelineStageTypeEnum[Object.keys(s)[0].substr(1)]);
+  const unknownStageList: any[] = pipeline.filter((s) => !PipelineStageTypeEnum[Object.keys(s)[0].substring(1)]);
   if (unknownStageList?.length) {
     const unknownStageNameList = unknownStageList.map((s) => Object.keys(s)[0]);
     throw new PipelineError(`Application not possible, ${unknownStageNameList.length > 1
