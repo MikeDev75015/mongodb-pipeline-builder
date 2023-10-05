@@ -1,12 +1,11 @@
 {
   "name": "mongodb-pipeline-builder",
-  "version": "4.0.0-2",
+  "version": "4.0.0-3",
   "description": "Pipeline constructor for the aggregate method of a mongoDB collection",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "dev": "ts-node tests/index.ts",
     "build": "tsc",
     "test": "jest --runInBand",
     "test-cov": "jest --runInBand --coverage",

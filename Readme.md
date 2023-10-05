@@ -47,9 +47,13 @@
 </div>
 </div>
 
+---
+
 <div style="text-align: center; width: 100%;">
 
 [-> Technical documentation <-](https://mikedev75015.github.io/mongodb-pipeline-builder)
+
+
 
 # mongodb-pipeline-builder
 
@@ -58,7 +62,7 @@
 
 <p style="text-align: justify; width: 100%;font-size: 15px;">
 
-**mongodb-pipeline-builder** is a pipeline builder for the [db.collection.aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/) method, the db.aggregate method and the mongoose model aggregate method.
+**mongodb-pipeline-builder** is a pipeline builder for the [db.collection.aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/), the [db.aggregate](https://www.mongodb.com/docs/v7.0/reference/method/db.aggregate/) and the mongoose [Model.aggregate](https://mongoosejs.com/docs/api/aggregate.html#Aggregate()) methods.
 
 - Simplify pipelines by making them more readable
 - Pipelines are easier to edit. 
@@ -68,9 +72,39 @@
 
 </p>
 
+---
+
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
 ### `npm i -S mongodb-pipeline-builder`
+
+---
+
+# Breaking changes between v3 and v4
+
+- Helpers
+  - Replacing the **Payload** suffix with **Helper** suffix
+  - Prefixed with the name of the pipeline stage where they should be used
+
+
+- Operators
+  - Prefixed with the **$** symbol
+  - Rename `MapOperator` to `$Map`
+
+
+- GetResult
+  - To be used only for non paginated results
+  - Adding new GetElement method to the response object
+  - Removing GetDocs method arguments
+
+
+- GetPagingResult
+  - To be used exclusively for paginated results
+
+
+*Welcome generics! `GetResult<Type>` and `GetPagingResult<Type>` now offer the ability to type responses*
+
+---
 
 ## Usage:
 
@@ -91,6 +125,8 @@ import { PipelineBuilder } from 'mongodb-pipeline-builder';
 import { LookupEqualityHelper, ProjectOnlyHelper, Field } from 'mongodb-pipeline-builder/helpers';
 import { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } from 'mongodb-pipeline-builder/operators';
 ```
+
+---
 
 ## Pagination example
 
@@ -122,6 +158,8 @@ const myNewPipeline = [ {
     }
 } ];
 ```
+
+---
 
 ## No pagination example
 
@@ -163,25 +201,17 @@ GetResult<T = any>(): Promise<GetResultResponse<T>>
 
 <p style="font-size: 15px;">
 
-`GetResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method).
+`GetResult<T>()` is an **asynchronous** method that provides a very easy way to use aggregation responses.
 
 <p>
 
-### Welcome
-<p style="font-size: 11px;">
-
-`<T = any>` It is now possible to **type** the response.
-
-<p>
-
-## GetResultResponse
 
 <p style="font-size: 15px;">
 
-Without pagination, the `GetResult<T>()` method returns a GetResultResponse object that contains two methods:<br>
+This method returns a `GetResultResponse` object that contains 3 methods:<br>
 
-- `GetDocs(): T[]` to get the documents found.
-- `GetElement(): T` to get a particular document.
+- `GetDocs(): T[]` to get all the documents that match the request.
+- `GetElement(index: number | 'last'): T` to get a particular document by its index.
 - `GetCount(): number` to get the total number of documents found.
 
 </p>
@@ -206,11 +236,10 @@ GetResult<DocType>( target, pipeline ).then( result => {
 ### `GetElement(index: number | 'last')` method possibilities:
 
 <p style="font-size: 15px;">
-A particular document can be retrieved by specifying its index as an argument of the `GetDocs()` method.
 
-To get the last document, the argument to provide is the string `'last'`. 
-
-If the specified index is greater than the index of the last document, `GetElement()` will return undefined.
+- A particular document can be retrieved by specifying its index.
+- To get the last document, simply provide the string `'last'`. 
+- If the specified index is greater than the index of the last document, `GetElement()` will return undefined.
 </p>
 
 ```typescript
@@ -220,6 +249,8 @@ result.GetElement('last'); // will return the last document, document51
 result.GetElement(99); // will return undefined
 ```
 
+---
+
 #  GetPagingResult method (Pagination)
 
 ```typescript
@@ -228,22 +259,14 @@ GetPagingResult<T = any>(): Promise<GetPagingResultResponse<T>>
 
 <p style="font-size: 15px;">
 
-`GetPagingResult()` is an **asynchronous** method that provides a very easy way to use aggregation pipelines on a target (collection or mongoose model having the aggregation method) for pagination.
+`GetPagingResult<T>()` is an **asynchronous** method that provides a very easy way to use aggregation responses when **Paging** stage is used.
 
 <p>
 
-### Again
-<p style="font-size: 11px;">
-
-`<T = any>` It is also possible to **type** the response.
-
-<p>
-
-## GetPagingResultResponse
 
 <p style="font-size: 15px;">
 
-With pagination,  `GetPagingResult<T>()` returns a `GetPagingResultResponse` object that contains three methods:
+This method returns a `GetPagingResultResponse` object that contains three methods:
 - `GetDocs()` to get the documents found.
 - `GetCount()` to get the total number of documents found.
 - `GetTotalPageNumber()` to get the total number of pages.
@@ -276,77 +299,382 @@ ___
 [=> Aggregation Pipeline Stages <=](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
 
-## SPECIAL STAGE:
+## BONUS STAGE:
 
-- Paging
+### `Paging(elementsPerPage: number, page = 1)`
+
+  *The Paging stage automatically adds 3 native stages used to paginate documents ($skip, $limit and $count).*
+
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').Paging(5, 2).getPipeline();
+// pipeline
+[
+  {
+    '$facet': {
+      docs: [ { '$match': 'query' }, { '$skip': 5 }, { '$limit': 5 } ],
+      count: [ { '$match': 'query' }, { '$count': 'totalElements' } ]
+    }
+  }
+]
+// For use with the GetPagingResult method
+```
+
 
 ## MONGODB NATIVE STAGES:
-- AddFields 
-- Bucket 
-- BucketAuto 
-- CollStats 
-- Count 
-- Facet 
-- GeoNear 
-- GraphLookup 
-- Group 
-- IndexStats 
-- Limit 
-- ListSessions 
-- Lookup 
-- Match 
-- Merge 
-- Out 
-- PlanCacheStats 
-- Project 
-- Redact 
-- ReplaceRoot 
-- ReplaceWith 
-- Sample 
-- Search 
-- Set 
-- Skip 
-- Sort 
-- SortByCount 
-- UnionWith 
-- Unset 
-- Unwind
 
-___
+### `AddFields(...values: { [key: string]: any }[])`
+#### Helper: `Field`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').AddFields(Field('foo', 'value1'), Field('bar', 'value2')).getPipeline();
+// pipeline
+[ { '$match': 'query' }, { '$addFields': { foo: 'value1', bar: 'value2' } } ]
+// For use with the GetResult method
+```
 
-<div style="text-align: center; width: 100%;">
+### `Bucket(value: BucketStage)`
+#### Helper: `BucketGroupByHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Bucket(BucketGroupByHelper('$age', [6, 13, 18])).getPipeline();
+// pipeline
+[
+  {
+    '$bucket': {
+      groupBy: '$age',
+      boundaries: [ 6, 13, 18 ],
+      output: { count: { '$sum': 1 } }
+    }
+  }
+]
+// For use with the GetResult method
+```
 
-[-> Aggregation Pipeline Helpers <-](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
+### `BucketAuto(value: BucketAutoStage)`
+#### Helper: `BucketAutoGroupByHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.BucketAuto(BucketAutoGroupByHelper('$age', 5)).getPipeline();
+// pipeline
+[
+  {
+    '$bucketAuto': { groupBy: '$age', buckets: 5, output: { count: { '$sum': 1 } } }
+  }
+]
+// For use with the GetResult method
+```
 
-</div> 
+### `CollStats(value: CollStatsStage)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.CollStats({ latencyStats: { histograms: true } }).getPipeline();
+// pipeline
+[
+  { '$collStats': { latencyStats: { histograms: true } } }
+]
+// For use with the GetResult method
+```
 
-## STAGE HELPERS <span style="color: red">*</span> :
+### `Count(value: string)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Count('counter').getPipeline();
+// pipeline
+[ { '$count': 'counter' } ]
+// For use with the GetResult method
+```
 
-- Bucket ( **BucketGroupByHelper** )
-- BucketAuto ( **BucketAutoGroupByHelper** )
-- CurrentOp ( **CurrentOpHelper** )
-- GeoNear ( **GeoNearHelper** )
-- Lookup ( **LookupConditionHelper** | **LookupEqualityHelper** )
-- Merge ( **MergeIntoHelper** )
-- Out ( **OutDbCollHelper** )
-- Project ( **ProjectIgnoreHelper** | **ProjectOnlyHelper** )
-- Sample ( **SampleSizeHelper** )
-- UnionWith ( **UnionWithCollectionHelper** )
+### `CurrentOp(value: CurrentOp)`
+#### Helper: `CurrentOpHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.CurrentOp(CurrentOpHelper({ allUsers: true, idleConnections: true })).getPipeline();
+// pipeline
+[
+  {
+    '$currentOp': {
+      allUsers: true,
+      idleConnections: true,
+      idleCursors: false,
+      idleSessions: true,
+      localOps: false,
+      backtrace: false
+    }
+  }
+]
+// For use with the GetResult method
+```
 
-## COMMON HELPERS:
+### `Facet(...values: { [key: string]: PipeLineStage[] }[])`
+#### Helper: `Field`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Facet(
+  Field('pipeline1', [{ $match: { tag: 'first' }}]),
+  Field('pipeline2', [{ $match: { tag: 'second' }}]),
+  Field('pipeline3', [{ $match: { tag: 'third' }}]),
+).getPipeline();
+// pipeline
+[
+  {
+    '$facet': {
+      pipeline1: [ { '$match': { tag: 'first' } } ],
+      pipeline2: [ { '$match': { tag: 'second' } } ],
+      pipeline3: [ { '$match': { tag: 'third' } } ]
+    }
+  }
+]
+// For use with the GetResult method
+```
 
-- Match( **Field** )
-- AddFields( **Field**** )
-- Facet( **Field**** )
-- Set( **Field**** )
-- Sort( **Field**** )
-- List( **Field**** )
+### `GeoNear(value: GeoNearStage)`
+#### Helper: `GeoNearHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.GeoNear(
+  GeoNearHelper({ type: "Point", coordinates: [ -73.99279 , 40.719296 ] }, 'dist.calculated')
+).getPipeline();
+// pipeline
+[
+  {
+    '$geoNear': {
+      near: { type: 'Point', coordinates: [ -73.99279, 40.719296 ] },
+      distanceField: 'dist.calculated'
+    }
+  }
+]
+// For use with the GetResult method
+```
 
+### `GraphLookup(value: GraphLookupStage)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.GraphLookup({
+  from: 'employees', startWith: '$reportsTo', connectFromField: 'reportsTo', connectToField: 'name', as: 'reportingHierarchy',
+}).getPipeline();
+// pipeline
+[
+  {
+    '$graphLookup': {
+      from: 'employees',
+      startWith: '$reportsTo',
+      connectFromField: 'reportsTo',
+      connectToField: 'name',
+      as: 'reportingHierarchy'
+    }
+  }
+]
+// For use with the GetResult method
+```
 
-<p style="font-style: italic">
-<span style="color: red; font-size: 24px">*</span> If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
-** One or more Field helper(s) separated by a comma.
-</p>
+### `Group(value: GroupStage)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `IndexStats(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Limit(value: number)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `ListSessions(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Lookup(value: LookupStage)`
+#### Helpers: `LookupConditionHelper | LookupEqualityHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Match(value: any)`
+#### Helper: `Field`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Merge(value: MergeStage)`
+#### Helper: `MergeIntoHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Out(value: OutStage)`
+#### Helper: `OutDbCollHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `PlanCacheStats(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Project(value: { [key: string]: any })`
+#### Helper: `ProjectIgnoreHelper | ProjectOnlyHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Redact(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `ReplaceRoot(value: ReplaceRootStage)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `ReplaceWith(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Sample(value: SampleStage)`
+#### Helper: `SampleSizeHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Search(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Set(...values: { [key: string]: any }[])`
+#### Helper: `Field`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Skip(value: number)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Sort(...values: { [key: string]: any }[])`
+#### Helper: `Field`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `SortByCount(value: any)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `UnionWith(value: UnionWithStage)`
+#### Helper: `UnionWithCollectionHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Unset(...values: string[])`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
+### `Unwind(value: string | UnwindStage)`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match('query').getPipeline();
+// pipeline
+[]
+// For use with the GetResult method
+```
+
 ___
 <div style="text-align: center; width: 100%;">
 

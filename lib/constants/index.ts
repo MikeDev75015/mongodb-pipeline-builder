@@ -40,6 +40,7 @@ export const PAYLOAD_VALIDATION_ENABLED = {
   bucketAuto: bucketAutoPayloadValidator,
   collStats: collStatsPayloadValidator,
   count: countPayloadValidator,
+  currentOp: () => '',
   facet: facetPayloadValidator,
   geoNear: geoNearPayloadValidator,
   graphLookup: graphLookupPayloadValidator,

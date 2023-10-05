@@ -6,7 +6,9 @@ import {
   BucketAutoStage,
   BucketStage,
   CollStatsStage,
-  DebugPipelineBuild, FacetStage,
+  CurrentOp,
+  DebugPipelineBuild,
+  FacetStage,
   GeoNearStage,
   getPipelineStageTypeValue,
   GraphLookupStage,
@@ -108,7 +110,7 @@ export class PipelineBuilder {
       ...options,
     };
 
-    this.pipelineNameWithCounter = `${ pipelineName }_${ PipelineBuilder.counter }`;
+    this.pipelineNameWithCounter = `${pipelineName}_${PipelineBuilder.counter}`;
     this.debugBuild = { status: setOptions.debug, actionList: [] };
     this.logs = setOptions.logs;
     this.stageValidatorsBundle = PAYLOAD_VALIDATION_ENABLED;
@@ -127,13 +129,13 @@ export class PipelineBuilder {
   }
 
   get pipelineName() {
-      if (PipelineBuilder.counter > 1) {
-          return this.pipelineNameWithCounter;
-      }
+    if (PipelineBuilder.counter > 1) {
+      return this.pipelineNameWithCounter;
+    }
 
-      const split = this.pipelineNameWithCounter.split('_');
-      split.pop();
-      return split.join('_');
+    const split = this.pipelineNameWithCounter.split('_');
+    split.pop();
+    return split.join('_');
   }
 
   // basics
@@ -152,7 +154,7 @@ export class PipelineBuilder {
       this.debugBuild.status
     ) {
       const errorMessage = !stageValue
-        ? `The ${ stageTypeLabel } stage value is not valid.`
+        ? `The ${stageTypeLabel} stage value is not valid.`
         : payloadError;
       throw new PipelineError(errorMessage);
     }
@@ -178,9 +180,11 @@ export class PipelineBuilder {
    */
   public readonly getPipeline = () => {
     this.saveActionToDebugHistoryList('getPipeline');
-    return (!this.pagingStage.length
-      ? this.verifyPipelineValidity([...this.stageList])
-      : this.paginatePipelineResults(this.verifyPipelineValidity([...this.stageList])));
+    return (
+      !this.pagingStage.length
+        ? this.verifyPipelineValidity([...this.stageList])
+        : this.paginatePipelineResults(this.verifyPipelineValidity([...this.stageList]))
+    );
   };
 
   /**
@@ -191,7 +195,6 @@ export class PipelineBuilder {
     this.saveActionToDebugHistoryList('resetPipeline');
     return this.stageList;
   };
-
 
   // tools
   /**
@@ -232,7 +235,8 @@ export class PipelineBuilder {
     const limitStage = this.stageList.find(s => Object.keys(s)[0] === '$limit');
     const countStage = this.stageList.find(s => Object.keys(s)[0] === '$count');
     if (skipStage || limitStage || countStage) {
-      throw new PipelineError('A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.');
+      throw new PipelineError(
+        'A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.');
     }
 
     if (elementsPerPage < 1) {
@@ -255,13 +259,13 @@ export class PipelineBuilder {
   /**
    * Adds new fields to documents
    *
-   * @param value one or more Field helper
    * @constructor
+   * @param values
    */
-  public AddFields(...value: { [key: string]: any }[]): this {
+  public AddFields(...values: { [key: string]: any }[]): this {
     return this.addStage(
       'addFields',
-      this.mergeObjectListToOneObject(value, 'AddFields'),
+      this.mergeObjectListToOneObject(values, 'AddFields'),
     );
   }
 
@@ -306,16 +310,27 @@ export class PipelineBuilder {
   }
 
   /**
-   * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the
-   * creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a
-   * single stage.
+   * Returns a stream of documents containing information on active and/or dormant operations as well as inactive
+   * sessions that are holding locks as part of a transaction. The stage returns a document for each operation
+   * or session
    * @param value
    * @constructor
    */
-  public Facet(...value: { [key: string]: PipeLineStage[] }[]): this {
+  public CurrentOp(value: CurrentOp): this {
+    return this.addStage('currentOp', value);
+  }
+
+  /**
+   * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the
+   * creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a
+   * single stage.
+   * @param values
+   * @constructor
+   */
+  public Facet(...values: { [key: string]: PipeLineStage[] }[]): this {
     return this.addStage(
       'facet',
-      this.mergeObjectListToOneObject(value, 'Facet'),
+      this.mergeObjectListToOneObject(values, 'Facet'),
     );
   }
 
@@ -524,13 +539,13 @@ export class PipelineBuilder {
    * adding new fields to output documents that contain both the existing fields from the input documents and the
    * newly added fields.
    * $set is an alias for $addFields stage.
-   * @param value
+   * @param values
    * @constructor
    */
-  public Set(...value: { [key: string]: any }[]): this {
+  public Set(...values: { [key: string]: any }[]): this {
     return this.addStage(
       'set',
-      this.mergeObjectListToOneObject(value, 'Set'),
+      this.mergeObjectListToOneObject(values, 'Set'),
     );
   }
 
@@ -548,13 +563,13 @@ export class PipelineBuilder {
   /**
    * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified.
    * For each input document, outputs one document.
-   * @param value
+   * @param values
    * @constructor
    */
-  public Sort(...value: { [key: string]: any }[]): this {
+  public Sort(...values: { [key: string]: any }[]): this {
     return this.addStage(
       'sort',
-      this.mergeObjectListToOneObject(value, 'Sort'),
+      this.mergeObjectListToOneObject(values, 'Sort'),
     );
   }
 
@@ -581,13 +596,13 @@ export class PipelineBuilder {
   /**
    * Removes/excludes fields from documents.
    * $unset is an alias for $project stage that removes fields.
-   * @param value
+   * @param values
    * @constructor
    */
-  public Unset(...value: string[]): this {
+  public Unset(...values: string[]): this {
     return this.addStage(
       'unset',
-      value.length > 1 ? value : value[0],
+      values.length > 1 ? values : values[0],
     );
   }
 
@@ -607,9 +622,9 @@ export class PipelineBuilder {
    * @param pipelineBuilt The pipeline built
    */
   private readonly verifyPipelineValidity = (pipelineBuilt: PipeLineStage[]) => {
-    this.log('info', `verifyPipelineValidity of ${ this.pipelineName } pipeline:\n`, JSON.stringify(this.stageList));
+    this.log('info', `verifyPipelineValidity of ${this.pipelineName} pipeline:\n`, JSON.stringify(this.stageList));
     if (!pipelineBuilt.length) {
-      throw new PipelineError(`Error, ${ this.pipelineName } pipeline is empty!`);
+      throw new PipelineError(`Error, ${this.pipelineName} pipeline is empty!`);
     }
 
     this.stageErrorList = pipelineBuilt.map(
@@ -618,7 +633,7 @@ export class PipelineBuilder {
 
     if (this.stageErrorList.length) {
       const errorMessage = this.stageErrorList.map(
-        (e, i) => `${ i + 1 }) ${ e.message }`,
+        (e, i) => `${i + 1}) ${e.message}`,
       ).join('\n');
       this.log('error', errorMessage, 'stageErrorList', this.stageErrorList);
 
@@ -640,7 +655,7 @@ export class PipelineBuilder {
 
     if (!stageValue || payloadError) {
       const errorMessage = !stageValue
-        ? `The ${ stageType } stage value is not valid.`
+        ? `The ${stageType} stage value is not valid.`
         : payloadError;
 
       this.saveActionToDebugHistoryList(
@@ -710,7 +725,7 @@ export class PipelineBuilder {
       action: any;
       pipeline: any;
       value?: any;
-    } = { date: this.getCurrentDate(), action: `${ this.pipelineName } => ${ action }`, pipeline: [...this.stageList] };
+    } = { date: this.getCurrentDate(), action: `${this.pipelineName} => ${action}`, pipeline: [...this.stageList] };
 
     if (argList?.length) {
       historyBundle.value = JSON.stringify(argList.length > 1 ? argList : argList[0]);
@@ -740,8 +755,8 @@ export class PipelineBuilder {
     ) {
       throw new PipelineError(
         invalidValueList.length > 1
-          ? `${ invalidValueList.length } fields of the ${ stageType } stage are not valid.`
-          : `The ${ stageType } stage value is not valid.`,
+          ? `${invalidValueList.length} fields of the ${stageType} stage are not valid.`
+          : `The ${stageType} stage value is not valid.`,
       );
     }
 
@@ -769,7 +784,7 @@ export class PipelineBuilder {
    */
   private readonly log = (type: 'info' | 'warn' | 'error', ...messageList: any[]) => {
     if (this.logs) {
-      console[type](`${ this.getCurrentDate() } - ${ this.pipelineName }:\n`, ...messageList);
+      console[type](`${this.getCurrentDate()} - ${this.pipelineName}:\n`, ...messageList);
     }
   };
 }

@@ -8,8 +8,6 @@ coverage
 reports
 documentation
 test-report.xml
-000.DEVELOP.refresh-local-project.cmd
-000.FEATURE.refresh-local-project.cmd
 tests
 save
-
+RUN.ts-node.tests.cmd

@@ -7,7 +7,7 @@ export interface CollStatsStage {
      *
      * latencyStats.histograms	Adds latency histogram information to the embedded documents in latencyStats if true.
      */
-    latencyStats: { histograms: boolean; };
+    latencyStats?: { histograms: boolean; };
     /**
      * Adds storage statistics to the return document.
      *
@@ -23,7 +23,7 @@ export interface CollStatsStage {
      * The scale factor does not affect those sizes that specify the unit of measurement in the field name, such as
      * "bytes currently in the cache".
      */
-    storageStats: { scale: number; };
+    storageStats?: { scale: number; };
     /**
      * Adds the total number of documents in the collection to the return document.
      *
@@ -32,9 +32,9 @@ export interface CollStatsStage {
      * The count is based on the collection’s metadata, which provides a fast but sometimes inaccurate count for
      * sharded clusters.
      */
-    count: any;
+    count?: any;
     /**
      * Adds query execution statistics to the return document.
      */
-    queryExecStats: any;
+    queryExecStats?: any;
 }
