@@ -243,7 +243,7 @@ GetPagingResult<T = any>(): Promise<GetPagingResultResponse<T>>
 
 <p style="font-size: 15px;">
 
-With pagination,  `GetResult<T>()` returns a `GetPagingResultResponse` object that contains three methods:
+With pagination,  `GetPagingResult<T>()` returns a `GetPagingResultResponse` object that contains three methods:
 - `GetDocs()` to get the documents found.
 - `GetCount()` to get the total number of documents found.
 - `GetTotalPageNumber()` to get the total number of pages.
@@ -252,7 +252,7 @@ With pagination,  `GetResult<T>()` returns a `GetPagingResultResponse` object th
 
 
 ```typescript
-const result = await GetResult<DocType>(target, pipeline);
+const result = await GetPagingResult<DocType>(target, pipeline);
 result.GetDocs(); // () => DocType[]
 result.GetCount(); // () => number
 result.GetTotalPageNumber(); // () => number
@@ -260,7 +260,7 @@ result.GetTotalPageNumber(); // () => number
 
 *$Or*
 ```typescript
-GetResult<DocType>(target, pipeline).then( result => {
+GetPagingResult<DocType>(target, pipeline).then( result => {
     result.GetDocs(); // () => DocType[]
     result.GetCount(); // () => number
     result.GetTotalPageNumber(); // () => number
@@ -271,9 +271,9 @@ GetResult<DocType>(target, pipeline).then( result => {
 ___
 
 
-[-> Try the lib on NPM RunKit with the require method <-](https://npm.runkit.com/mongodb-pipeline-builder)
+[=> Try the lib on NPM RunKit with the require method <=](https://npm.runkit.com/mongodb-pipeline-builder)
 
-[-> Aggregation Pipeline Stages <-](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
+[=> Aggregation Pipeline Stages <=](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
 
 ## SPECIAL STAGE:
@@ -322,25 +322,29 @@ ___
 
 ## STAGE HELPERS <span style="color: red">*</span> :
 
-- Bucket ( BucketGroupByHelper )
-- BucketAuto ( BucketAutoGroupByHelper )
-- CurrentOp ( CurrentOpHelper )
-- GeoNear ( GeoNearHelper )
-- Lookup ( LookupConditionHelper | LookupEqualityHelper )
-- Merge ( MergeIntoHelper )
-- Out ( OutDbCollHelper )
-- Project ( ProjectIgnoreHelper | ProjectOnlyHelper )
-- Sample ( SampleSizeHelper )
-- UnionWith ( UnionWithCollectionHelper )
+- Bucket ( **BucketGroupByHelper** )
+- BucketAuto ( **BucketAutoGroupByHelper** )
+- CurrentOp ( **CurrentOpHelper** )
+- GeoNear ( **GeoNearHelper** )
+- Lookup ( **LookupConditionHelper** | **LookupEqualityHelper** )
+- Merge ( **MergeIntoHelper** )
+- Out ( **OutDbCollHelper** )
+- Project ( **ProjectIgnoreHelper** | **ProjectOnlyHelper** )
+- Sample ( **SampleSizeHelper** )
+- UnionWith ( **UnionWithCollectionHelper** )
 
 ## COMMON HELPERS:
 
-- Field: AddFields( Field ** ) | Facet( Field ** ) | Set( Field ** ) | Sort( Field ** )<br>
-- List
+- Match( **Field** )
+- AddFields( **Field**** )
+- Facet( **Field**** )
+- Set( **Field**** )
+- Sort( **Field**** )
+- List( **Field**** )
 
 
 <p style="font-style: italic">
-<span style="color: red">*</span> If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
+<span style="color: red; font-size: 24px">*</span> If no helper is available for a stage, use stage method and pass it a valid value as a parameter.<br>
 ** One or more Field helper(s) separated by a comma.
 </p>
 ___
