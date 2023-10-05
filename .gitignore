@@ -5,9 +5,11 @@ node_modules
 .idea/*
 dist
 coverage
+reports
 documentation
 test-report.xml
-000.refresh-local-project.cmd
+000.DEVELOP.refresh-local-project.cmd
+000.FEATURE.refresh-local-project.cmd
 tests
 save
 

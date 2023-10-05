@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.2
+  sonarcloud: sonarsource/sonarcloud@1.0.3
   slack: circleci/slack@4.3.0
   jq: circleci/jq@2.2.0
 
@@ -21,10 +21,6 @@ aliases:
     run:
       name: Build
       command: npm run build
-  - &run-unit-tests
-    run:
-      name: Test
-      command: npm run test:ci
   - &update-npm-version
     run:
       name: Update NPM version
@@ -69,10 +65,6 @@ commands:
       - run:
           name: NPM Account Authentication
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-      - run:
-          name: Copy .npmrc to dist
-          command: cp -rf .npmrc dist
-      - run: cd dist
       - run:
           name: Publish package on npm
           command: npm run publish-<< parameters.branch >>
@@ -154,13 +146,25 @@ jobs:
   unit_tests:
     docker:
       - image: cimg/node:20.5.0
-    resource_class: small
+    resource_class: medium
+    parallelism: 14
     steps:
       - checkout
       - *restore-cache
       - *install-deps
-      - *run-unit-tests
-#      - sonarcloud/scan
+      - run:
+          name: Unit tests to run
+          command: echo $(circleci tests glob "lib/**/*.test.ts")
+      - run:
+          name: Create reports folder
+          command: mkdir -p reports/sonar
+      - run:
+          name: Run unit tests with reporter
+          command: npm run test:ci
+      - store_artifacts:
+          path: reports/sonar
+          destination: reports/sonar
+      - sonarcloud/scan
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -269,8 +273,6 @@ workflows:
           context:
             - SONARCLOUD
             - SLACK
-          requires:
-            - build
           filters:
             branches:
               ignore:
