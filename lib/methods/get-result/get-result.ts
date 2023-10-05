@@ -25,11 +25,9 @@ export const GetResult = async <T = any>(
       result[0].docs &&
       result[0].count &&
       result[0].count[0] &&
-      result[0].count[0].totalElements !== undefined &&
-      result[0].count[0].totalElements >= 0
+      result[0].count[0].totalElements !== undefined
     ) {
       throwError('Application not possible, use the GetPagingResult method.');
-      return {} as GetResultResponse<T>;
     }
 
     // Default result
@@ -69,7 +67,6 @@ export const GetPagingResult = async <T = any>(
       result[0].count[0].totalElements === undefined
     ) {
       throwError('Application not possible, use the GetResult method.');
-      return {} as GetPagingResultResponse<T>;
     }
 
     // Default result
