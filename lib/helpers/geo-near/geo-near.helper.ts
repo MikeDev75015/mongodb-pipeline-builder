@@ -1,4 +1,4 @@
-import {GeoNearStage} from "../../interfaces";
+import { GeoNearStage } from '../../interfaces';
 
 /**
  * Near Payload
@@ -20,26 +20,18 @@ import {GeoNearStage} from "../../interfaces";
  * @constructor
  */
 export const GeoNearHelper = (near: any, distanceField: string, optional?: {
-    spherical?: boolean;
-    maxDistance?: number;
-    query?: any;
-    distanceMultiplier?: number;
-    includeLocs?: string;
-    uniqueDocs?: boolean;
-    minDistance?: number;
-    key?: any;
+  spherical?: boolean;
+  maxDistance?: number;
+  query?: any;
+  distanceMultiplier?: number;
+  includeLocs?: string;
+  uniqueDocs?: boolean;
+  minDistance?: number;
+  key?: any;
 }) => {
-    let payload: GeoNearStage = {
-        near,
-        distanceField
-    };
-
-    if (optional) {
-        payload = {
-            ...payload,
-            ...optional
-        };
-    }
-
-    return payload;
-}
+  return {
+    near,
+    distanceField,
+    ...(optional ? optional : {}),
+  } as GeoNearStage;
+};

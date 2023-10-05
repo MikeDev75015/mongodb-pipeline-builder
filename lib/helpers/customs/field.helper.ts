@@ -8,6 +8,4 @@
  * @param fieldValue
  * @constructor
  */
-export const Field = (fieldName: string, fieldValue: any) => {
-    return { [fieldName]: fieldValue };
-};
+export const Field = (fieldName: string, fieldValue: any) => ({ [fieldName]: fieldValue });

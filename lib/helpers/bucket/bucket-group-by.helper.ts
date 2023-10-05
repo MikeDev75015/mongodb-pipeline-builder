@@ -37,25 +37,12 @@ import {BucketStage} from "../../interfaces";
 export const BucketGroupByHelper = (
     groupBy: any,
     boundaries: any[],
-    optional?: {
-        default?: string | number,
-        output?: any
-    }
+    optional: { default?: string | number; output?: any } = {}
 ) => {
-
-    const payload = {
+    return {
         groupBy,
         boundaries,
-        output: { "count": { $sum: 1 } }
+        ...(optional?.default ? { default: optional.default } : {}),
+        ...(optional?.output ? { output: optional.output } : { output: { "count": { $sum: 1 } } }),
     } as BucketStage;
-
-    if (optional?.default) {
-        payload.default = optional.default;
-    }
-
-    if (optional?.output) {
-        payload.output = optional.output;
-    }
-
-    return payload;
 }
