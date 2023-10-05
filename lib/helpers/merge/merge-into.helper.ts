@@ -59,9 +59,9 @@ export const MergeIntoHelper = (
 ) => {
     return {
         into,
-        on: optional && optional.on? optional.on : '_id',
-        whenMatched: optional && optional.whenMatched? optional.whenMatched : 'merge',
-        whenNotMatched: optional && optional.whenNotMatched? optional.whenNotMatched : 'insert',
-        let: optional && optional.letWhenMatched? optional.letWhenMatched : { new: "$$ROOT" }
+        on: optional?.on ? optional.on : '_id',
+        whenMatched: optional?.whenMatched ? optional.whenMatched : 'merge',
+        whenNotMatched: optional?.whenNotMatched ? optional.whenNotMatched : 'insert',
+        let: optional?.letWhenMatched ? optional.letWhenMatched : { new: "$$ROOT" }
     } as MergeStage;
 }

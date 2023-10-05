@@ -37,11 +37,11 @@ export const BucketAutoGroupByHelper = (
         output: { "count": { $sum: 1 } }
     };
 
-    if (optional && optional.output) {
+    if (optional?.output) {
         payload.output = optional.output;
     }
 
-    if (optional && optional.granularity) {
+    if (optional?.granularity) {
         payload.granularity = optional.granularity;
     }
 

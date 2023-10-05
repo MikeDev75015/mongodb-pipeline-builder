@@ -634,7 +634,7 @@ export class PipelineBuilder {
    * @private
    */
   private readonly isValidStage = (stageToValidate: PipeLineStage) => {
-    const stageType: string = Object.keys(stageToValidate)[0].substr(1);
+    const stageType: string = Object.keys(stageToValidate)[0].substring(1);
     const stageValue: any = Object.values(stageToValidate)[0];
     const payloadError = this.validatePayload(stageType, stageValue);
 
@@ -712,7 +712,7 @@ export class PipelineBuilder {
       value?: any;
     } = { date: this.getCurrentDate(), action: `${ this.pipelineName } => ${ action }`, pipeline: [...this.stageList] };
 
-    if (argList && argList.length) {
+    if (argList?.length) {
       historyBundle.value = JSON.stringify(argList.length > 1 ? argList : argList[0]);
     }
 

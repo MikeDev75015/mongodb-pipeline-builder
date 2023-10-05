@@ -12,7 +12,7 @@ export function IsValidName(options?: {
     noSpace?: boolean,
     noSpecialChar?: boolean
 }) {
-    return (target: object | any, propertyKey: string) => {
+    return (target: object, propertyKey: string) => {
         let value: string;
         const getter = () => value;
         const setter = (newVal: string) => {

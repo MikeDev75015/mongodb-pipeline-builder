@@ -24,22 +24,22 @@ export const CurrentOpHelper = (parameters?: {
     localOps?: boolean;
     backtrace?: boolean;
 }) => ({
-    allUsers: parameters && parameters.allUsers !== undefined
+    allUsers: parameters?.allUsers !== undefined
         ? parameters.allUsers
         : false,
-    idleConnections: parameters && parameters.idleConnections !== undefined
+    idleConnections: parameters?.idleConnections !== undefined
         ? parameters.idleConnections
         : false,
-    idleCursors: parameters && parameters.idleCursors !== undefined
+    idleCursors: parameters?.idleCursors !== undefined
         ? parameters.idleCursors
         : false,
-    idleSessions: parameters && parameters.idleSessions !== undefined
+    idleSessions: parameters?.idleSessions !== undefined
         ? parameters.idleSessions
         : true,
-    localOps: parameters && parameters.localOps !== undefined
+    localOps: parameters?.localOps !== undefined
         ? parameters.localOps
         : false,
-    backtrace: parameters && parameters.backtrace !== undefined
+    backtrace: parameters?.backtrace !== undefined
         ? parameters.backtrace
         : false
 }) as CurrentOp;
