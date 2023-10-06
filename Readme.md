@@ -76,32 +76,42 @@
 
 ## npm package <img src="https://pbs.twimg.com/media/EDoWJbUXYAArclg.png" width="24" height="24" />
 
-### `npm i -S mongodb-pipeline-builder`
+`npm i -S mongodb-pipeline-builder`
+
 
 ---
 
-# Breaking changes between v3 and v4
 
-- Helpers
-  - Replacing the **Payload** suffix with **Helper** suffix
-  - Prefixed with the name of the pipeline stage where they should be used
+> **Breaking changes between v3 and v4**
 
-
-- Operators
-  - Prefixed with the **$** symbol
-  - Rename `MapOperator` to `$Map`
+-  **Helpers**
+ 
+   > Replacing the Payload suffix with Helper suffix
+   > 
+   > Prefixed with the name of the pipeline stage where they should be used
 
 
-- GetResult
-  - To be used only for non paginated results
-  - Adding new GetElement method to the response object
-  - Removing GetDocs method arguments
+-  **Operators**
+
+   > Prefixed with the **$** symbol
+   > 
+   > Rename `MapOperator` to `$Map`
 
 
-- GetPagingResult
-  - To be used exclusively for paginated results
+- **GetResult**
+
+  > To be used only if no Paging stage is set
+  > 
+  > Adding new GetElement method to the response object
+  > 
+  > Removing GetDocs method arguments
 
 
+- **GetPagingResult**
+
+  > To be used exclusively with Paging stage.
+
+  
 *Welcome generics! `GetResult<Type>` and `GetPagingResult<Type>` now offer the ability to type responses*
 
 ---
@@ -296,10 +306,10 @@ ___
 
 [=> Try the lib on NPM RunKit with the require method <=](https://npm.runkit.com/mongodb-pipeline-builder)
 
-[=> Aggregation Pipeline Stages <=](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
 
-## BONUS STAGE:
+
+## BONUS STAGE
 
 ### `Paging(elementsPerPage: number, page = 1)`
 
@@ -321,7 +331,7 @@ builder.Match('query').Paging(5, 2).getPipeline();
 ```
 
 
-## MONGODB NATIVE STAGES:
+## [MONGODB STAGES](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
 
 ### `AddFields(...values: { [key: string]: any }[])`
 #### Helper: `Field`
@@ -471,46 +481,87 @@ builder.GraphLookup({
 ### `Group(value: GroupStage)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Group({ _id: null, count: { $count: { } } }).getPipeline();
 // pipeline
-[]
+[
+  { '$group': { _id: null, count: { '$count': {} } } }
+]
 // For use with the GetResult method
 ```
 
 ### `IndexStats(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.IndexStats({}).getPipeline();
 // pipeline
-[]
+[ { '$indexStats': {} } ]
 // For use with the GetResult method
 ```
 
 ### `Limit(value: number)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Limit(10).getPipeline();
 // pipeline
-[]
+[ { '$limit': 10 } ]
 // For use with the GetResult method
 ```
 
 ### `ListSessions(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.ListSessions({ allUsers: true }).getPipeline();
 // pipeline
-[]
+[ { '$listSessions': { allUsers: true } } ]
 // For use with the GetResult method
 ```
 
 ### `Lookup(value: LookupStage)`
-#### Helpers: `LookupConditionHelper | LookupEqualityHelper`
+#### Helper: `LookupConditionHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Lookup(LookupConditionHelper('users', 'users', {
+  pipeline: builder2.Match(
+    $Expression($GreaterThanEqual('$age', '$$age_min')),
+  ).getPipeline(),
+  project: ProjectOnlyHelper('name', 'age', 'city'),
+  sourceList: ['age_min'],
+})).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$lookup': {
+      from: 'users',
+      as: 'users',
+      let: { age_min: '$age_min' },
+      pipeline: [
+        {
+          '$match': { '$expr': { '$gte': [ '$age', '$$age_min' ] } }
+        },
+        { '$project': { _id: 0, name: 1, age: 1, city: 1 } }
+      ]
+    }
+  }
+]
+// For use with the GetResult method
+```
+#### Helper: `LookupEqualityHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Lookup(
+  LookupEqualityHelper('users', 'user', 'id', 'userId')
+).getPipeline();
+// pipeline
+[
+  {
+    '$lookup': {
+      from: 'users',
+      localField: 'id',
+      foreignField: 'userId',
+      as: 'user'
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
@@ -518,9 +569,21 @@ builder.Match('query').getPipeline();
 #### Helper: `Field`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Match(Field('id', 'fake-id')).getPipeline();
 // pipeline
-[]
+[ { '$match': { id: 'fake-id' } } ]
+// For use with the GetResult method
+```
+#### Operator: `$Expression`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Match($Expression($GreaterThanEqual('$age', 18))).getPipeline();
+// pipeline
+[
+  {
+    '$match': { '$expr': { '$gte': [ '$age', 18 ] } }
+  }
+]
 // For use with the GetResult method
 ```
 
@@ -528,9 +591,19 @@ builder.Match('query').getPipeline();
 #### Helper: `MergeIntoHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Merge(MergeIntoHelper('newCollection')).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$merge': {
+      into: 'newCollection',
+      on: '_id',
+      whenMatched: 'merge',
+      whenNotMatched: 'insert',
+      let: { new: '$$ROOT' }
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
@@ -538,74 +611,124 @@ builder.Match('query').getPipeline();
 #### Helper: `OutDbCollHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Out(OutDbCollHelper('users', 'db1')).getPipeline();
 // pipeline
-[]
+[ { '$out': { db: 'db1', coll: 'users' } } ]
 // For use with the GetResult method
 ```
 
 ### `PlanCacheStats(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.PlanCacheStats({}).getPipeline();
 // pipeline
-[]
+[ { '$planCacheStats': {} } ]
 // For use with the GetResult method
 ```
 
 ### `Project(value: { [key: string]: any })`
-#### Helper: `ProjectIgnoreHelper | ProjectOnlyHelper`
+#### Helper: `ProjectIgnoreHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Project(ProjectIgnoreHelper('password', 'refreshToken')).getPipeline();
 // pipeline
-[]
+[ { '$project': { password: 0, refreshToken: 0 } } ]
+// For use with the GetResult method
+```
+#### Helper: `ProjectOnlyHelper`
+```typescript
+// const builder = new PipelineBuilder('example');
+builder.Project(ProjectOnlyHelper('password', 'refreshToken')).getPipeline();
+// pipeline
+[ { '$project': { _id: 0, password: 1, refreshToken: 1 } } ]
 // For use with the GetResult method
 ```
 
 ### `Redact(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Redact(
+  $Cond(
+    $GreaterThan($Size($SetIntersection('$tags', ['STLW', 'G'])), 0),
+    '$$DESCEND',
+    '$$PRUNE'
+  )
+).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$redact': {
+      '$cond': [
+        { '$gt': [ { '$size': { '$setIntersection': [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] },
+        '$$DESCEND',
+        '$$PRUNE'
+      ]
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
 ### `ReplaceRoot(value: ReplaceRootStage)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.ReplaceRoot({
+  newRoot: { full_name: { $concat : [ "$first_name", " ", "$last_name" ] } }
+}).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$replaceRoot': {
+      newRoot: {
+        full_name: { '$concat': [ '$first_name', ' ', '$last_name' ] }
+      }
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
 ### `ReplaceWith(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.ReplaceWith('$name').getPipeline();
 // pipeline
-[]
+[ { '$replaceWith': '$name' } ]
 // For use with the GetResult method
 ```
 
-### `Sample(value: SampleStage)`
-#### Helper: `SampleSizeHelper`
+### `Sample(value: number)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Sample(6).getPipeline();
 // pipeline
-[]
+[ { '$sample': { size: 6 } } ]
 // For use with the GetResult method
 ```
 
-### `Search(value: any)`
+### `Search(value: AtlasSearchStage)`
+#### Helper: `AtlasSearchHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Search(AtlasSearchHelper('near', {
+  'path': 'released',
+  'origin': '2011-09-01T00:00:00.000+00:00',
+  'pivot': 7776000000,
+}, { returnStoredSource: true, scoreDetails: true })).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$search': {
+      near: {
+        path: 'released',
+        origin: '2011-09-01T00:00:00.000+00:00',
+        pivot: 7776000000
+      },
+      returnStoredSource: true,
+      scoreDetails: true
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
@@ -613,18 +736,18 @@ builder.Match('query').getPipeline();
 #### Helper: `Field`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Set(Field('first', true), Field('second', 2)).getPipeline();
 // pipeline
-[]
+[ { '$set': { first: true, second: 2 } } ]
 // For use with the GetResult method
 ```
 
 ### `Skip(value: number)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Skip(100).getPipeline();
 // pipeline
-[]
+[ { '$skip': 100 } ]
 // For use with the GetResult method
 ```
 
@@ -632,18 +755,26 @@ builder.Match('query').getPipeline();
 #### Helper: `Field`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Sort(
+  Field('first', -1),
+  Field('second', 1),
+  Field('third', { $meta: "textScore" }),
+).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$sort': { first: -1, second: 1, third: { '$meta': 'textScore' } }
+  }
+]
 // For use with the GetResult method
 ```
 
 ### `SortByCount(value: any)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.SortByCount('$employee').getPipeline();
 // pipeline
-[]
+[ { '$sortByCount': '$employee' } ]
 // For use with the GetResult method
 ```
 
@@ -651,34 +782,46 @@ builder.Match('query').getPipeline();
 #### Helper: `UnionWithCollectionHelper`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.UnionWith(
+  UnionWithCollectionHelper(
+    'cities',
+    builder2.Project(ProjectOnlyHelper('name', 'country')).getPipeline()
+  )
+).getPipeline();
 // pipeline
-[]
+[
+  {
+    '$unionWith': {
+      coll: 'cities',
+      pipeline: [ { '$project': { _id: 0, name: 1, country: 1 } } ]
+    }
+  }
+]
 // For use with the GetResult method
 ```
 
 ### `Unset(...values: string[])`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Unset('users', 'roles').getPipeline();
 // pipeline
-[]
+[ { '$unset': [ 'users', 'roles' ] } ]
 // For use with the GetResult method
 ```
 
 ### `Unwind(value: string | UnwindStage)`
 ```typescript
 // const builder = new PipelineBuilder('example');
-builder.Match('query').getPipeline();
+builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).getPipeline();
 // pipeline
-[]
+[ { '$unwind': { path: '$sizes', preserveNullAndEmptyArrays: true } } ]
 // For use with the GetResult method
 ```
 
 ___
 <div style="text-align: center; width: 100%;">
 
-[-> Aggregation Pipeline Operators <-](https://docs.mongodb.com/manual/reference/operator/aggregation/)
+[=> Aggregation Pipeline Operators <=](https://docs.mongodb.com/manual/reference/operator/aggregation/)
 
 </div>
 <p style="font-size: 15px;">
