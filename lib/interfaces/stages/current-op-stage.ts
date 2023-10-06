@@ -1,7 +1,7 @@
 /**
  * CurrentOp Interface
  */
-export interface CurrentOp {
+export interface CurrentOpStage {
     /**
      * If set to false, $currentOp will only report on operations/idle connections/idle cursors/idle sessions belonging
      * to the user who ran the command.

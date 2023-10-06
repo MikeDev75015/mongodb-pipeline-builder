@@ -1,5 +1,5 @@
 import {CurrentOpHelper} from "./current-op.helper";
-import {CurrentOp} from "../../interfaces";
+import {CurrentOpStage} from "../../interfaces";
 
 describe('currentOp helpers', () => {
     describe('CurrentOpHelper', () => {
@@ -50,7 +50,7 @@ describe('currentOp helpers', () => {
                 }],
         ])('%o should return %o', (
             operation: any,
-            expected: CurrentOp
+            expected: CurrentOpStage
         ) => {
             expect(operation).toEqual(expected);
         });

@@ -234,10 +234,10 @@ describe('should create a new pipeline builder object', () => {
                         .ReplaceWith({ tests: 'unit' }), { tests: 'unit' }],
                 ['should add a stage to the pipeline', 'sample',
                     new PipelineBuilder('debug', { debug: true, logs: true})
-                        .Sample({ size: 3 }), { size: 3 }],
+                        .Sample(3), { size: 3 }],
                 ['should add a stage to the pipeline', 'search',
                     new PipelineBuilder('debug', { debug: true, logs: true})
-                        .Search({ tests: 'unit' }), { tests: 'unit' }],
+                        .Search({ returnStoredSource: true }), { returnStoredSource: true }],
 
                 ['should add a stage to the pipeline', 'set',
                     new PipelineBuilder('debug', { debug: true, logs: true})
@@ -252,10 +252,10 @@ describe('should create a new pipeline builder object', () => {
 
                 ['should add a stage to the pipeline', 'sort',
                     new PipelineBuilder('debug', { debug: true, logs: true})
-                        .Sort({ tests: 'unit' }), { tests: 'unit' }],
+                        .Sort({ tests: 1 }), { tests: 1 }],
                 ['should add a stage to the pipeline', 'sort',
                     new PipelineBuilder('debug', { debug: true, logs: true})
-                        .Sort({ tests: 'unit' }, { test: 'unit' }), { tests: 'unit', test: 'unit' }],
+                        .Sort({ tests: -1 }, { test: -1 }), { tests: -1, test: -1 }],
 
                 ['should add a stage to the pipeline', 'sortByCount',
                     new PipelineBuilder('debug', { debug: true, logs: true})
