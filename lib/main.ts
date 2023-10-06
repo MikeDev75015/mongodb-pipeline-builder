@@ -2,11 +2,12 @@
 import { PAYLOAD_VALIDATION_ENABLED } from './constants';
 import { IsValidName } from './decorators';
 import { PipelineError } from './errors';
+import { SampleSizeHelper } from './helpers';
 import {
   BucketAutoStage,
   BucketStage,
   CollStatsStage,
-  CurrentOp,
+  CurrentOpStage,
   DebugPipelineBuild,
   FacetStage,
   GeoNearStage,
@@ -22,10 +23,10 @@ import {
   PipelineStageError,
   PipelineStageLabel,
   ReplaceRootStage,
-  SampleStage,
   UnionWithStage,
   UnwindStage,
 } from './interfaces';
+import { AtlasSearchStage } from './interfaces/stages/atlas-search-stage';
 
 /**
  * The class of the pipeline builder object
@@ -316,7 +317,7 @@ export class PipelineBuilder {
    * @param value
    * @constructor
    */
-  public CurrentOp(value: CurrentOp): this {
+  public CurrentOp(value: CurrentOpStage): this {
     return this.addStage('currentOp', value);
   }
 
@@ -452,7 +453,7 @@ export class PipelineBuilder {
    * @param value
    * @constructor
    */
-  public Out(value: OutStage): this {
+  public Out(value: OutStage | string): this {
     return this.addStage('out', value);
   }
 
@@ -517,8 +518,8 @@ export class PipelineBuilder {
    * @param value
    * @constructor
    */
-  public Sample(value: SampleStage): this {
-    return this.addStage('sample', value);
+  public Sample(value: number): this {
+    return this.addStage('sample', SampleSizeHelper(value));
   }
 
   /**
@@ -530,7 +531,7 @@ export class PipelineBuilder {
    * @param value
    * @constructor
    */
-  public Search(value: any): this {
+  public Search(value: AtlasSearchStage): this {
     return this.addStage('search', value);
   }
 
@@ -569,7 +570,7 @@ export class PipelineBuilder {
   public Sort(...values: { [key: string]: any }[]): this {
     return this.addStage(
       'sort',
-      this.mergeObjectListToOneObject(values, 'Sort'),
+      this.mergeObjectListToOneObject(values, 'sort'),
     );
   }
 

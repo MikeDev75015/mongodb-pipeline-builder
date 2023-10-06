@@ -1,4 +1,4 @@
-import {CurrentOp} from "../../interfaces";
+import {CurrentOpStage} from "../../interfaces";
 
 /**
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions
@@ -42,4 +42,4 @@ export const CurrentOpHelper = (parameters?: {
     backtrace: parameters?.backtrace !== undefined
         ? parameters.backtrace
         : false
-}) as CurrentOp;
+}) as CurrentOpStage;
