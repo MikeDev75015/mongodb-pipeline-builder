@@ -66,9 +66,10 @@
 
 - Simplify pipelines by making them more readable
 - Pipelines are easier to edit. 
-- Pipelines are testable on a dataset. 
 - Pipeline stages appear in an array. 
 - Sequential stages for documents
+
+All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeEvent and Paging stages can appear multiple times in a pipeline.
 
 </p>
 
@@ -82,11 +83,11 @@
 ---
 
 
-> **Breaking changes between v3 and v4**
+> **Breaking changes** between **v3** and **v4**
 
 -  **Helpers**
  
-   > Replacing the Payload suffix with Helper suffix
+   > Replacing the `Payload` suffix with `Helper` suffix
    > 
    > Prefixed with the name of the pipeline stage where they should be used
 
@@ -146,7 +147,7 @@ const myNewPipeline = new PipelineBuilder( 'myPagination', { debug: true } )
     .Match( $Expression( $LessThanEqual( '$id', 20 ) ) )
     .Project( ProjectOnlyHelper( 'name', 'weight' ) )
     .Paging( 5, 3 ) // 5 per page, page 3
-    .getPipeline();
+    .build();
 ```
 
 *is equivalent to*
@@ -176,14 +177,14 @@ const myNewPipeline = [ {
 ```typescript
 const myNewPipeline = new PipelineBuilder( 'user-skills' )
     .Match( $Expression( $Equal( '$id', 123456 ) ) )
-    .Lookup( LookupEqualityHelper( 'profiles', 'profile', 'profileId', 'id' ) )
+    .Lookup( LookupEqualityHelper( 'profiles', 'profile', 'id', 'profileId' ) )
     .Project( ProjectOnlyHelper( 'firstname', 'lastname', 'email' ) )
     .AddFields(
         Field( 'skills', $ArrayElemAt( '$profile.skills', 0 ) ),
         Field( 'availability', $ArrayElemAt( '$profile.availability', 0 ) )
     )
     .Unset( 'profile' )
-    .getPipeline();
+    .build();
 ```
 
 *is equivalent to*
@@ -191,7 +192,7 @@ const myNewPipeline = new PipelineBuilder( 'user-skills' )
 ```typescript
 const myNewPipeline = [
     { $match: { $expr: { $eq: ["$id", 123456] } } },
-    { $lookup: { from: "profiles", as: "profile", localField: "profileId", foreignField: "id" } },
+    { $lookup: { from: "profiles", as: "profile", localField: "id", foreignField: "profileId" } },
     { $project: { _id: 0, firstname: 1, lastname: 1, email: 1 } },
     { $addFields: {
         skills: { $arrayElemAt: ["$profile.skills", 0] },
@@ -254,7 +255,7 @@ GetResult<DocType>( target, pipeline ).then( result => {
 
 ```typescript
 // GetDocs() -> [document1, document2, document3, ..., document51]
-result.GetElement(2); // will return document to index 2, document1
+result.GetElement(2); // will return document to index 2, document3
 result.GetElement('last'); // will return the last document, document51
 result.GetElement(99); // will return undefined
 ```
@@ -306,48 +307,49 @@ ___
 
 [=> Try the lib on NPM RunKit with the require method <=](https://npm.runkit.com/mongodb-pipeline-builder)
 
+---
 
+`// builder = new PipelineBuilder('example');`
 
+## PAGING STAGE
+#### For use with the GetPagingResult method
 
-## BONUS STAGE
-
-### `Paging(elementsPerPage: number, page = 1)`
+### Paging(elementsPerPage: number, page = 1)
 
   *The Paging stage automatically adds 3 native stages used to paginate documents ($skip, $limit and $count).*
 
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Match('query').Paging(5, 2).getPipeline();
+builder.Paging(5, 2).build();
+
 // pipeline
 [
   {
     '$facet': {
-      docs: [ { '$match': 'query' }, { '$skip': 5 }, { '$limit': 5 } ],
-      count: [ { '$match': 'query' }, { '$count': 'totalElements' } ]
+      docs: [ { '$skip': 5 }, { '$limit': 5 } ],
+      count: [ { '$count': 'totalElements' } ]
     }
   }
 ]
-// For use with the GetPagingResult method
 ```
 
 
 ## [MONGODB STAGES](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
+#### For use with the GetResult method
 
-### `AddFields(...values: { [key: string]: any }[])`
+### [AddFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/)(...values: AddFieldsStage[])
 #### Helper: `Field`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Match('query').AddFields(Field('foo', 'value1'), Field('bar', 'value2')).getPipeline();
+builder.AddFields(Field('foo', 'value1'), Field('bar', 'value2')).build();
+
 // pipeline
-[ { '$match': 'query' }, { '$addFields': { foo: 'value1', bar: 'value2' } } ]
-// For use with the GetResult method
+[ { '$addFields': { foo: 'value1', bar: 'value2' } } ]
 ```
 
-### `Bucket(value: BucketStage)`
+### [Bucket](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/)(value: BucketStage)
 #### Helper: `BucketGroupByHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Bucket(BucketGroupByHelper('$age', [6, 13, 18])).getPipeline();
+builder.Bucket(BucketGroupByHelper('$age', [6, 13, 18])).build();
+
 // pipeline
 [
   {
@@ -358,48 +360,64 @@ builder.Bucket(BucketGroupByHelper('$age', [6, 13, 18])).getPipeline();
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `BucketAuto(value: BucketAutoStage)`
+### [BucketAuto](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/)(value: BucketAutoStage)
 #### Helper: `BucketAutoGroupByHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.BucketAuto(BucketAutoGroupByHelper('$age', 5)).getPipeline();
+builder.BucketAuto(BucketAutoGroupByHelper('$age', 5)).build();
+
 // pipeline
 [
   {
     '$bucketAuto': { groupBy: '$age', buckets: 5, output: { count: { '$sum': 1 } } }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `CollStats(value: CollStatsStage)`
+### [ChangeStream](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/)(value: ChangeStreamStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.CollStats({ latencyStats: { histograms: true } }).getPipeline();
+builder.ChangeStream({ allChangesForCluster: true, fullDocument: 'required' }).build();
+
+// pipeline
+[
+  {
+    '$changeStream': { allChangesForCluster: true, fullDocument: 'required' }
+  }
+]
+```
+
+### [ChangeStreamSplitLargeEvent](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/)(value: ChangeStreamSplitLargeEventStage)
+```typescript
+builder.ChangeStreamSplitLargeEvent({}).build();
+
+// pipeline
+[ { '$changeStreamSplitLargeEvent': {} } ]
+```
+
+### [CollStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/)(value: CollStatsStage)
+```typescript
+builder.CollStats({ latencyStats: { histograms: true } }).build();
+
 // pipeline
 [
   { '$collStats': { latencyStats: { histograms: true } } }
 ]
-// For use with the GetResult method
 ```
 
-### `Count(value: string)`
+### [Count](https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/)(value: string)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Count('counter').getPipeline();
+builder.Count('counter').build();
+
 // pipeline
 [ { '$count': 'counter' } ]
-// For use with the GetResult method
 ```
 
-### `CurrentOp(value: CurrentOp)`
+### [CurrentOp](https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/)(value: CurrentOpStage)
 #### Helper: `CurrentOpHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.CurrentOp(CurrentOpHelper({ allUsers: true, idleConnections: true })).getPipeline();
+builder.CurrentOp(CurrentOpHelper({ allUsers: true, idleConnections: true })).build();
+
 // pipeline
 [
   {
@@ -413,18 +431,47 @@ builder.CurrentOp(CurrentOpHelper({ allUsers: true, idleConnections: true })).ge
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Facet(...values: { [key: string]: PipeLineStage[] }[])`
+### [Densify](https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/)(value: DensifyStage)
+```typescript
+builder.Densify({
+  field: "altitude",
+  partitionByFields: [ "variety" ],
+  range: { bounds: "full", step: 200 }
+}).build();
+
+// pipeline
+[
+  {
+    '$densify': {
+      field: 'altitude',
+      partitionByFields: [ 'variety' ],
+      range: { bounds: 'full', step: 200 }
+    }
+  }
+]
+```
+
+### [Documents](https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/)(value: DocumentsStage)
+```typescript
+builder.Documents([{ doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 }]).build();
+
+// pipeline
+[
+  { '$documents': [ { doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 } ] }
+]
+```
+
+### [Facet](https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/)(...values: FacetStage[])
 #### Helper: `Field`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.Facet(
   Field('pipeline1', [{ $match: { tag: 'first' }}]),
   Field('pipeline2', [{ $match: { tag: 'second' }}]),
   Field('pipeline3', [{ $match: { tag: 'third' }}]),
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
@@ -435,16 +482,40 @@ builder.Facet(
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `GeoNear(value: GeoNearStage)`
+### [Fill](https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/)(value: FillStage)
+```typescript
+builder.Fill({
+  output:
+    {
+      "bootsSold": { value: 0 },
+      "sandalsSold": { value: 0 },
+      "sneakersSold": { value: 0 }
+    }
+}).build();
+
+// pipeline
+[
+  {
+    '$fill': {
+      output: {
+        bootsSold: { value: 0 },
+        sandalsSold: { value: 0 },
+        sneakersSold: { value: 0 }
+      }
+    }
+  }
+]
+```
+
+### [GeoNear](https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/)(value: GeoNearStage)
 #### Helper: `GeoNearHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.GeoNear(
   GeoNearHelper({ type: "Point", coordinates: [ -73.99279 , 40.719296 ] }, 'dist.calculated')
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
@@ -454,15 +525,14 @@ builder.GeoNear(
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `GraphLookup(value: GraphLookupStage)`
+### [GraphLookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/)(value: GraphLookupStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.GraphLookup({
   from: 'employees', startWith: '$reportsTo', connectFromField: 'reportsTo', connectToField: 'name', as: 'reportingHierarchy',
-}).getPipeline();
+}).build();
+
 // pipeline
 [
   {
@@ -475,58 +545,77 @@ builder.GraphLookup({
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Group(value: GroupStage)`
+### [Group](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)(value: GroupStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Group({ _id: null, count: { $count: { } } }).getPipeline();
+builder.Group({ _id: null, count: { $count: { } } }).build();
+
 // pipeline
 [
   { '$group': { _id: null, count: { '$count': {} } } }
 ]
-// For use with the GetResult method
 ```
 
-### `IndexStats(value: any)`
+### [IndexStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/)(value: IndexStatsStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.IndexStats({}).getPipeline();
+builder.IndexStats({}).build();
+
 // pipeline
 [ { '$indexStats': {} } ]
-// For use with the GetResult method
 ```
 
-### `Limit(value: number)`
+### [Limit](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)(value: number)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Limit(10).getPipeline();
+builder.Limit(10).build();
+
 // pipeline
 [ { '$limit': 10 } ]
-// For use with the GetResult method
 ```
 
-### `ListSessions(value: any)`
+### [ListLocalSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/)(value: ListSessionsStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.ListSessions({ allUsers: true }).getPipeline();
+builder.ListLocalSessions({ allUsers: true }).build();
+
+// pipeline
+[ { '$listLocalSessions': { allUsers: true } } ]
+```
+
+### [ListSampledQueries](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/)(value: ListSampledQueriesStage)
+```typescript
+builder.ListSampledQueries({ namespace: "social.post" }).build();
+
+// pipeline
+[ { '$listSampledQueries': { namespace: 'social.post' } } ]
+```
+
+### [ListSearchIndexes](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/)(value: ListSearchIndexesStage)
+```typescript
+builder.ListSearchIndexes({ name: 'searchIndex01' }).build();
+
+// pipeline
+[ { '$listSearchIndexes': { name: 'searchIndex01' } } ]
+```
+
+### [ListSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/)(value: ListSessionsStage)
+```typescript
+builder.ListSessions({ allUsers: true }).build();
+
 // pipeline
 [ { '$listSessions': { allUsers: true } } ]
-// For use with the GetResult method
 ```
 
-### `Lookup(value: LookupStage)`
+### [Lookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/)(value: LookupStage)
 #### Helper: `LookupConditionHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.Lookup(LookupConditionHelper('users', 'users', {
   pipeline: builder2.Match(
     $Expression($GreaterThanEqual('$age', '$$age_min')),
-  ).getPipeline(),
+  ).build(),
   project: ProjectOnlyHelper('name', 'age', 'city'),
   sourceList: ['age_min'],
-})).getPipeline();
+})).build();
+
 // pipeline
 [
   {
@@ -543,14 +632,13 @@ builder.Lookup(LookupConditionHelper('users', 'users', {
     }
   }
 ]
-// For use with the GetResult method
 ```
 #### Helper: `LookupEqualityHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.Lookup(
   LookupEqualityHelper('users', 'user', 'id', 'userId')
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
@@ -562,36 +650,33 @@ builder.Lookup(
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Match(value: any)`
+### [Match](https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/)(value: MatchStage)
 #### Helper: `Field`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Match(Field('id', 'fake-id')).getPipeline();
+builder.Match(Field('age', 18)).build();
+
 // pipeline
-[ { '$match': { id: 'fake-id' } } ]
-// For use with the GetResult method
+[ { '$match': { age: 18 } } ]
 ```
 #### Operator: `$Expression`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Match($Expression($GreaterThanEqual('$age', 18))).getPipeline();
+builder.Match($Expression($GreaterThanEqual('$age', 18))).build();
+
 // pipeline
 [
   {
     '$match': { '$expr': { '$gte': [ '$age', 18 ] } }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Merge(value: MergeStage)`
+### [Merge](https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/)(value: MergeStage)
 #### Helper: `MergeIntoHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Merge(MergeIntoHelper('newCollection')).getPipeline();
+builder.Merge(MergeIntoHelper('newCollection')).build();
+
 // pipeline
 [
   {
@@ -604,56 +689,51 @@ builder.Merge(MergeIntoHelper('newCollection')).getPipeline();
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Out(value: OutStage)`
+### [Out](https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/)(value: OutStage)
 #### Helper: `OutDbCollHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Out(OutDbCollHelper('users', 'db1')).getPipeline();
+builder.Out(OutDbCollHelper('users', 'db1')).build();
+
 // pipeline
 [ { '$out': { db: 'db1', coll: 'users' } } ]
-// For use with the GetResult method
 ```
 
-### `PlanCacheStats(value: any)`
+### [PlanCacheStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/)(value: PlanCacheStatsStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.PlanCacheStats({}).getPipeline();
+builder.PlanCacheStats({}).build();
+
 // pipeline
 [ { '$planCacheStats': {} } ]
-// For use with the GetResult method
 ```
 
-### `Project(value: { [key: string]: any })`
+### [Project](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)(value: ProjectStage)
 #### Helper: `ProjectIgnoreHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Project(ProjectIgnoreHelper('password', 'refreshToken')).getPipeline();
+builder.Project(ProjectIgnoreHelper('password', 'refreshToken')).build();
+
 // pipeline
 [ { '$project': { password: 0, refreshToken: 0 } } ]
-// For use with the GetResult method
 ```
 #### Helper: `ProjectOnlyHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Project(ProjectOnlyHelper('password', 'refreshToken')).getPipeline();
+builder.Project(ProjectOnlyHelper('password', 'refreshToken')).build();
+
 // pipeline
 [ { '$project': { _id: 0, password: 1, refreshToken: 1 } } ]
-// For use with the GetResult method
 ```
 
-### `Redact(value: any)`
+### [Redact](https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/)(value: RedactStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.Redact(
   $Cond(
     $GreaterThan($Size($SetIntersection('$tags', ['STLW', 'G'])), 0),
     '$$DESCEND',
     '$$PRUNE'
   )
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
@@ -666,15 +746,14 @@ builder.Redact(
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `ReplaceRoot(value: ReplaceRootStage)`
+### [ReplaceRoot](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/)(value: ReplaceRootStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.ReplaceRoot({
   newRoot: { full_name: { $concat : [ "$first_name", " ", "$last_name" ] } }
-}).getPipeline();
+}).build();
+
 // pipeline
 [
   {
@@ -685,36 +764,33 @@ builder.ReplaceRoot({
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `ReplaceWith(value: any)`
+### [ReplaceWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/)(value: ReplaceWithStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.ReplaceWith('$name').getPipeline();
+builder.ReplaceWith('$name').build();
+
 // pipeline
 [ { '$replaceWith': '$name' } ]
-// For use with the GetResult method
 ```
 
-### `Sample(value: number)`
+### [Sample](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)(value: number)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Sample(6).getPipeline();
+builder.Sample(6).build();
+
 // pipeline
 [ { '$sample': { size: 6 } } ]
-// For use with the GetResult method
 ```
 
-### `Search(value: AtlasSearchStage)`
-#### Helper: `AtlasSearchHelper`
+### [Search](https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/)(value: AtlasSearchStage)
+#### Helper: `SearchHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Search(AtlasSearchHelper('near', {
+builder.Search(SearchHelper('near', {
   'path': 'released',
   'origin': '2011-09-01T00:00:00.000+00:00',
   'pivot': 7776000000,
-}, { returnStoredSource: true, scoreDetails: true })).getPipeline();
+}, { returnStoredSource: true, scoreDetails: true })).build();
+
 // pipeline
 [
   {
@@ -729,65 +805,118 @@ builder.Search(AtlasSearchHelper('near', {
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Set(...values: { [key: string]: any }[])`
+### [SearchMeta](https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/)(value: AtlasSearchStage)
+#### Helper: `SearchHelper`
+```typescript
+builder.SearchMeta(SearchHelper('range', {
+  "path": "year",
+  "gte": 1998,
+  "lt": 1999
+}, { count: { type: 'total' } })).build();
+
+// pipeline
+[
+  {
+    '$searchMeta': {
+      range: { path: 'year', gte: 1998, lt: 1999 },
+      count: { type: 'total' }
+    }
+  }
+]
+```
+
+### [Set](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)(...values: SetStage[])
 #### Helper: `Field`
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Set(Field('first', true), Field('second', 2)).getPipeline();
+builder.Set(Field('first', true), Field('second', 2)).build();
+
 // pipeline
 [ { '$set': { first: true, second: 2 } } ]
-// For use with the GetResult method
 ```
 
-### `Skip(value: number)`
+### [SetWindowFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/)(value: SetWindowFieldsStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Skip(100).getPipeline();
+builder.SetWindowFields({
+  partitionBy: "$state",
+  sortBy: { orderDate: 1 },
+  output: {
+    cumulativeQuantityForState: {
+      $sum: "$quantity",
+      window: { documents: [ "unbounded", "current" ] }
+    }
+  }
+}).build();
+
+// pipeline
+[
+  {
+    '$setWindowFields': {
+      partitionBy: '$state',
+      sortBy: { orderDate: 1 },
+      output: {
+        cumulativeQuantityForState: {
+          '$sum': '$quantity',
+          window: { documents: [ 'unbounded', 'current' ] }
+        }
+      }
+    }
+  }
+]
+```
+
+### [ShardedDataDistribution](https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/)(value: ShardedDataDistributionStage)
+```typescript
+builder.ShardedDataDistribution({}).build();
+
+// pipeline
+[ { '$shardedDataDistribution': {} } ]
+```
+
+### [Skip](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)(value: number)
+```typescript
+builder.Skip(100).build();
+
 // pipeline
 [ { '$skip': 100 } ]
-// For use with the GetResult method
 ```
 
-### `Sort(...values: { [key: string]: any }[])`
+### [Sort](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)(...values: SortStage[])
 #### Helper: `Field`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.Sort(
   Field('first', -1),
   Field('second', 1),
   Field('third', { $meta: "textScore" }),
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
     '$sort': { first: -1, second: 1, third: { '$meta': 'textScore' } }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `SortByCount(value: any)`
+### [SortByCount](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/)(value: SortByCountStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.SortByCount('$employee').getPipeline();
+builder.SortByCount('$employee').build();
 // pipeline
+
 [ { '$sortByCount': '$employee' } ]
-// For use with the GetResult method
 ```
 
-### `UnionWith(value: UnionWithStage)`
+### [UnionWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/)(value: UnionWithStage)
 #### Helper: `UnionWithCollectionHelper`
 ```typescript
-// const builder = new PipelineBuilder('example');
 builder.UnionWith(
   UnionWithCollectionHelper(
     'cities',
-    builder2.Project(ProjectOnlyHelper('name', 'country')).getPipeline()
+    builder2.Project(ProjectOnlyHelper('name', 'country')).build()
   )
-).getPipeline();
+).build();
+
 // pipeline
 [
   {
@@ -797,25 +926,22 @@ builder.UnionWith(
     }
   }
 ]
-// For use with the GetResult method
 ```
 
-### `Unset(...values: string[])`
+### [Unset](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/)(...values: UnsetStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Unset('users', 'roles').getPipeline();
+builder.Unset('users', 'roles').build();
+
 // pipeline
 [ { '$unset': [ 'users', 'roles' ] } ]
-// For use with the GetResult method
 ```
 
-### `Unwind(value: string | UnwindStage)`
+### [Unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)(value: UnwindStage)
 ```typescript
-// const builder = new PipelineBuilder('example');
-builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).getPipeline();
+builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).build();
+
 // pipeline
 [ { '$unwind': { path: '$sizes', preserveNullAndEmptyArrays: true } } ]
-// For use with the GetResult method
 ```
 
 ___
