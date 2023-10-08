@@ -13,7 +13,7 @@ describe('set validators', () => {
                 'No fields have been added.'],
             [setPayloadValidator(payloadList[1]),
                 'One or more field values are not defined.'],
-            [setPayloadValidator(payloadList[2]), ''],
+            [setPayloadValidator(payloadList[2]), 'VALID'],
             [setPayloadValidator(payloadList[3]), 'The payload is not valid.'],
         ])('%o should return %s', (
             operation: any,

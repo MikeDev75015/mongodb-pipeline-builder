@@ -16,5 +16,5 @@ export const countPayloadValidator = (payload: string) => {
         return 'The value must not contain the . character.'
     }
 
-    return '';
+    return 'VALID';
 }

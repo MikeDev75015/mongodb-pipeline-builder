@@ -1,5 +1,5 @@
 import {bucketPayloadValidator} from "./bucket-payload.validator";
-import {BucketStage} from "../../interfaces";
+import {BucketStage} from "../../models";
 
 describe('bucket validators', () => {
     describe('bucketPayloadValidator', () => {
@@ -20,7 +20,7 @@ describe('bucket validators', () => {
             [bucketPayloadValidator(payloadList[3] as BucketStage),
                 'The boundaries value is not valid. You must specify at least two boundaries.'],
             [bucketPayloadValidator(payloadList[4] as BucketStage),
-                ''],
+                'VALID'],
         ])('%o should return %s', (
             operation: any,
             expected: any

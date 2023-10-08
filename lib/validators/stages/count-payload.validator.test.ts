@@ -17,7 +17,7 @@ describe('count validators', () => {
             [countPayloadValidator(payloadList[2]),
                 'The value must not contain the . character.'],
             [countPayloadValidator(payloadList[3]),
-                ''],
+                'VALID'],
         ])('%o should return %s', (
             operation: any,
             expected: any

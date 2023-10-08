@@ -18,5 +18,5 @@ export const projectPayloadValidator = (payload: { [key: string]: any }) => {
         return 'One or more field values are not defined.'
     }
 
-    return '';
+    return 'VALID';
 }

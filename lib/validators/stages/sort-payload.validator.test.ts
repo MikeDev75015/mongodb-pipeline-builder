@@ -18,9 +18,9 @@ describe('sort validators', () => {
                 'One or more field values are not defined.'],
             [sortPayloadValidator(payloadList[2]), 'One or more values are not valid. unit...'],
             [sortPayloadValidator(payloadList[3]), 'The payload is not valid.'],
-            [sortPayloadValidator(payloadList[4]), ''],
-            [sortPayloadValidator(payloadList[5]), ''],
-            [sortPayloadValidator(payloadList[6]), ''],
+            [sortPayloadValidator(payloadList[4]), 'VALID'],
+            [sortPayloadValidator(payloadList[5]), 'VALID'],
+            [sortPayloadValidator(payloadList[6]), 'VALID'],
         ])('%o should return %s', (
             operation: any,
             expected: any

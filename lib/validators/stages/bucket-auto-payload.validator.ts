@@ -1,4 +1,4 @@
-import {BucketAutoStage} from "../../interfaces";
+import {BucketAutoStage} from "../../models";
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
@@ -21,5 +21,5 @@ export const bucketAutoPayloadValidator = (payload: BucketAutoStage) => {
     } else if (payload.granularity && !granularityValueList.includes(payload.granularity)) {
         return `The granularity value is not valid. You must specify one of these possible values: ${granularityValueList.join(' | ')}.`;
     }
-    return '';
+    return 'VALID';
 }

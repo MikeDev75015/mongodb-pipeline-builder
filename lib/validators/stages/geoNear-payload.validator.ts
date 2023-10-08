@@ -1,4 +1,4 @@
-import {GeoNearStage} from '../../interfaces';
+import {GeoNearStage} from '../../models';
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
@@ -10,5 +10,5 @@ export const geoNearPayloadValidator = (payload: GeoNearStage) => {
         return 'The near and the distanceField properties are required.'
     }
 
-    return '';
+    return 'VALID';
 }

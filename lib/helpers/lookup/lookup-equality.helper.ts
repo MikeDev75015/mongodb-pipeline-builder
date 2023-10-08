@@ -1,7 +1,7 @@
 import { PipelineError } from "../../errors";
 import {
     LookupEquality
-} from "../../interfaces";
+} from "../../models";
 
 /**
  * Equality Match

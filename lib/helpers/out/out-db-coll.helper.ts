@@ -1,4 +1,4 @@
-import {OutStage} from "../../interfaces";
+import {OutStage} from "../../models";
 
 /**
  * Database Payload

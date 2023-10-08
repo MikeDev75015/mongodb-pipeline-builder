@@ -1,4 +1,4 @@
-import {CollStatsStage} from '../../interfaces';
+import {CollStatsStage} from '../../models';
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
@@ -9,5 +9,5 @@ export const collStatsPayloadValidator = (payload: CollStatsStage) => {
     if (!Object.keys(payload).length) {
         return 'Invalid empty payload.';
     }
-    return '';
+    return 'VALID';
 }
