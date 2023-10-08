@@ -1,4 +1,4 @@
-import {BucketStage} from "../../interfaces";
+import {BucketStage} from "../../models";
 
 /**
  * GroupBy Payload

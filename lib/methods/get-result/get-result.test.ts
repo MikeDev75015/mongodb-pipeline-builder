@@ -1,7 +1,5 @@
 import { PipelineError } from '../../errors';
-import { PipeLineStage } from '../../interfaces';
-import { GetPagingResultResponse } from '../../interfaces/core/get-paging-result.response';
-import { GetResultResponse } from '../../interfaces/core/get-result.response';
+import { GetPagingResultResponse, GetResultResponse, PipeLineStage } from '../../models';
 import { GetPagingResult, GetResult, getTotalPageNumber } from './get-result';
 
 const simpleResultMock = [
@@ -182,16 +180,17 @@ describe('GetPagingResult', () => {
   );
 
   test.each([
-   ['result has more than one element', [{}, {}]],
+    ['result has more than one element', [{}, {}]],
     ['docs property is missing', [{ count: pagingResultMock[0].count }]],
     ['count property is missing', [{ docs: pagingResultMock[0].docs }]],
     ['count is an empty array', [{ ...pagingResultMock[0], count: [] }]],
     ['totalElements is undefined', [{ ...pagingResultMock[0], count: [{ totalElements: undefined }] }]],
-   ])('should throw a pipeline error if %s', async (_: string, result: any[]) => {
-   await expect(() => GetPagingResult(buildAggregationMock(result), [{ $match: {} }]))
-   .rejects
-   .toThrowError(new PipelineError('An error was encountered while executing the GetPagingResult method:\n - Application not possible, use the GetResult method.'));
-   });
+  ])('should throw a pipeline error if %s', async (_: string, result: any[]) => {
+    await expect(() => GetPagingResult(buildAggregationMock(result), [{ $match: {} }]))
+    .rejects
+    .toThrowError(new PipelineError(
+      'An error was encountered while executing the GetPagingResult method:\n - Application not possible, use the GetResult method.'));
+  });
 
   it('should return an object with the GetDocs and GetCount methods as properties that get the documents and' +
     'the total number of documents for a paging aggregate', () => {

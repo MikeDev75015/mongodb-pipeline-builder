@@ -10,7 +10,7 @@ describe('geoNear validators', () => {
             [geoNearPayloadValidator(payloadList[0]),
                 'The near and the distanceField properties are required.'],
             [geoNearPayloadValidator(payloadList[1]),
-                ''],
+                'VALID'],
         ])('%o should return %s', (
             operation: any,
             expected: any

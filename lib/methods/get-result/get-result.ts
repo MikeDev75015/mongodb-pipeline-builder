@@ -1,7 +1,5 @@
-import { PipeLineStage, PipelineStageTypeEnum } from '../../interfaces';
 import { PipelineError } from '../../errors';
-import { GetResultResponse } from '../../interfaces/core/get-result.response';
-import { GetPagingResultResponse } from '../../interfaces/core/get-paging-result.response';
+import { GetPagingResultResponse, GetResultResponse, PipeLineStage, ValidPipelineStageNameList } from '../../models';
 
 /**
  * Apply the aggregate method on the chosen target
@@ -12,7 +10,7 @@ import { GetPagingResultResponse } from '../../interfaces/core/get-paging-result
  * @constructor
  */
 export const GetResult = async <T = any>(
-  target: any, pipeline: PipeLineStage[]
+  target: any, pipeline: PipeLineStage[],
 ): Promise<GetResultResponse<T>> => {
   checkArgsValidity(target, pipeline);
 
@@ -34,7 +32,7 @@ export const GetResult = async <T = any>(
     return {
       GetDocs: () => result,
       GetElement: (index: number | 'last') => getElementByIndex(result, index),
-      GetCount: () => result.length
+      GetCount: () => result.length,
     } as GetResultResponse<T>;
 
   } catch (e) {
@@ -51,7 +49,7 @@ export const GetResult = async <T = any>(
  * @constructor
  */
 export const GetPagingResult = async <T = any>(
-  target: any, pipeline: PipeLineStage[]
+  target: any, pipeline: PipeLineStage[],
 ): Promise<GetPagingResultResponse<T>> => {
   checkArgsValidity(target, pipeline);
 
@@ -106,7 +104,7 @@ export const getTotalPageNumber = (count: { totalElements: number; }[], pipeline
   return totalElements % elementsPerPage
     ? Math.floor(totalElements / elementsPerPage) + 1
     : Math.floor(totalElements / elementsPerPage);
-}
+};
 
 /**
  * Apply the arguments of the GetDocs method of a default result
@@ -119,7 +117,7 @@ const getElementByIndex = <T>(result: T[], index: number | 'last'): T => {
   }
 
   return result[index];
-}
+};
 
 const checkArgsValidity = (target: any, pipeline: PipeLineStage[]) => {
   if (!target) {
@@ -135,7 +133,7 @@ const checkArgsValidity = (target: any, pipeline: PipeLineStage[]) => {
     throw new PipelineError('Application not possible, the pipeline is empty.');
   }
   // @ts-ignore
-  const unknownStageList: any[] = pipeline.filter((s) => !PipelineStageTypeEnum[Object.keys(s)[0].substring(1)]);
+  const unknownStageList: any[] = pipeline.filter((s) => !ValidPipelineStageNameList.includes(Object.keys(s)[0]));
   if (unknownStageList?.length) {
     const unknownStageNameList = unknownStageList.map((s) => Object.keys(s)[0]);
     throw new PipelineError(`Application not possible, ${unknownStageNameList.length > 1

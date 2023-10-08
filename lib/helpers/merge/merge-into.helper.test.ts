@@ -1,5 +1,5 @@
 import {MergeIntoHelper} from "./merge-into.helper";
-import {MergeStage, PipeLineStage, WhenMatchedType, WhenNotMatchedType} from "../../interfaces";
+import {MergeStage, PipeLineStage, WhenMatchedType, WhenNotMatchedType} from "../../models";
 
 describe('merge helpers', () => {
     test.each([

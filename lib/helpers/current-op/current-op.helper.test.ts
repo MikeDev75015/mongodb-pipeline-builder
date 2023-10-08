@@ -1,5 +1,5 @@
 import {CurrentOpHelper} from "./current-op.helper";
-import {CurrentOpStage} from "../../interfaces";
+import {CurrentOpStage} from "../../models";
 
 describe('currentOp helpers', () => {
     describe('CurrentOpHelper', () => {

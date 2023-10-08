@@ -23,5 +23,5 @@ export const sortPayloadValidator = (payload: { [key: string]: any }) => {
         return `One or more values are not valid. ${unexpectedValues.join(', ')}...`
     }
 
-    return '';
+    return 'VALID';
 }

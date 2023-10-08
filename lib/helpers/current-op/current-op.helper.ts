@@ -1,4 +1,4 @@
-import {CurrentOpStage} from "../../interfaces";
+import {CurrentOpStage} from "../../models";
 
 /**
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions

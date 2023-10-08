@@ -14,7 +14,7 @@ describe('addFields validators', () => {
                 'No fields have been added.'],
             [addFieldsPayloadValidator(payloadList[1]),
                 'One or more field values are not defined.'],
-            [addFieldsPayloadValidator(payloadList[2]), ''],
+            [addFieldsPayloadValidator(payloadList[2]), 'VALID'],
             [addFieldsPayloadValidator(payloadList[3]),
                 'The payload is not valid.'],
         ])('%o should return %s', (

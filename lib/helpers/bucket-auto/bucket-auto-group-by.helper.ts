@@ -1,5 +1,5 @@
-import { BucketAutoStage } from '../../interfaces';
-import { GranularityValues } from '../../interfaces/stages/bucket-auto-stage';
+import { BucketAutoStage } from '../../models';
+import { GranularityValues } from '../../models/stages/bucket-auto-stage';
 
 /**
  * GroupByAuto Payload

@@ -13,7 +13,7 @@ describe('project validators', () => {
                 'No fields have been added.'],
             [projectPayloadValidator(payloadList[1]),
                 'One or more field values are not defined.'],
-            [projectPayloadValidator(payloadList[2]), ''],
+            [projectPayloadValidator(payloadList[2]), 'VALID'],
             [projectPayloadValidator(payloadList[3]), 'The payload is not valid.'],
         ])('%o should return %s', (
             operation: any,

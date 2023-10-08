@@ -1,4 +1,4 @@
-import {BucketStage} from '../../interfaces';
+import {BucketStage} from '../../models';
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
@@ -16,5 +16,5 @@ export const bucketPayloadValidator = (payload: BucketStage) => {
         return 'The boundaries value is not valid. You must specify at least two boundaries.';
     }
 
-    return '';
+    return 'VALID';
 }

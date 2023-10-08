@@ -1,4 +1,4 @@
-import {LookupStage} from '../../interfaces';
+import {LookupStage} from '../../models';
 
 /**
  * Checks the presence of mandatory fields
@@ -15,7 +15,7 @@ export const lookupPayloadValidator = (payload: LookupStage) => {
     } else if (payload.localField || payload.foreignField) {
         return lookupEqualityValidator(payload);
     } else {
-        return '';
+        return 'VALID';
     }
 }
 
@@ -30,6 +30,6 @@ const lookupEqualityValidator = (payload: LookupStage) => {
     } else if (!payload.foreignField) {
         return 'The foreignField property is required when localfield is specified.';
     } else {
-        return '';
+        return 'VALID';
     }
 }

@@ -1,6 +1,6 @@
 import {
     LookupCondition, PipeLineStage
-} from "../../interfaces";
+} from "../../models";
 
 /**
  * Join Conditions and Uncorrelated Sub-queries

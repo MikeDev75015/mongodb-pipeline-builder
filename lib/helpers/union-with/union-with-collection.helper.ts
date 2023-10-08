@@ -1,4 +1,4 @@
-import {PipeLineStage, UnionWithStage} from "../../interfaces";
+import {PipeLineStage, UnionWithStage} from "../../models";
 
 /**
  * Collection Payload

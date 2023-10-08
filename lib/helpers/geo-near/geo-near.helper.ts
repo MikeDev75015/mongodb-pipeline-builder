@@ -1,4 +1,4 @@
-import { GeoNearStage } from '../../interfaces';
+import { GeoNearStage } from '../../models';
 
 /**
  * Near Payload
@@ -19,7 +19,7 @@ import { GeoNearStage } from '../../interfaces';
  * [key] - Specify the geospatial indexed field to use when calculating the distance.
  * @constructor
  */
-export const GeoNearHelper = (near: any, distanceField: string, optional?: {
+export const GeoNearHelper = (near: any, distanceField: string, optional: {
   spherical?: boolean;
   maxDistance?: number;
   query?: any;
@@ -28,10 +28,10 @@ export const GeoNearHelper = (near: any, distanceField: string, optional?: {
   uniqueDocs?: boolean;
   minDistance?: number;
   key?: any;
-}) => {
+} = {}) => {
   return {
     near,
     distanceField,
-    ...(optional ? optional : {}),
+    ...optional,
   } as GeoNearStage;
 };

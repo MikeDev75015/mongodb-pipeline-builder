@@ -1,4 +1,4 @@
-import {MergeStage, WhenMatchedType, WhenNotMatchedType, PipeLineStage} from "../../interfaces";
+import {MergeStage, WhenMatchedType, WhenNotMatchedType, PipeLineStage} from "../../models";
 
 /**
  * Into Payload
