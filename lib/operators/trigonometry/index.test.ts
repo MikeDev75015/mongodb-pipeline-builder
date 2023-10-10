@@ -1,12 +1,12 @@
 import {
-    $Acos,
-    $Acosh,
-    $Asin,
-    $Asinh, $Atan,
-    $Atan2,
-    $Atanh,
-    $Cos,
-    $Cosh,
+    $ArcCosine,
+    $ArcCosineHyperbolic,
+    $ArcSine,
+    $ArcSineHyperbolic, $ArcTangent,
+    $ArcTangent2,
+    $ArcTangentHyperbolic,
+    $Cosine,
+    $CosineHyperbolic,
     $DegreesToRadians,
     $RadiansToDegrees,
     $Sin,
@@ -15,25 +15,25 @@ import {
     $Tanh
 } from "./index";
 
-const expression = 'unit';
-const expression1 = 'tests';
-const expression2 = 'again';
+const expression = '$unit.value';
+const expression1 = 1;
+const expression2 = { $max: [1, '$unit.value'] };
 
 
 describe('trigonometry operators', () => {
     test.each([
         [$Sin(expression), { $sin: expression }],
-        [$Cos(expression), { $cos: expression }],
+        [$Cosine(expression), { $cos: expression }],
         [$Tan(expression), { $tan: expression }],
-        [$Asin(expression), { $asin: expression }],
-        [$Acos(expression), { $acos: expression }],
-        [$Atan(expression), { $atan: expression }],
-        [$Atan2(expression1, expression2), { $atan2: [expression1, expression2 ] }],
-        [$Asinh(expression), { $asinh: expression }],
-        [$Acosh(expression), { $acosh: expression }],
-        [$Atanh(expression), { $atanh: expression }],
+        [$ArcSine(expression), { $asin: expression }],
+        [$ArcCosine(expression), { $acos: expression }],
+        [$ArcTangent(expression), { $atan: expression }],
+        [$ArcTangent2(expression1, expression2), { $atan2: [expression1, expression2 ] }],
+        [$ArcSineHyperbolic(expression), { $asinh: expression }],
+        [$ArcCosineHyperbolic(expression), { $acosh: expression }],
+        [$ArcTangentHyperbolic(expression), { $atanh: expression }],
         [$Sinh(expression), { $sinh: expression }],
-        [$Cosh(expression), { $cosh: expression }],
+        [$CosineHyperbolic(expression), { $cosh: expression }],
         [$Tanh(expression), { $tanh: expression }],
         [$DegreesToRadians(expression), { $degreesToRadians: expression }],
         [$RadiansToDegrees(expression), { $radiansToDegrees: expression }],

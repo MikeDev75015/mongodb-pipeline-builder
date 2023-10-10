@@ -1,12 +1,22 @@
-import {$Expression, $Let, $Literal, $MergeObjects, $Meta, $Rand, $SampleRate} from "./";
+import {
+    $CovariancePop,
+    $CovarianceSamp,
+    $Expression,
+    $Let,
+    $Literal,
+    $MergeObjects,
+    $Meta,
+    $Rand,
+    $SampleRate,
+} from './';
 
 
-const expression = 'tot';
+const functionExpression = () => 'test';
 const fieldName = 'name';
 const searchedValue = 'toto';
 const value = 'test';
 const nonNegativeFloat = 1.2;
-const metaDataKeyword = 'test';
+const metaDataKeyword = 'textScore';
 const vars = { var1: 'var1' };
 const documents: any[] = [];
 
@@ -21,7 +31,9 @@ describe('misc operators', () => {
         [$SampleRate(nonNegativeFloat), { $sampleRate: nonNegativeFloat }],
         [$MergeObjects(...documents), { $mergeObjects: documents }],
         [$Meta(metaDataKeyword), { $meta: metaDataKeyword }],
-        [$Let(vars, expression), { $let: { vars, in: expression } }],
+        [$Let(vars, functionExpression), { $let: { vars, in: functionExpression } }],
+        [$CovariancePop(1, 2), { $covariancePop: [1, 2] }],
+        [$CovarianceSamp(2, 1), { $covarianceSamp: [2, 1] }],
     ])('should return %s', (
         operation: any,
         expected: any

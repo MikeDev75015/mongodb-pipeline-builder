@@ -1,4 +1,4 @@
-import {OutStage} from "../../models";
+import { OutStage } from '../../models';
 
 /**
  * Database Payload
@@ -8,13 +8,8 @@ import {OutStage} from "../../models";
  * @param coll The output collection name.
  * @constructor
  */
-export const OutDbCollHelper = (coll: string, db?: string) => {
-    if (db) {
-        return {
-            db,
-            coll
-        } as OutStage;
-    }
-
-    return coll;
-}
+export const OutDbCollHelper = (coll: string, db?: string) => (
+  db ? (
+    { db, coll }
+  ) : coll
+) as OutStage;

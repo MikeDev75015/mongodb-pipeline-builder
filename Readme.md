@@ -84,6 +84,10 @@ All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeE
 
 
 > **Breaking changes** between **v3** and **v4**
+> * Renaming `getPipeline()` with `build()`
+> * Added new stages: ChangeStream, ChangeStreamSplitLargeEvent, Densify, Documents, Fill, ListLocalSessions, ListSampledQueries, ListSearchIndexes, SearchMeta, SetWindowFields and ShardedDataDistribution
+> * Added the possibility to insert stages without validation
+> * Checking for non-duplicable stages
 
 -  **Helpers**
  
@@ -103,7 +107,7 @@ All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeE
 
   > To be used only if no Paging stage is set
   > 
-  > Adding new GetElement method to the response object
+  > Added new GetElement method to the response object
   > 
   > Removing GetDocs method arguments
 
@@ -125,7 +129,7 @@ All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeE
 ```typescript
 const PipelineBuilder = require("mongodb-pipeline-builder").PipelineBuilder;
 const { LookupEqualityHelper, ProjectOnlyHelper, Field } = require('mongodb-pipeline-builder/helpers');
-const { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } = require('mongodb-pipeline-builder/operators');
+const { $LessThanEqual, $ArrayElementAt, $Equal, $Expression } = require('mongodb-pipeline-builder/operators');
 ```
 
 ### Using `import`
@@ -134,7 +138,7 @@ const { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } = require('mongodb-p
 ```typescript
 import { PipelineBuilder } from 'mongodb-pipeline-builder';
 import { LookupEqualityHelper, ProjectOnlyHelper, Field } from 'mongodb-pipeline-builder/helpers';
-import { $LessThanEqual, $ArrayElemAt, $Equal, $Expression } from 'mongodb-pipeline-builder/operators';
+import { $LessThanEqual, $ArrayElementAt, $Equal, $Expression } from 'mongodb-pipeline-builder/operators';
 ```
 
 ---
@@ -180,8 +184,8 @@ const myNewPipeline = new PipelineBuilder( 'user-skills' )
     .Lookup( LookupEqualityHelper( 'profiles', 'profile', 'id', 'profileId' ) )
     .Project( ProjectOnlyHelper( 'firstname', 'lastname', 'email' ) )
     .AddFields(
-        Field( 'skills', $ArrayElemAt( '$profile.skills', 0 ) ),
-        Field( 'availability', $ArrayElemAt( '$profile.availability', 0 ) )
+        Field( 'skills', $ArrayElementAt( '$profile.skills', 0 ) ),
+        Field( 'availability', $ArrayElementAt( '$profile.availability', 0 ) )
     )
     .Unset( 'profile' )
     .build();
@@ -727,7 +731,7 @@ builder.Project(ProjectOnlyHelper('password', 'refreshToken')).build();
 ### [Redact](https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/)(value: RedactStage)
 ```typescript
 builder.Redact(
-  $Cond(
+  $Condition(
     $GreaterThan($Size($SetIntersection('$tags', ['STLW', 'G'])), 0),
     '$$DESCEND',
     '$$PRUNE'
@@ -945,11 +949,1188 @@ builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).build();
 ```
 
 ___
-<div style="text-align: center; width: 100%;">
 
-[=> Aggregation Pipeline Operators <=](https://docs.mongodb.com/manual/reference/operator/aggregation/)
 
-</div>
-<p style="font-size: 15px;">
-$Absolute | $Accumulator | $Acos | $Acosh | $Add | $AddToSet | $AllElementsTrue | $And | $AnyElementTrue | $ArrayElemAt | $ArrayToObject | $Asin | $Asinh | $Atan | $Atan2 | $Atanh | $Avg | $BinarySize | $BsonSize | $Ceil | $Compare | $Concat | $ConcatArrays | $Cond | $Convert | $Cos | $Cosh | $DateFromParts | $DateFromString | $DateToParts | $DateToString | $DayOfMonth | $DayOfWeek | $DayOfYear | $DegreesToRadians | $Divide | $Equal | $Exponent | $Expression | $Filter | $First | $Floor | $FunctionOperator | $GreaterThan | $GreaterThanEqual | $Hour | $IfNull | $In | $IndexOfArray | $IndexOfBytes | $IndexOfCP | $IsArray | $IsNumber | $IsoDayOfWeek | $IsoWeek | $IsoWeekYear | $Last | $LessThan | $LessThanEqual | $Let | $Literal | $Log | $Log10 | $Ltrim | $Map | $Max | $MergeObjects | $Meta | $Millisecond | $Min | $Minute | $Mod | $Month | $Multiply | $NaturalLog | $Not | $NotEqual | $ObjectToArray | $Or | $Pow | $Push | $RadiansToDegrees | $Rand | $Range | $Reduce | $RegexFind | $RegexFindAll | $RegexMatch | $ReplaceAll | $ReplaceOne | $ReverseArray | $Round | $Rtrim | $SampleRate | $Second | $SetDifference | $SetEquals | $SetIntersection | $SetIsSubset | $SetUnion | $Sin | $Sinh | $Size | $Slice | $Split | $Sqrt | $StdDevPop | $StdDevSamp | $StrCaseCmp | $StrLenBytes | $StrLenCP | $Substr | $SubstrBytes | $SubstrCP | $Subtract | $Sum | $Switch | $Tan | $Tanh | $ToBool | $ToDate | $ToDecimal | $ToDouble | $ToInt | $ToLong | $ToLower | $ToObjectId | $ToString | $ToUpper | $Trim | $Trunc | $Type | $Week | $Year | $Zip
-</p>
+# [MONGODB OPERATORS](https://docs.mongodb.com/manual/reference/operator/aggregation/)
+
+#### [$Absolute](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
+```typescript
+$Absolute(-5)
+
+// operator
+{ $abs: -5 }
+```
+#### [$Accumulator](https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/)
+```typescript
+$Accumulator(
+  () => ({ count: 0, sum: 0 }),
+  (state: { count: number; sum: number; }, numCopies: number) => ({
+    count: state.count + 1,
+    sum: state.sum + numCopies,
+  }),
+  ['$copies'],
+  (state1: { count: number; sum: number; }, state2: { count: number; sum: number; }) => ({
+    count: state1.count + state2.count,
+    sum: state1.sum + state2.sum,
+  }),
+  { finalize: (state: { sum: number; count: number; }) => (state.sum / state.count) },
+)
+
+// operator
+{
+  '$accumulator': {
+    init: [ () => ({ count: 0, sum: 0 }) ],
+    accumulate: [
+      (state: { count: number; sum: number; }, numCopies: number) => ({
+        count: state.count + 1,
+        sum: state.sum + numCopies,
+      })
+    ],
+    accumulateArgs: [ '$copies' ],
+    merge: [
+      (state1: { count: number; sum: number; }, state2: { count: number; sum: number; }) => ({
+        count: state1.count + state2.count,
+        sum: state1.sum + state2.sum,
+      })
+    ],
+    finalize: [ (state: { sum: number; count: number; }) => (state.sum / state.count) ],
+    lang: 'js'
+  }
+}
+```
+#### [$ArcCosine](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
+```typescript
+$ArcCosine({ $divide : [ '$side_b', '$hypotenuse' ] })
+
+// operator
+{ '$acos': { '$divide': [ '$side_b', '$hypotenuse' ] } }
+```
+#### [$ArcCosineHyperbolic](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
+```typescript
+$ArcCosineHyperbolic(3)
+
+// operator
+{ '$acosh': 3 }
+```
+#### [$Add](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+```typescript
+$Add('$price', 10)
+
+// operator
+{ '$add': [ '$price', 10 ] }
+```
+#### [$AddToSet](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/)
+```typescript
+$AddToSet('$item')
+
+// operator
+{ '$addToSet': '$item' }
+```
+#### [$AllElementsTrue](https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/)
+```typescript
+$AllElementsTrue([ true, 1, "someString" ])
+
+// operator
+{ '$allElementsTrue': [ [ true, 1, 'someString' ] ] }
+```
+#### [$And](https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/)
+```typescript
+$And(1, 'green')
+
+// operator
+{ '$and': [ 1, 'green' ] }
+```
+#### [$AnyElementTrue](https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/)
+```typescript
+$AnyElementTrue([ true, false ])
+
+// operator
+{ '$anyElementTrue': [ [ true, false ] ] }
+```
+#### [$ArrayElementAt](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+```typescript
+$ArrayElementAt([ 1, 2, 3 ], 0)
+
+// operator
+{ '$arrayElemAt': [ [ 1, 2, 3 ], 0 ] }
+```
+#### [$ArrayToObject](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/)
+```typescript
+$ArrayToObject([ { "k": "item", "v": "abc123" }, { "k": "qty", "v": "$qty" } ])
+
+// operator
+{ '$arrayToObject': [ { k: 'item', v: 'abc123' }, { k: 'qty', v: '$qty' } ] }
+```
+```typescript
+$ArrayToObject([ [ "item", "abc123" ], [ "qty", 25 ] ], true)              
+
+// operator
+{ '$arrayToObject': { '$literal': [ [ 'item', 'abc123' ], [ 'qty', 25 ] ] } }
+```
+#### [$ArcSine](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
+```typescript
+$ArcSine('$value')
+
+// operator
+{ '$asin': '$value' }
+```
+#### [$ArcSineHyperbolic](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
+```typescript
+$ArcSineHyperbolic('$value')
+
+// operator
+{ '$asinh': '$value' }
+```
+#### [$ArcTangent](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
+```typescript
+$ArcTangent('$value')
+
+// operator
+{ '$atan': '$value' }
+```
+#### [$ArcTangent2](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/)
+```typescript
+$ArcTangent2('$side_b', '$side_a')
+
+// operator
+{ '$atan2': [ '$side_b', '$side_a' ] }
+```
+#### [$ArcTangentHyperbolic](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
+```typescript
+$ArcTangentHyperbolic('$value')
+
+// operator
+{ '$atanh': '$value' }
+```
+#### [$Average](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+```typescript
+$Average('$value')
+
+// operator
+{ '$avg': '$value' }
+```
+```typescript
+$Average('$value1', '$value2', '$value3')
+
+// operator
+{ '$avg': [ '$value1', '$value2', '$value3' ] }
+```
+#### [$BinarySize](https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/)
+```typescript
+$BinarySize('Hello World!')
+
+// operator
+{ '$binarySize': 'Hello World!' }
+```
+#### [$BitwiseAnd](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#mongodb-expression-exp.-bitAnd)
+```typescript
+$BitwiseAnd('$array')
+
+// operator
+{ '$bitAnd': '$array' }
+```
+```typescript
+$BitwiseAnd(0, 127, 5)
+
+// operator
+{ '$bitAnd': [ 0, 127, 5 ] }
+```
+#### [$BitwiseNot](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/#mongodb-expression-exp.-bitNot)
+```typescript
+$BitwiseNot('$long')
+
+// operator
+{ '$bitNot': '$long' }
+```
+#### [$BitwiseOr](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#mongodb-expression-exp.-bitOr)
+```typescript
+$BitwiseOr('$array')
+
+// operator
+{ '$bitOr': '$array' }
+```
+```typescript
+$BitwiseOr(0, 127, 5)
+
+// operator
+{ '$bitOr': [ 0, 127, 5 ] }
+```
+#### [$BitwiseXor](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#mongodb-expression-exp.-bitXor)
+```typescript
+$BitwiseXor('$array')
+
+// operator
+{ '$bitXor': '$array' }
+```
+```typescript
+$BitwiseXor(0, 127, 5)
+
+// operator
+{ '$bitXor': [ 0, 127, 5 ] }
+```
+#### [$Bottom](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/#mongodb-group-grp.-bottom)
+```typescript
+$Bottom(['field1', 'field2'], { field2: -1 })
+
+// operator
+{ '$bottom': { output: [ 'field1', 'field2' ], sortBy: { field2: -1 } } }
+```
+#### [$BottomN](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#mongodb-group-grp.-bottomN)
+```typescript
+$BottomN('field', { field: 1 }, 3)
+
+// operator
+{ '$bottomN': { output: 'field', sortBy: { field: 1 }, n: 3 } }
+```
+#### [$BsonSize](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/)
+```typescript
+$BsonSize('$$ROOT')
+
+// operator
+{ '$bsonSize': '$$ROOT' }
+```
+#### [$Ceil](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
+```typescript
+$Ceil('$value')
+
+// operator
+{ '$ceil': '$value' }
+```
+#### [$Compare](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/)
+```typescript
+$Compare('$age', 25)
+
+// operator
+{ '$cmp': [ '$age', 25 ] }
+```
+#### [$Concat](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+```typescript
+$Concat('$first', ' - ', '$second')
+
+// operator
+{ '$concat': [ '$first', ' - ', '$second' ] }
+```
+#### [$ConcatArrays](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/)
+```typescript
+$ConcatArrays('$array', [1, 2, 3])
+
+// operator
+{ '$concatArrays': [ '$array', [ 1, 2, 3 ] ] }
+```
+#### [$Condition](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+```typescript
+$Condition({ $gte: [ '$quantity', 250 ] }, 'true', 'false')
+
+// operator
+{ '$cond': [ { '$gte': [ '$quantity', 250 ] }, 'true', 'false' ] }
+```
+#### [$Convert](https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/)
+```typescript
+$Convert(100, 'bool')
+
+// operator
+{ '$convert': { input: 100, to: 'bool' } }
+```
+#### [$Cosine](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
+```typescript
+$Cosine('$angle')
+
+// operator
+{ '$cos': '$angle' }
+```
+#### [$CosineHyperbolic](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
+```typescript
+$CosineHyperbolic({ $degreesToRadians : "$angle" })
+
+// operator
+{ '$cosh': { '$degreesToRadians': '$angle' } }
+```
+#### [$Count](https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/)
+```typescript
+$Count()
+
+// operator
+{ '$count': {} }
+```
+#### [$CovariancePopulation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/)
+```typescript
+$CovariancePopulation('$numeric1', '$numeric2')
+
+// operator
+{ '$covariancePopulation': [ '$numeric1', '$numeric2' ] }
+```
+#### [$CovarianceSample](https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/)
+```typescript
+$CovarianceSample('$numeric1', '$numeric2')
+
+// operator
+{ '$covarianceSample': [ '$numeric1', '$numeric2' ] }
+```
+#### [$DateAdd](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/)
+```typescript
+$DateAdd('$startDate', 'hour', 2)
+
+// operator
+{ '$dateAdd': { startDate: '$startDate', unit: 'hour', amount: 2 } }
+```
+#### [$DateDifference](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/)
+```typescript
+$DateDifference('$startDate', '$endDate', 'second')
+
+// operator
+{ '$dateDiff': { startDate: '$startDate', endDate: '$endDate', unit: 'second' } }
+```
+#### [$DateFromParts](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/)
+```typescript
+$DateFromCalendarParts(2000, { month: 12, day: 31, hour: 12, minute: 25, second: 59, timezone: '+01:00' })
+
+// operator
+{
+  '$dateFromParts': {
+    year: 2000,
+    month: 12,
+    day: 31,
+    hour: 12,
+    minute: 25,
+    second: 59,
+    timezone: '+01:00'
+  }
+}
+```
+```typescript
+$DateFromIsoWeekParts(2000, { isoWeek: 53, isoDayOfWeek: 7, millisecond: 500 })
+
+// operator
+{ '$dateFromParts': { isoWeekYear: 2000, isoWeek: 53, isoDayOfWeek: 7, millisecond: 500 } }
+```
+#### [$DateFromString](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/)
+```typescript
+$DateFromString('2017-02-08T12:10:40.787', { timezone: 'America/New_York' })
+
+// operator
+{
+  '$dateFromString': {
+    dateString: '2017-02-08T12:10:40.787',
+    timezone: 'America/New_York'
+  }
+}
+```
+#### [$DateSubtract](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/)
+```typescript
+$DateSubtract(1697382106124, 'month', 1)
+
+// operator
+{ '$dateSubtract': { startDate: 1697382106124, unit: 'month', amount: 1 } }
+```
+#### [$DateToParts](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/)
+```typescript
+$DateToParts(1697382106124)
+
+// operator
+{ '$dateToParts': { date: 1697382106124 } }
+```
+#### [$DateToString](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/)
+```typescript
+$DateToString(1697382106124)
+
+// operator
+{ '$dateToString': { date: 1697382106124 } }
+```
+#### [$DateTrunc](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/)
+```typescript
+$DateTrunc(1697382106124, 'month')
+
+// operator
+{ '$dateTrunc': { date: 1697382106124, unit: 'month' } }
+```
+#### [$DayOfMonth](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/)
+```typescript
+$DayOfMonth('$date', 'Europe/Paris')
+
+// operator
+{ '$dayOfMonth': { date: '$date', timezone: 'Europe/Paris' } }
+```
+#### [$DayOfWeek](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+```typescript
+$DayOfWeek('$date', '+03:30')
+
+// operator
+{ '$dayOfWeek': { date: '$date', timezone: '+03:30' } }
+```
+#### [$DayOfYear](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/)
+```typescript
+$DayOfYear('$date')
+
+// operator
+{ '$dayOfYear': { date: '$date' } }
+```
+#### [$DegreesToRadians](https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/)
+```typescript
+$DegreesToRadians('$angle_a')
+
+// operator
+{ '$degreesToRadians': '$angle_a' }
+```
+#### $DenseRank
+```typescript
+
+
+// operator
+
+```
+#### $Derivative
+```typescript
+
+
+// operator
+
+```
+#### $Divide
+```typescript
+
+
+// operator
+
+```
+#### $DocumentNumber
+```typescript
+
+
+// operator
+
+```
+#### $Equal
+```typescript
+
+
+// operator
+
+```
+#### $Exponent
+```typescript
+
+
+// operator
+
+```
+#### $ExponentialMovingAverage
+```typescript
+
+
+// operator
+
+```
+#### $Filter
+```typescript
+
+
+// operator
+
+```
+#### $First
+```typescript
+
+
+// operator
+
+```
+#### $FirstN
+```typescript
+
+
+// operator
+
+```
+```typescript
+
+
+// operator
+
+```
+#### $Floor
+```typescript
+
+
+// operator
+
+```
+#### $Function
+```typescript
+
+
+// operator
+
+```
+#### $GetField
+```typescript
+
+
+// operator
+
+```
+#### $GreaterThan
+```typescript
+
+
+// operator
+
+```
+#### $GreaterThanEqual
+```typescript
+
+
+// operator
+
+```
+#### $Hour
+```typescript
+
+
+// operator
+
+```
+#### $IfNull
+```typescript
+
+
+// operator
+
+```
+#### $In
+```typescript
+
+
+// operator
+
+```
+#### $IndexOfArray
+```typescript
+
+
+// operator
+
+```
+#### $IndexOfBytes
+```typescript
+
+
+// operator
+
+```
+#### $IndexOfCodePoint
+```typescript
+
+
+// operator
+
+```
+#### $Integral
+```typescript
+
+
+// operator
+
+```
+#### $IsArray
+```typescript
+
+
+// operator
+
+```
+#### $IsNumber
+```typescript
+
+
+// operator
+
+```
+#### $IsoDayOfWeek
+```typescript
+
+
+// operator
+
+```
+#### $IsoWeek
+```typescript
+
+
+// operator
+
+```
+#### $IsoWeekYear
+```typescript
+
+
+// operator
+
+```
+#### $Last
+```typescript
+
+
+// operator
+
+```
+#### $LastN
+```typescript
+
+
+// operator
+
+```
+```typescript
+
+
+// operator
+
+```
+#### $LessThan
+```typescript
+
+
+// operator
+
+```
+#### $LessThanEqual
+```typescript
+
+
+// operator
+
+```
+#### $Let
+```typescript
+
+
+// operator
+
+```
+#### $Literal
+```typescript
+
+
+// operator
+
+```
+#### $Log
+```typescript
+
+
+// operator
+
+```
+#### $Log10
+```typescript
+
+
+// operator
+
+```
+#### $Ltrim
+```typescript
+
+
+// operator
+
+```
+#### $Map
+```typescript
+
+
+// operator
+
+```
+#### $Max
+```typescript
+
+
+// operator
+
+```
+#### $MergeObjects
+```typescript
+
+
+// operator
+
+```
+#### $Meta
+```typescript
+
+
+// operator
+
+```
+#### $Millisecond
+```typescript
+
+
+// operator
+
+```
+#### $Min
+```typescript
+
+
+// operator
+
+```
+#### $Minute
+```typescript
+
+
+// operator
+
+```
+#### $Mod
+```typescript
+
+
+// operator
+
+```
+#### $Month
+```typescript
+
+
+// operator
+
+```
+#### $Multiply
+```typescript
+
+
+// operator
+
+```
+#### $NaturalLog
+```typescript
+
+
+// operator
+
+```
+#### $Not
+```typescript
+
+
+// operator
+
+```
+#### $NotEqual
+```typescript
+
+
+// operator
+
+```
+#### $ObjectToArray
+```typescript
+
+
+// operator
+
+```
+#### $Or
+```typescript
+
+
+// operator
+
+```
+#### $Pow
+```typescript
+
+
+// operator
+
+```
+#### $Push
+```typescript
+
+
+// operator
+
+```
+#### $RadiansToDegrees
+```typescript
+
+
+// operator
+
+```
+#### $Rand
+```typescript
+
+
+// operator
+
+```
+#### $Range
+```typescript
+
+
+// operator
+
+```
+#### $Reduce
+```typescript
+
+
+// operator
+
+```
+#### $RegexFind
+```typescript
+
+
+// operator
+
+```
+#### $RegexFindAll
+```typescript
+
+
+// operator
+
+```
+#### $RegexMatch
+```typescript
+
+
+// operator
+
+```
+#### $ReplaceAll
+```typescript
+
+
+// operator
+
+```
+#### $ReplaceOne
+```typescript
+
+
+// operator
+
+```
+#### $ReverseArray
+```typescript
+
+
+// operator
+
+```
+#### $Round
+```typescript
+
+
+// operator
+
+```
+#### $Rtrim
+```typescript
+
+
+// operator
+
+```
+#### $SampleRate
+```typescript
+
+
+// operator
+
+```
+#### $Second
+```typescript
+
+
+// operator
+
+```
+#### $SetDifference
+```typescript
+
+
+// operator
+
+```
+#### $SetEquals
+```typescript
+
+
+// operator
+
+```
+#### $SetIntersection
+```typescript
+
+
+// operator
+
+```
+#### $SetIsSubset
+```typescript
+
+
+// operator
+
+```
+#### $SetUnion
+```typescript
+
+
+// operator
+
+```
+#### $Sin
+```typescript
+
+
+// operator
+
+```
+#### $Sinh
+```typescript
+
+
+// operator
+
+```
+#### $Size
+```typescript
+
+
+// operator
+
+```
+#### $Slice
+```typescript
+
+
+// operator
+
+```
+#### $Split
+```typescript
+
+
+// operator
+
+```
+#### $Sqrt
+```typescript
+
+
+// operator
+
+```
+#### $StdDevPop
+```typescript
+
+
+// operator
+
+```
+#### $StdDevSamp
+```typescript
+
+
+// operator
+
+```
+#### $StrCaseCmp
+```typescript
+
+
+// operator
+
+```
+#### $StrLenBytes
+```typescript
+
+
+// operator
+
+```
+#### $StrLenCP
+```typescript
+
+
+// operator
+
+```
+#### $Substr
+```typescript
+
+
+// operator
+
+```
+#### $SubstrBytes
+```typescript
+
+
+// operator
+
+```
+#### $SubstrCP
+```typescript
+
+
+// operator
+
+```
+#### $Subtract
+```typescript
+
+
+// operator
+
+```
+#### $Sum
+```typescript
+
+
+// operator
+
+```
+#### $Switch
+```typescript
+
+
+// operator
+
+```
+#### $Tan
+```typescript
+
+
+// operator
+
+```
+#### $Tanh
+```typescript
+
+
+// operator
+
+```
+#### $ToBool
+```typescript
+
+
+// operator
+
+```
+#### $ToDate
+```typescript
+
+
+// operator
+
+```
+#### $ToDecimal
+```typescript
+
+
+// operator
+
+```
+#### $ToDouble
+```typescript
+
+
+// operator
+
+```
+#### $ToInt
+```typescript
+
+
+// operator
+
+```
+#### $ToLong
+```typescript
+
+
+// operator
+
+```
+#### $ToLower
+```typescript
+
+
+// operator
+
+```
+#### $ToObjectId
+```typescript
+
+
+// operator
+
+```
+#### $ToString
+```typescript
+
+
+// operator
+
+```
+#### $ToUpper
+```typescript
+
+
+// operator
+
+```
+#### $Trim
+```typescript
+
+
+// operator
+
+```
+#### $Trunc
+```typescript
+
+
+// operator
+
+```
+#### $Type
+```typescript
+
+
+// operator
+
+```
+#### $Week
+```typescript
+
+
+// operator
+
+```
+#### $Year
+```typescript
+
+
+// operator
+
+```
+#### $Zip
+```typescript
+
+
+// operator
+
+```
+
+

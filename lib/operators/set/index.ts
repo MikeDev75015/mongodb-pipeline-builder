@@ -6,20 +6,22 @@
 // If a set contains a nested array element, the set expression does not descend into the nested array but evaluates
 // the array at top-level.
 
+import { ArrayExpression } from '../../models/core/expression';
+
 /**
  * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument
  * expression.
- * @param array
  * @constructor
+ * @param array
  */
-export const $AllElementsTrue = (array: any) => ({ $allElementsTrue: [array ] });
+export const $AllElementsTrue = (array: ArrayExpression) => ({ $allElementsTrue: [array] });
 /**
  * Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument
  * expression.
  * @param array
  * @constructor
  */
-export const $AnyElementTrue = (array: any) => ({ $anyElementTrue: [array ] });
+export const $AnyElementTrue = (array: ArrayExpression) => ({ $anyElementTrue: [array] });
 /**
  * Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative
  * complement of the second set relative to the first. Accepts exactly two argument expressions.
@@ -27,19 +29,19 @@ export const $AnyElementTrue = (array: any) => ({ $anyElementTrue: [array ] });
  * @param array2
  * @constructor
  */
-export const $SetDifference = (array1: any, array2: any) => ({ $setDifference: [array1, array2 ] });
+export const $SetDifference = (array1: ArrayExpression, array2: ArrayExpression) => ({ $setDifference: [array1, array2] });
 /**
  * Returns true if the input sets have the same distinct elements. Accepts two or more argument expressions.
  * @param arrayOfArrays
  * @constructor
  */
-export const $SetEquals = (...arrayOfArrays: any) => ({ $setEquals: arrayOfArrays });
+export const $SetEquals = (...arrayOfArrays: ArrayExpression[]) => ({ $setEquals: arrayOfArrays });
 /**
  * Returns a set with elements that appear in all of the input sets. Accepts any number of argument expressions.
  * @param arrayOfArrays
  * @constructor
  */
-export const $SetIntersection = (...arrayOfArrays: any) => ({ $setIntersection: arrayOfArrays });
+export const $SetIntersection = (...arrayOfArrays: ArrayExpression[]) => ({ $setIntersection: arrayOfArrays });
 /**
  * Returns true if all elements of the first set appear in the second set, including when the first set equals the
  * second set; i.e. not a strict subset. Accepts exactly two argument expressions.
@@ -47,10 +49,10 @@ export const $SetIntersection = (...arrayOfArrays: any) => ({ $setIntersection: 
  * @param array2
  * @constructor
  */
-export const $SetIsSubset = (array1: any, array2: any) => ({ $setIsSubset: [array1, array2 ] });
+export const $SetIsSubset = (array1: ArrayExpression, array2: ArrayExpression) => ({ $setIsSubset: [array1, array2] });
 /**
  * Returns a set with elements that appear in any of the input sets.
  * @param arrayOfArrays
  * @constructor
  */
-export const $SetUnion = (...arrayOfArrays: any) => ({ $setUnion: arrayOfArrays });
+export const $SetUnion = (...arrayOfArrays: ArrayExpression[]) => ({ $setUnion: arrayOfArrays });

@@ -4,11 +4,17 @@
  * @constructor
  */
 export const ProjectOnlyHelper = (...properties: string[]) => {
-    const projectOnlyObject: {[index: string]: any} = properties.includes('_id') ? {} : { _id: 0 };
-    properties.forEach(prop => {
-        if (prop !== '_id') {
-            projectOnlyObject[prop] = 1;
-        }
-    });
-    return projectOnlyObject;
-}
+  return properties.reduce(
+    (acc, prop) => {
+      if (prop !== '_id') {
+        acc[prop] = 1;
+      }
+      return acc;
+    },
+    {
+      ...(
+        properties.includes('_id') ? {} : { _id: 0 }
+      ),
+    } as { [index: string]: any },
+  );
+};

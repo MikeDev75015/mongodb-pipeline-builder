@@ -1,4 +1,8 @@
 /*
+ GLOBAL HELPERS
+ */
+export * from './utils/utils';
+/*
  CUSTOMS HELPERS
  */
 export { Field } from './customs/field.helper';

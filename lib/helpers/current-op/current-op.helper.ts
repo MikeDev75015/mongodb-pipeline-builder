@@ -1,4 +1,4 @@
-import {CurrentOpStage} from "../../models";
+import { CurrentOpStage } from '../../models';
 
 /**
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions
@@ -13,33 +13,14 @@ import {CurrentOpStage} from "../../models";
  * $currentOp also enables you to perform arbitrary transformations of the results as the documents pass through the
  * pipeline.
  * @constructor
- * @param parameters Optional. If you do not specify any parameters, CurrentOp will use the default values.
+ * @param optional Optional. If you do not specify any parameters, CurrentOp will use the default values.
  * All default to false, except idleSessions, which defaults to true.
  */
-export const CurrentOpHelper = (parameters?: {
-    allUsers?: boolean;
-    idleConnections?: boolean;
-    idleCursors?: boolean;
-    idleSessions?: boolean;
-    localOps?: boolean;
-    backtrace?: boolean;
-}) => ({
-    allUsers: parameters?.allUsers !== undefined
-        ? parameters.allUsers
-        : false,
-    idleConnections: parameters?.idleConnections !== undefined
-        ? parameters.idleConnections
-        : false,
-    idleCursors: parameters?.idleCursors !== undefined
-        ? parameters.idleCursors
-        : false,
-    idleSessions: parameters?.idleSessions !== undefined
-        ? parameters.idleSessions
-        : true,
-    localOps: parameters?.localOps !== undefined
-        ? parameters.localOps
-        : false,
-    backtrace: parameters?.backtrace !== undefined
-        ? parameters.backtrace
-        : false
-}) as CurrentOpStage;
+export const CurrentOpHelper = (optional: {
+  allUsers?: boolean;
+  idleConnections?: boolean;
+  idleCursors?: boolean;
+  idleSessions?: boolean;
+  localOps?: boolean;
+  backtrace?: boolean;
+} = {}) => optional as CurrentOpStage;

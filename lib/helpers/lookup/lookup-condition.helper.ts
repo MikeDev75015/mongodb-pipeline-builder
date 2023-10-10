@@ -1,6 +1,5 @@
-import {
-    LookupCondition, PipeLineStage
-} from "../../models";
+import { LookupCondition, PipeLineStage } from '../../models';
+import { isNotEmptyObject } from '../utils/utils';
 
 /**
  * Join Conditions and Uncorrelated Sub-queries
@@ -20,40 +19,28 @@ import {
  * OPTIONAL sourceList
  */
 export const LookupConditionHelper = (
-    from: string, as: string,
-    optional?: {
-        project?: {[index: string]: any},
-        pipeline?: PipeLineStage[],
-        sourceList?: string[]
-    }
+  from: string, as: string,
+  optional: {
+    project?: { [index: string]: any },
+    pipeline?: PipeLineStage[],
+    sourceList?: string[]
+  } = {},
 ) => {
-    const letObject: {[index: string]: any} = {};
-    let pipeline: PipeLineStage[] = [];
+  const pipeline: PipeLineStage[] = [
+    ...(optional.pipeline ?? []),
+    ...(optional.project ? [{ $project: optional.project }] : []),
+  ];
 
-    if (optional?.pipeline) {
-        pipeline = optional.pipeline;
-    }
+  const letObject: { [index: string]: any } = {
+    ...optional.sourceList?.reduce((acc, source) => ({ ...acc, [source]: '$' + source }), {}),
+  };
 
-    if (optional?.sourceList && optional.sourceList[0]) {
-        optional.sourceList.forEach(s => letObject[s] = '$' + s);
-    }
+  const payload: LookupCondition = {
+    from,
+    as,
+    ...(isNotEmptyObject(letObject) ? { let: letObject } : {}),
+    ...(pipeline.length ? { pipeline } : {}),
+  };
 
-    if (optional?.project && Object.keys(optional.project).length) {
-        pipeline = pipeline.concat([{ $project: optional.project }]);
-    }
-
-    const payload: LookupCondition = {
-        from,
-        as,
-    };
-
-    if (Object.keys(letObject).length) {
-        payload.let = letObject;
-    }
-
-    if (pipeline.length) {
-        payload.pipeline = pipeline;
-    }
-
-    return payload;
+  return payload;
 };

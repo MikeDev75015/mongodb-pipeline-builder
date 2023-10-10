@@ -1,7 +1,5 @@
-import { PipelineError } from "../../errors";
-import {
-    LookupEquality
-} from "../../models";
+import { PipelineError } from '../../errors';
+import { LookupEquality } from '../../models';
 
 /**
  * Equality Match
@@ -14,14 +12,15 @@ import {
  * @param foreignField
  */
 export const LookupEqualityHelper = (from: string, as: string, localField: string, foreignField: string) => {
-    if (!localField || !foreignField) {
-        throw new PipelineError('Invalid Lookup Equality Payload, invalid or missing "localField" or "foreignField" parameter!');
-    }
+  if (!localField || !foreignField) {
+    throw new PipelineError(
+      'Invalid Lookup Equality Payload, invalid or missing "localField" or "foreignField" parameter!');
+  }
 
-    return {
-        from,
-        localField,
-        foreignField,
-        as
-    } as LookupEquality;
+  return {
+    from,
+    localField,
+    foreignField,
+    as,
+  } as LookupEquality;
 };

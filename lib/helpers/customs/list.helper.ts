@@ -3,4 +3,4 @@
  * @param args
  * @constructor
  */
-export const List = (...args: any[]) => args;
+export const List = (...args: unknown[]) => args;

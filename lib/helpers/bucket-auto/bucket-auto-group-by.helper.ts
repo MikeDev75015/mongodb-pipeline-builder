@@ -29,17 +29,12 @@ import { GranularityValues } from '../../models/stages/bucket-auto-stage';
 export const BucketAutoGroupByHelper = (
   groupBy: any,
   buckets: number,
-  optional?: { output?: any; granularity?: GranularityValues },
+  optional: { output?: any; granularity?: GranularityValues } = {},
 ) => {
   return {
     groupBy,
     buckets,
-    ...(
-      optional?.output ? { output: optional.output } : { output: { 'count': { $sum: 1 } } }
-    ),
-    ...(
-      optional?.granularity ? { granularity: optional.granularity } : {}
-    ),
-
+    output: { 'count': { $sum: 1 } },
+    ...optional,
   } as BucketAutoStage;
 };

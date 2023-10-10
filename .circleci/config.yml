@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.3
+  sonarcloud: sonarsource/sonarcloud@2.0.0
   slack: circleci/slack@4.3.0
   jq: circleci/jq@2.2.0
 
@@ -492,25 +492,3 @@ workflows:
               only: /^v\d+\.\d+\.\d+\-\d+$/
             branches:
               ignore: /.*/
-
-
-  test-workflow:
-    when:
-      not: << pipeline.git.tag >>
-    jobs:
-      - approval-test:
-          type: approval
-          filters:
-            branches:
-              only:
-                - test
-      - clean-repository:
-          name: clean-origin-test
-          branch: test
-          context: GIT
-          requires:
-            - approval-test
-          filters:
-            branches:
-              only:
-                - test

@@ -1,6 +1,8 @@
 // Data $Size Operators
 // The following operators return the size of a data element:
 
+import { ObjectExpression } from '../../models/core/expression';
+
 /**
  * Returns the size of a given string or binary data value’s content in bytes.
  *
@@ -16,7 +18,9 @@
  * @param stringOrBinaryData can be any valid expression as long as it resolves to either a string or binary data value.
  * @constructor
  */
-export const $BinarySize = (stringOrBinaryData: any) => ({ $binarySize: stringOrBinaryData });
+export const $BinarySize = (stringOrBinaryData: any) => (
+  { $binarySize: stringOrBinaryData }
+);
 /**
  * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON. You can use $bsonSize as
  * an alternative to the Object.bsonSize() method.
@@ -29,4 +33,6 @@ export const $BinarySize = (stringOrBinaryData: any) => ({ $binarySize: stringOr
  * @param object
  * @constructor
  */
-export const $BsonSize = (object: any) => ({ $bsonSize: object });
+export const $BsonSize = (object: ObjectExpression) => (
+  { $bsonSize: object }
+);
