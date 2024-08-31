@@ -116,7 +116,7 @@ export class PipelineBuilder {
    * Returns the pipeline name
    * @returns {string}
    */
-  get name() {
+  get name(): string {
     return this.pipelineName;
   }
 
@@ -127,7 +127,7 @@ export class PipelineBuilder {
    * @param {PipeLineStage} stage
    * @returns {this}
    */
-  public readonly insertStage = (stage: { [key: string]: any }) => {
+  public readonly insertStage = (stage: { [key: string]: any }): this => {
     this.saveActionToDebugHistoryList('insertStage', stage);
 
     const stageError = this.isValidStage(stage);
@@ -170,7 +170,7 @@ export class PipelineBuilder {
    * Starts debug mode
    * @returns {this}
    */
-  public readonly startDebug = () => {
+  public readonly startDebug = (): this => {
     this.toggleDebug(true);
     return this;
   };
@@ -179,7 +179,7 @@ export class PipelineBuilder {
    * Stops debug mode
    * @returns {this}
    */
-  public readonly stopDebug = () => {
+  public readonly stopDebug = (): this => {
     this.toggleDebug(false);
     return this;
   };
@@ -205,7 +205,7 @@ export class PipelineBuilder {
    * @returns {this}
    * @constructor
    */
-  public readonly Paging = (elementsPerPage: number, page = 1): this => {
+  public readonly Paging = (elementsPerPage: number, page: number = 1): this => {
     this.saveActionToDebugHistoryList('Paging', { elementsPerPage, page });
 
     if (this.pagingStages.length) {
@@ -884,7 +884,7 @@ export class PipelineBuilder {
    * @param stageValue
    * @returns {this}
    */
-  private readonly addStage = (stageType: keyof PipeLineStage, stageValue: any) => {
+  private readonly addStage = (stageType: keyof PipeLineStage, stageValue: any): this => {
     this.saveActionToDebugHistoryList('addStage', { stageType, stageValue });
 
     const stageToAdd: PipeLineStage = { [stageType]: stageValue };

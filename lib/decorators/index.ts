@@ -1,1 +1,1 @@
-export {IsValidName} from "./is-valid-name/is-valid-name";
+export { IsValidName } from './is-valid-name/is-valid-name.decorator';

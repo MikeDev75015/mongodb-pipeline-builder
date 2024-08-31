@@ -20,7 +20,7 @@ const input = '';
 const chars = 'e';
 const find = 'test';
 const replacement = 'unit';
-const delimiter = 6;
+const delimiter = '6';
 const stringLength = 8;
 const byteIndex = 4;
 const byteCount = 45;
@@ -34,15 +34,15 @@ const regex = / /g;
 describe('string operators', () => {
     test.each([
     [$Concat(...expressions), { $concat: expressions }],
-    [$IndexOfBytes(stringExpression, substringExpression, startIndex, endIndex), { $indexOfBytes: [stringExpression, substringExpression, startIndex, endIndex ] }],
-    [$IndexOfCP(stringExpression, substringExpression, startIndex, endIndex), { $indexOfCP: [stringExpression, substringExpression, startIndex, endIndex ] }],
-    [$Ltrim(input, chars), { $ltrim: { input,  chars } }],
+    [$IndexOfBytes(stringExpression, substringExpression, { startIndex, endIndex }), { $indexOfBytes: [stringExpression, substringExpression, startIndex, endIndex ] }],
+    [$IndexOfCP(stringExpression, substringExpression, { startIndex, endIndex }), { $indexOfCP: [stringExpression, substringExpression, startIndex, endIndex ] }],
+    [$Ltrim(input, { chars }), { $ltrim: { input,  chars } }],
     [$RegexFind(input, regex), { $regexFind: { input , regex } }],
     [$RegexFindAll(input, regex), { $regexFindAll: { input , regex } }],
     [$RegexMatch(input, regex), { $regexMatch: { input, regex } }],
     [$ReplaceOne(input, find, replacement), { $replaceOne: { input, find, replacement } }],
     [$ReplaceAll(input, find, replacement), { $replaceAll: { input, find, replacement } }],
-    [$Rtrim(input, chars), { $rtrim: { input,  chars } }],
+    [$Rtrim(input, { chars }), { $rtrim: { input,  chars } }],
     [$Split(stringExpression, delimiter), { $split: [stringExpression, delimiter ] }],
     [$StrLenBytes(stringExpression), { $strLenBytes: stringExpression }],
     [$StrLenCP(stringExpression), { $strLenCP: stringExpression }],
@@ -52,7 +52,7 @@ describe('string operators', () => {
     [$SubstrCP(stringExpression, codePointIndex, codePointCount), { $substrCP: [stringExpression, codePointIndex, codePointCount ] }],
     [$ToLower(expression), { $toLower: expression }],
     [$ToString(expression), { $toString: expression }],
-    [$Trim(input, chars), { $trim: { input,  chars } }],
+    [$Trim(input, { chars }), { $trim: { input,  chars } }],
     [$ToUpper(expression), { $toUpper: expression }],
     ])('should %s', (
         operation: any,

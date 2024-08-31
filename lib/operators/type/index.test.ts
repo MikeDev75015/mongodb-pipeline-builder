@@ -9,7 +9,7 @@ const expression = '';
 
 describe('type operators', () => {
     test.each([
-        [$Convert(input, to, onError, onNull), { $convert: {input, to, onError, onNull} }],
+        [$Convert(input, to, { onError, onNull }), { $convert: {input, to, onError, onNull} }],
         [$IsNumber(expression), { $isNumber: expression }],
         [$ToBool(expression), { $toBool: expression }],
         [$ToDecimal(expression), { $toDecimal: expression }],

@@ -22,34 +22,42 @@
  * - A single $accumulator operation exceeds its specified memory limit. If you specify the allowDiskUse option, the
  * operator stores the in-progress operation on disk and finishes the operation in memory. Once the operation finishes,
  * the results from disk and memory are merged together using the merge function.
- * @param initCode is a function used to initialize the state. The init function receives its arguments from the
+ * @param init is a function used to initialize the state. The init function receives its arguments from the
  * initArgs array expression. You can specify the function definition as either BSON type Code or String.
- * @param initArgs Optional. Arguments passed to the init function.
- * @param accumulateCode is a function used to accumulate documents. The accumulate function receives its arguments from
+ * @param accumulate is a function used to accumulate documents. The accumulate function receives its arguments from
  * the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state.
  * You can specify the function definition as either BSON type Code or String.
  * @param accumulateArgs are Arguments passed to the accumulate function. You can use accumulateArgs to specify what
  * field value(s) to pass to the accumulate function.
- * @param mergeCode is a Function used to merge two internal states. merge must be either a String or Code BSON type.
+ * @param merge is a Function used to merge two internal states. merge must be either a String or Code BSON type.
  * merge returns the combined result of the two merged states. For information on when the merge function is called,
  * see Merge Two States with $merge.
- * @param finalizeCode Optional. Function used to update the result of the accumulation.
- * @param langCode is the language used in the $accumulator code. Currently, the only supported value for lang is js.
+ * @param optional contains non required parameters, initArgs, finalize and lang. Default lang is js.
  * @constructor
  */
-export const $Accumulator = (
-    initCode: any, accumulateCode: any, accumulateArgs: any, mergeCode: any, finalizeCode: any, initArgs = [], langCode = 'js'
-) => ({
+export const $Accumulator = <State, FinalState, Arg = any>(
+  init: (...initArgs: Arg[]) => State,
+  accumulate: (state: State, ...accumulateArgs: Arg[]) => State,
+  accumulateArgs: Arg[],
+  merge: (state1: State, state2: State) => State,
+  optional: { finalize?: (state: State) => FinalState, initArgs?: Arg[], lang?: string } = {},
+) => (
+  {
     $accumulator: {
-        init: initCode,
-        initArgs,        // Optional
-        accumulate: accumulateCode,
-        accumulateArgs,
-        merge: mergeCode,
-        finalize: finalizeCode,                    // Optional
-        lang: langCode
-    }
-});
+      init,
+      ...(
+        optional.initArgs ? { initArgs: optional.initArgs } : {}
+      ),
+      accumulate,
+      accumulateArgs,
+      merge,
+      ...(
+        optional.finalize ? { finalize: optional.finalize } : {}
+      ),
+      lang: optional.lang ?? 'js',
+    },
+  }
+);
 
 /**
  * Defines a custom aggregation function or expression in JavaScript.
@@ -67,10 +75,12 @@ export const $Accumulator = (
  * @param langCode
  * @constructor
  */
-export const $FunctionOperator = (bodyCode: any, array: any, langCode = 'js') => ({
+export const $FunctionOperator = (bodyCode: any, array: any, langCode = 'js') => (
+  {
     $function: {
-        body: bodyCode,
-        args: array,
-        lang: langCode
-    }
-});
+      body: bodyCode,
+      args: array,
+      lang: langCode,
+    },
+  }
+);

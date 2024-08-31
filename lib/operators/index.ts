@@ -12,3 +12,4 @@ export * from './trigonometry';
 export * from './arithmetic';
 export * from './data-size';
 export * from './conditional';
+export * from './bitwise';

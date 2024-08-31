@@ -4,7 +4,11 @@
  * @constructor
  */
 export const ProjectIgnoreHelper = (...properties: string[]) => {
-    const projectIgnoreObject: {[index: string]: any} = {};
-    properties.forEach(prop => projectIgnoreObject[prop] = 0);
-    return projectIgnoreObject;
-}
+  return properties.reduce(
+    (acc, prop) => {
+      acc[prop] = 0;
+      return acc;
+    },
+    {} as { [index: string]: any },
+  );
+};

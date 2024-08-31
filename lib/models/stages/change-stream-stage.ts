@@ -5,19 +5,23 @@ export type ChangeStreamStage = {
    */
   allChangesForCluster?: boolean;
   /**
-   * Optional: Specifies whether change notifications include a copy of the full document when modified by update operations.
+   * Optional: Specifies whether change notifications include a copy of the full document when modified by update
+   * operations.
    *
    * default: Change notifications do not include the full document for update operations.
    *
-   * required: Change notifications includes a copy of the modified document as it appeared immediately after the change. If the document cannot be found, the change stream throws an error.
+   * required: Change notifications includes a copy of the modified document as it appeared immediately after the
+   * change. If the document cannot be found, the change stream throws an error.
    *
    * To use this option, you must first use the collMod command to enable the changeStreamPreAndPostImages option.
    *
    * New in version 6.0.
    *
-   * updateLookup: Change notifications includes a copy of the document modified by the change. This document is the current majority-committed document or null if it no longer exists.
+   * updateLookup: Change notifications includes a copy of the document modified by the change. This document is the
+   * current majority-committed document or null if it no longer exists.
    *
-   * whenAvailable: Change notification includes a copy of the modified document as it appeared immediately after the change or null if the document is unavailable.
+   * whenAvailable: Change notification includes a copy of the modified document as it appeared immediately after the
+   * change or null if the document is unavailable.
    *
    * To use this option, you must first use the collMod command to enable the changeStreamPreAndPostImages option.
    *
@@ -31,7 +35,8 @@ export type ChangeStreamStage = {
    *
    * off: Disables inclusion of the document from before the change.
    *
-   * whenAvailable: Includes document from before the change. The query does not fail if the unmodified document is not available.
+   * whenAvailable: Includes document from before the change. The query does not fail if the unmodified document is not
+   * available.
    *
    * required: Includes document from before the change. The query fails if the unmodified document is not available.
    */
@@ -53,7 +58,8 @@ export type ChangeStreamStage = {
    */
   startAfter?: any;
   /**
-   * Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
+   * Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or
+   * startAfter fields.
    */
   startAtOperationTime?: Date | number;
 };

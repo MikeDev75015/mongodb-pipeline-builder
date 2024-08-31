@@ -1,6 +1,5 @@
-
 /*
-CORE INTERFACES
+ CORE INTERFACES
  */
 export { DebuggedAction } from './core/debugged-action';
 export { GetResultResponse } from './core/get-result.response';
@@ -11,12 +10,15 @@ export { PipelineStageError } from './core/pipeline-stage-error';
 export { StageValidator } from './core/stage-validator';
 export { StageValidatorsBundle } from './core/stage-validators-bundle';
 export { ValidPipelineStageNameList } from './core/pipeline-stage';
-
+export { Expression } from './core/expression';
+export { FilePath } from './core/file-path';
+export { SystemVariable } from './core/pipeline-system-variables';
+export { PipelineOperator, OperatorExpression } from './core/pipeline-operator';
 /*
-STAGE INTERFACES
+ STAGE INTERFACES
  */
 export { BucketAutoStage } from './stages/bucket-auto-stage';
-export { BucketStage } from "./stages/bucket-stage";
+export { BucketStage } from './stages/bucket-stage';
 export { CollStatsStage } from './stages/coll-stats-stage';
 export { CurrentOpStage } from './stages/current-op-stage';
 export { FacetStage } from './stages/facet-stage';

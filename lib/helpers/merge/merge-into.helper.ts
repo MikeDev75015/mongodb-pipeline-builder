@@ -1,4 +1,5 @@
-import {MergeStage, WhenMatchedType, WhenNotMatchedType, PipeLineStage} from "../../models";
+import { MergeStage, PipeLineStage, WhenMatchedType, WhenNotMatchedType } from '../../models';
+import { setDefaultValueIfNotProvided } from '../utils/utils';
 
 /**
  * Into Payload
@@ -13,17 +14,13 @@ import {MergeStage, WhenMatchedType, WhenNotMatchedType, PipeLineStage} from "..
  * For a replica set or a standalone, if the output database does not exist, $merge also creates the database.
  * For a sharded cluster, the specified output database must already exist.
  * The output collection can be a sharded collection.
- * @param optional OPTIONAL on. Field or fields that act as a unique identifier for a document. The identifier determines if a
- * results document matches an already existing document in the output collection. Specify either:
- * A single field name as a string. For example:
- * on: "_id"
- * A combination of fields in an array. For example:
- * on: [ "date", "customerId" ]
- * The order of the fields in the array does not matter, and you cannot specify the same field multiple times.
- * For the specified field or fields:
- * The aggregation results documents must contain the field(s) specified in the on, unless the on field is the _id
- * field. If the _id field is missing from a results document, MongoDB adds it automatically.
- * The specified field or fields cannot contain a null or an array value.
+ * @param optional OPTIONAL on. Field or fields that act as a unique identifier for a document. The identifier
+ *   determines if a results document matches an already existing document in the output collection. Specify either: A
+ *   single field name as a string. For example: on: "_id" A combination of fields in an array. For example: on: [
+ *   "date", "customerId" ] The order of the fields in the array does not matter, and you cannot specify the same field
+ *   multiple times. For the specified field or fields: The aggregation results documents must contain the field(s)
+ *   specified in the on, unless the on field is the _id field. If the _id field is missing from a results document,
+ *   MongoDB adds it automatically. The specified field or fields cannot contain a null or an array value.
  * $merge requires a unique, index with keys that correspond to the on identifier fields. Although the order of the
  * index key specification does not matter, the unique index must only contain the on fields as its keys.
  * The index must also have the same collation as the aggregation’s collation.
@@ -50,18 +47,19 @@ import {MergeStage, WhenMatchedType, WhenNotMatchedType, PipeLineStage} from "..
  * @constructor
  */
 export const MergeIntoHelper = (
-    into: string | { [key: string]: string },
-    optional?: {
-        on?: string | string[],
-        whenMatched?: WhenMatchedType | PipeLineStage[],
-        letWhenMatched?: { [key: string]: any },
-        whenNotMatched?: WhenNotMatchedType }
+  into: string | { [key: string]: string },
+  optional: {
+    on?: string | string[],
+    whenMatched?: WhenMatchedType | PipeLineStage[],
+    letWhenMatched?: { [key: string]: any },
+    whenNotMatched?: WhenNotMatchedType
+  } = {},
 ) => {
-    return {
-        into,
-        on: optional?.on ? optional.on : '_id',
-        whenMatched: optional?.whenMatched ? optional.whenMatched : 'merge',
-        whenNotMatched: optional?.whenNotMatched ? optional.whenNotMatched : 'insert',
-        let: optional?.letWhenMatched ? optional.letWhenMatched : { new: "$$ROOT" }
-    } as MergeStage;
-}
+  return {
+    into,
+    on: setDefaultValueIfNotProvided('_id', optional.on),
+    whenMatched: setDefaultValueIfNotProvided('merge', optional.whenMatched),
+    whenNotMatched: setDefaultValueIfNotProvided('insert', optional.whenNotMatched),
+    let: setDefaultValueIfNotProvided({ new: '$$ROOT' }, optional.letWhenMatched),
+  } as MergeStage;
+};

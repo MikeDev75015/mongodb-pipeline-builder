@@ -4,8 +4,10 @@
  * With .Match(), returns all documents whose specified field contains the searched value.
  *
  * With .AddFields, adds a new property to returned documents
- * @param fieldName
- * @param fieldValue
+ * @param name
+ * @param value
  * @constructor
  */
-export const Field = (fieldName: string, fieldValue: any) => ({ [fieldName]: fieldValue });
+export const Field = (name: string, value: any) => (
+  { [name]: value }
+);

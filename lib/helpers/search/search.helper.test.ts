@@ -11,7 +11,7 @@ describe('Atlas Search helper', () => {
         'path': 'released',
         'origin': '2011-09-01T00:00:00.000+00:00',
         'pivot': 7776000000,
-      }
+      },
     });
   });
 
