@@ -1,4 +1,4 @@
-import { MergeStage, PipeLineStage, WhenMatchedType, WhenNotMatchedType } from '../../models';
+import { MergeStage, PipelineStage, WhenMatchedType, WhenNotMatchedType } from '../../models';
 import { setDefaultValueIfNotProvided } from '../utils/utils';
 
 /**
@@ -50,7 +50,7 @@ export const MergeIntoHelper = (
   into: string | { [key: string]: string },
   optional: {
     on?: string | string[],
-    whenMatched?: WhenMatchedType | PipeLineStage[],
+    whenMatched?: WhenMatchedType | PipelineStage[],
     letWhenMatched?: { [key: string]: any },
     whenNotMatched?: WhenNotMatchedType
   } = {},

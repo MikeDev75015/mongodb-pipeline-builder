@@ -1,4 +1,4 @@
-import { PipeLineStage } from '../core/pipeline-stage';
+import { PipelineStage } from '../core/pipeline-stage';
 
 /**
  * Lookup Stage Interface
@@ -80,5 +80,5 @@ export type LookupStage = {
    *
    * Other (non-$match) stages in the pipeline do not require an $expr operator to access the variables.
    */
-  pipeline?: PipeLineStage[],
+  pipeline?: PipelineStage[],
 };

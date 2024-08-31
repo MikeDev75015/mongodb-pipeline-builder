@@ -5,7 +5,7 @@ export { DebuggedAction } from './core/debugged-action';
 export { GetResultResponse } from './core/get-result.response';
 export { GetPagingResultResponse } from './core/get-paging-result.response';
 export { PipelineBuilderOptions } from './core/pipeline-builder-options';
-export { PipeLineStage } from './core/pipeline-stage';
+export { PipelineStage } from './core/pipeline-stage';
 export { PipelineStageError } from './core/pipeline-stage-error';
 export { StageValidator } from './core/stage-validator';
 export { StageValidatorsBundle } from './core/stage-validators-bundle';

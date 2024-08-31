@@ -1,4 +1,4 @@
-import { PipeLineStage } from '../core/pipeline-stage';
+import { PipelineStage } from '../core/pipeline-stage';
 
 /**
  * Merge Stage Interface
@@ -151,7 +151,7 @@ export type MergeStage = {
    *
    * The user-defined variables in the let field, i.e. $$<uservariable>.<field>.
    */
-  whenMatched?: WhenMatchedType | PipeLineStage[];
+  whenMatched?: WhenMatchedType | PipelineStage[];
   /**
    * Optional. Specifies variables accessible for use in the whenMatched pipeline
    *

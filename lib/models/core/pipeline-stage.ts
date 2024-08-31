@@ -41,7 +41,7 @@ import { UnsetStage } from '../stages/unset-stage';
 /**
  * interface PipeLineStage
  */
-export type PipeLineStage = {
+export type PipelineStage = {
   /**
    * Adds new fields to documents. Similar to $project, $addFields reshapes each document in the stream; specifically,
    * by adding new fields to output documents that contain both the existing fields from the input documents and the

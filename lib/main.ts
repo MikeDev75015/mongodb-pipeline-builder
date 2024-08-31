@@ -28,7 +28,7 @@ import {
   MergeStage,
   OutStage,
   PipelineBuilderOptions,
-  PipeLineStage,
+  PipelineStage,
   PipelineStageError,
   PlanCacheStatsStage,
   ProjectStage,
@@ -60,7 +60,7 @@ export class PipelineBuilder {
    * Contains the $skip and $limit stages for pagination
    * @private
    */
-  private pagingStages: PipeLineStage[];
+  private pagingStages: PipelineStage[];
 
   /**
    * Contains debug status and information saved at each step
@@ -72,7 +72,7 @@ export class PipelineBuilder {
    * Contains the list of pipeline stages that have been added
    * @private
    */
-  private readonly stageList: (PipeLineStage & { disableValidation?: boolean })[];
+  private readonly stageList: (PipelineStage & { disableValidation?: boolean })[];
 
   /**
    * Default builder options
@@ -124,7 +124,7 @@ export class PipelineBuilder {
 
   /**
    * Allows the user to insert their own stage into the pipeline
-   * @param {PipeLineStage} stage
+   * @param {PipelineStage} stage
    * @returns {this}
    */
   public readonly insertStage = (stage: { [key: string]: any }): this => {
@@ -880,14 +880,14 @@ export class PipelineBuilder {
   /**
    * Adds a new stage to the pipeline
    *
-   * @param {keyof PipeLineStage} stageType
+   * @param {keyof PipelineStage} stageType
    * @param stageValue
    * @returns {this}
    */
-  private readonly addStage = (stageType: keyof PipeLineStage, stageValue: any): this => {
+  private readonly addStage = (stageType: keyof PipelineStage, stageValue: any): this => {
     this.saveActionToDebugHistoryList('addStage', { stageType, stageValue });
 
-    const stageToAdd: PipeLineStage = { [stageType]: stageValue };
+    const stageToAdd: PipelineStage = { [stageType]: stageValue };
     const validation = this.isValidStage(stageToAdd);
 
     if (validation) {
@@ -905,7 +905,7 @@ export class PipelineBuilder {
    * @param pipelineToPaginate the pipeline whose results are to be paged
    * @returns the paging pipeline
    */
-  private readonly addPipelinePagingStages = (pipelineToPaginate: PipeLineStage[]) => {
+  private readonly addPipelinePagingStages = (pipelineToPaginate: PipelineStage[]) => {
     this.saveActionToDebugHistoryList('addPipelinePagingStages', pipelineToPaginate);
 
     this.checkPagingPipelineValidity();
@@ -917,14 +917,14 @@ export class PipelineBuilder {
           count: [...pipelineToPaginate, { $count: 'totalElements' }],
         } as FacetStage,
       },
-    ] as PipeLineStage[];
+    ] as PipelineStage[];
   };
 
   /**
    * Checks the validity of the pipeline
    * @param pipelineBuilt The pipeline built
    */
-  private readonly verifyPipelineValidity = (pipelineBuilt: (PipeLineStage & { disableValidation?: boolean })[]) => {
+  private readonly verifyPipelineValidity = (pipelineBuilt: (PipelineStage & { disableValidation?: boolean })[]) => {
     if (!pipelineBuilt.length) {
       throw new PipelineError(`Error, ${this.pipelineName} pipeline is empty!`);
     }
@@ -948,15 +948,15 @@ export class PipelineBuilder {
       this.log('error', errorMessage, 'stageErrorList:', this.stageErrorList);
       throw new PipelineError(errorMessage);
     }
-    return pipelineBuilt.map(({ disableValidation, ...stage }) => stage) as PipeLineStage[];
+    return pipelineBuilt.map(({ disableValidation, ...stage }) => stage) as PipelineStage[];
   };
 
   /**
    * Checks non-duplicable stages in the pipeline
-   * @param {(PipeLineStage & {disableValidation?: boolean})[]} pipelineBuilt
-   * @returns {(keyof PipeLineStage)[]}
+   * @param {(PipelineStage & {disableValidation?: boolean})[]} pipelineBuilt
+   * @returns {(keyof PipelineStage)[]}
    */
-  private readonly checkInvalidDuplicatedStages = (pipelineBuilt: (PipeLineStage & { disableValidation?: boolean })[]) => {
+  private readonly checkInvalidDuplicatedStages = (pipelineBuilt: (PipelineStage & { disableValidation?: boolean })[]) => {
     return NON_DUPLICABLE_STAGE_LIST.filter(
       (nonDuplicableStage) => pipelineBuilt.filter((s) => Object.keys(s)[0] === nonDuplicableStage).length > 1,
     );
@@ -981,7 +981,7 @@ export class PipelineBuilder {
    * @param stageToValidate The stage to validate
    * @private
    */
-  private readonly isValidStage = (stageToValidate: PipeLineStage): PipelineStageError | undefined => {
+  private readonly isValidStage = (stageToValidate: PipelineStage): PipelineStageError | undefined => {
     const [stageType] = Object.keys(stageToValidate);
     const [stageValue] = Object.values(stageToValidate);
 

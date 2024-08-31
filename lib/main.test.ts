@@ -1,7 +1,7 @@
 /* tslint:disable:no-string-literal */
 import { PipelineBuilder } from './';
 import { PipelineError } from './errors';
-import { CurrentOpStage, PipeLineStage } from './models';
+import { CurrentOpStage, PipelineStage } from './models';
 
 describe('should create a new pipeline builder object', () => {
   describe('pipeline Builder With Debug', () => {
@@ -449,7 +449,7 @@ describe('should create a new pipeline builder object', () => {
       const pipelineWithErrors = [
         { $count: ' ' },
         { $sort: { id: 'date' } },
-      ] as PipeLineStage[];
+      ] as PipelineStage[];
 
       it('should throw an error message list if invalid stage is found', () => {
         // tslint:disable-next-line:no-string-literal
@@ -532,7 +532,7 @@ describe('should create a new pipeline builder object', () => {
 
     describe('isValidStage', () => {
       it('should return unexpected stage name error', () => {
-        expect(pipelineBuilderWithoutDebug['isValidStage']({ test: {} } as PipeLineStage)).toEqual({
+        expect(pipelineBuilderWithoutDebug['isValidStage']({ test: {} } as PipelineStage)).toEqual({
           stageType: 'test', message: 'Unexpected stage name. Received: test',
         });
       });

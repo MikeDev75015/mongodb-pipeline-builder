@@ -1,4 +1,4 @@
-import { PipeLineStage, StageValidatorsBundle } from '../models';
+import { PipelineStage, StageValidatorsBundle } from '../models';
 import * as Validators from '../validators';
 
 /**
@@ -19,6 +19,6 @@ export const STAGE_PAYLOAD_VALIDATORS_AVAILABLE: StageValidatorsBundle = {
   $sort: Validators.sortPayloadValidator,
 };
 
-export const NON_DUPLICABLE_STAGE_LIST: (keyof PipeLineStage)[] = [
+export const NON_DUPLICABLE_STAGE_LIST: (keyof PipelineStage)[] = [
   '$changeStream', '$changeStreamSplitLargeEvent', '$geoNear', '$merge', '$out',
 ];

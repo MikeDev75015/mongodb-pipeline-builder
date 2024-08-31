@@ -1,4 +1,4 @@
-import { MergeStage, PipeLineStage, WhenMatchedType, WhenNotMatchedType } from '../../models';
+import { MergeStage, PipelineStage, WhenMatchedType, WhenNotMatchedType } from '../../models';
 import { MergeIntoHelper } from './merge-into.helper';
 
 describe('merge helpers', () => {
@@ -23,7 +23,7 @@ describe('merge helpers', () => {
       }), {
       into: 'units',
       on: 'name',
-      whenMatched: [{ $project: { stats: 1 } }] as PipeLineStage[],
+      whenMatched: [{ $project: { stats: 1 } }] as PipelineStage[],
       let: { test: '$test', unit: '$unit' },
       whenNotMatched: 'discard' as WhenNotMatchedType,
     },
