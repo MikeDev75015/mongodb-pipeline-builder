@@ -1,4 +1,4 @@
-import { LookupCondition, PipeLineStage } from '../../models';
+import { LookupCondition, PipelineStage } from '../../models';
 import { isNotEmptyObject } from '../utils/utils';
 
 /**
@@ -22,11 +22,11 @@ export const LookupConditionHelper = (
   from: string, as: string,
   optional: {
     project?: { [index: string]: any },
-    pipeline?: PipeLineStage[],
+    pipeline?: PipelineStage[],
     sourceList?: string[]
   } = {},
 ) => {
-  const pipeline: PipeLineStage[] = [
+  const pipeline: PipelineStage[] = [
     ...(optional.pipeline ?? []),
     ...(optional.project ? [{ $project: optional.project }] : []),
   ];

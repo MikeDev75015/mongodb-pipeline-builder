@@ -1,4 +1,4 @@
-import { PipeLineStage } from '../core/pipeline-stage';
+import { PipelineStage } from '../core/pipeline-stage';
 
 /**
  * UnionWith Stage Interface
@@ -15,5 +15,5 @@ export type UnionWithStage = {
    *
    * The pipeline cannot include the $out and $merge stages.
    */
-  pipeline?: PipeLineStage[];
+  pipeline?: PipelineStage[];
 };

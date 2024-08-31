@@ -1,5 +1,5 @@
 import { PipelineError } from '../../errors';
-import { GetPagingResultResponse, GetResultResponse, PipeLineStage, ValidPipelineStageNameList } from '../../models';
+import { GetPagingResultResponse, GetResultResponse, PipelineStage, ValidPipelineStageNameList } from '../../models';
 
 /**
  * Apply the aggregate method on the chosen target
@@ -10,7 +10,7 @@ import { GetPagingResultResponse, GetResultResponse, PipeLineStage, ValidPipelin
  * @constructor
  */
 export const GetResult = async <T = any>(
-  target: any, pipeline: PipeLineStage[],
+  target: any, pipeline: PipelineStage[],
 ): Promise<GetResultResponse<T>> => {
   checkArgsValidity(target, pipeline);
 
@@ -49,7 +49,7 @@ export const GetResult = async <T = any>(
  * @constructor
  */
 export const GetPagingResult = async <T = any>(
-  target: any, pipeline: PipeLineStage[],
+  target: any, pipeline: PipelineStage[],
 ): Promise<GetPagingResultResponse<T>> => {
   checkArgsValidity(target, pipeline);
 
@@ -85,7 +85,7 @@ export const GetPagingResult = async <T = any>(
  * @param count The result of the pipeline count of the stage facet
  * @param pipeline The pipeline applied to the target
  */
-export const getTotalPageNumber = (count: { totalElements: number; }[], pipeline: PipeLineStage[]): number => {
+export const getTotalPageNumber = (count: { totalElements: number; }[], pipeline: PipelineStage[]): number => {
   if (
     !count?.length || count[0].totalElements === undefined ||
     !pipeline?.length
@@ -119,7 +119,7 @@ const getElementByIndex = <T>(result: T[], index: number | 'last'): T => {
   return result[index];
 };
 
-const checkArgsValidity = (target: any, pipeline: PipeLineStage[]) => {
+const checkArgsValidity = (target: any, pipeline: PipelineStage[]) => {
   if (!target) {
     throw new PipelineError('Application not possible, the target is not valid.');
   }

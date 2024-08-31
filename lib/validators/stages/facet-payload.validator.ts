@@ -1,4 +1,4 @@
-import { FacetStage, PipeLineStage, ValidPipelineStageNameList } from '../../models';
+import { FacetStage, PipelineStage, ValidPipelineStageNameList } from '../../models';
 
 /**
  * Checks the presence of mandatory fields and the validity of each field present in the payload
@@ -20,7 +20,7 @@ export const facetPayloadValidator = (payload: FacetStage) => {
   }
 
   const pipelineName = Object.keys(payload);
-  const pipelineList = Object.values(payload) as (PipeLineStage & { disableValidation?: boolean })[][];
+  const pipelineList = Object.values(payload) as (PipelineStage & { disableValidation?: boolean })[][];
   const pipelineErrors: string[] = [];
 
   pipelineList.forEach((pipeline, i) => {

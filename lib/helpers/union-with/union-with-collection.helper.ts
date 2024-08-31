@@ -1,4 +1,4 @@
-import { PipeLineStage, UnionWithStage } from '../../models';
+import { PipelineStage, UnionWithStage } from '../../models';
 
 /**
  * Collection Payload
@@ -8,6 +8,6 @@ import { PipeLineStage, UnionWithStage } from '../../models';
  * The pipeline cannot include the $out and $merge stages.
  * @constructor
  */
-export const UnionWithCollectionHelper = (collectionName: string, pipeline: PipeLineStage[] = []) => (
+export const UnionWithCollectionHelper = (collectionName: string, pipeline: PipelineStage[] = []) => (
   { coll: collectionName, pipeline }
 ) as UnionWithStage;

@@ -1,5 +1,5 @@
 import { PipelineError } from '../../errors';
-import { GetPagingResultResponse, GetResultResponse, PipeLineStage } from '../../models';
+import { GetPagingResultResponse, GetResultResponse, PipelineStage } from '../../models';
 import { GetPagingResult, GetResult, getTotalPageNumber } from './get-result';
 
 const simpleResultMock = [
@@ -68,20 +68,20 @@ describe('GetResult', () => {
     [
       'the pipeline is not valid',
       targetAggregationMock,
-      undefined as unknown as PipeLineStage[],
+      undefined as unknown as PipelineStage[],
       'Application not possible, the pipeline is not valid.',
     ],
     ['the pipeline is empty', targetAggregationMock, [], 'Application not possible, the pipeline is empty.'],
     [
       'one pipeline stage is unknown or not valid',
       targetAggregationMock,
-      [{ $test: 'unit' } as PipeLineStage],
+      [{ $test: 'unit' } as PipelineStage],
       'Application not possible, $test pipeline stage is unknown or not valid.',
     ],
     [
       'many pipeline stages are unknown or not valid',
       targetAggregationMock,
-      [{ $test: 'unit' } as PipeLineStage, { $name: 'toto' } as PipeLineStage],
+      [{ $test: 'unit' } as PipelineStage, { $name: 'toto' } as PipelineStage],
       'Application not possible, $test / $name pipeline stages are unknown or not valid.',
     ],
     [
@@ -96,7 +96,7 @@ describe('GetResult', () => {
     ],
   ])(
     'should throw a pipeline error if %s',
-    async (_: string, target: any, pipeline: PipeLineStage[], errorMessage: string) => {
+    async (_: string, target: any, pipeline: PipelineStage[], errorMessage: string) => {
       await expect(() => GetResult(target, pipeline))
       .rejects
       .toThrowError(new PipelineError(errorMessage));
@@ -144,20 +144,20 @@ describe('GetPagingResult', () => {
     [
       'the pipeline is not valid',
       targetAggregationMock,
-      undefined as unknown as PipeLineStage[],
+      undefined as unknown as PipelineStage[],
       'Application not possible, the pipeline is not valid.',
     ],
     ['the pipeline is empty', targetAggregationMock, [], 'Application not possible, the pipeline is empty.'],
     [
       'one pipeline stage is unknown or not valid',
       targetAggregationMock,
-      [{ $test: 'unit' } as PipeLineStage],
+      [{ $test: 'unit' } as PipelineStage],
       'Application not possible, $test pipeline stage is unknown or not valid.',
     ],
     [
       'many pipeline stages are unknown or not valid',
       targetAggregationMock,
-      [{ $test: 'unit' } as PipeLineStage, { $name: 'toto' } as PipeLineStage],
+      [{ $test: 'unit' } as PipelineStage, { $name: 'toto' } as PipelineStage],
       'Application not possible, $test / $name pipeline stages are unknown or not valid.',
     ],
     [
@@ -172,7 +172,7 @@ describe('GetPagingResult', () => {
     ],
   ])(
     'should throw a pipeline error if %s',
-    async (_: string, target: any, pipeline: PipeLineStage[], errorMessage: string) => {
+    async (_: string, target: any, pipeline: PipelineStage[], errorMessage: string) => {
       await expect(() => GetPagingResult(target, pipeline))
       .rejects
       .toThrowError(new PipelineError(errorMessage));
@@ -228,7 +228,7 @@ describe('getTotalPageNumber', () => {
     pipeline,
   ) => {
     expect(
-      getTotalPageNumber(count as unknown as any[], pipeline as unknown as PipeLineStage[]),
+      getTotalPageNumber(count as unknown as any[], pipeline as unknown as PipelineStage[]),
     ).toEqual(-1);
   });
 

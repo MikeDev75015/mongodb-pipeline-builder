@@ -1,4 +1,4 @@
-import { PipeLineStage } from '../index';
+import { PipelineStage } from '../index';
 
 /**
  * Lookup Condition Payload Interface
@@ -68,7 +68,7 @@ export type LookupCondition = {
    *
    * Other (non-$match) stages in the pipeline do not require an $expr operator to access the variables.
    */
-  pipeline?: PipeLineStage[];
+  pipeline?: PipelineStage[];
   /**
    * Specifies the name of the new array field to add to the input documents. The new array field contains the
    * matching documents from the from collection. If the specified name already exists in the input document, the
