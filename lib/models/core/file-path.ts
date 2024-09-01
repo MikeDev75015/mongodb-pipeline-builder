@@ -2,4 +2,4 @@ import { LowercaseLetter, UppercaseLetter } from './letter';
 
 type LetterOnly = LowercaseLetter | UppercaseLetter;
 
-export type FilePath = `$${LetterOnly}${string}`;
+export type FilePath = `$${LetterOnly}${string}` | `$$${string}`;
