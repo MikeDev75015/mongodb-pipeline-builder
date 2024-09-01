@@ -178,7 +178,7 @@ export const $Last = (array: ArrayExpression) => (
  */
 export const $Map = (
   array: ArrayExpression,
-  apply: FunctionExpression,
+  apply: FunctionExpression | ObjectExpression,
   optional: {
     /**
      * Optional. A name for the variable that represents each individual element of the input array. If no name is
@@ -249,7 +249,7 @@ export const $Range = (
  * @constructor
  */
 export const $Reduce = (
-  array: ArrayExpression,
+  array: ArrayExpression | string,
   initialValue: Expression,
   apply: FunctionExpression | ObjectExpression,
 ) => (

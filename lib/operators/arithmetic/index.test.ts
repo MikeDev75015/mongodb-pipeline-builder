@@ -31,6 +31,7 @@ describe('arithmetic operators', () => {
   test.each([
     [$Absolute(10), { $abs: 10 }],
     [$Add(...[]), { $add: [] }],
+    [$Add('$$value', '$$this.times'), { $add: ['$$value', '$$this.times'] }],
     [$Ceil(num), { $ceil: num }],
     [$Ceil('$value'), { $ceil: '$value' }],
     [$Ceil('$test.value'), { $ceil: '$test.value' }],

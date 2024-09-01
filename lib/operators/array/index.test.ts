@@ -35,6 +35,7 @@ const position = 3;
 const step = 2;
 const startIndex = 5;
 const as = 'test';
+const field = 'list';
 
 describe('array operators', () => {
   test.each([
@@ -65,10 +66,27 @@ describe('array operators', () => {
     [$Last(array), { $last: array }],
     [$Map(array, apply, { as }), { $map: { input: array, as, in: apply } }],
     [$Map(array, apply), { $map: { input: array, in: apply } }],
+    [
+      $Map(array, {
+        id: '$$this.id',
+        name: '$$this.name',
+        createdBy: '$$this.createdBy',
+      }), {
+      $map: {
+        input: array,
+        in: {
+          id: '$$this.id',
+          name: '$$this.name',
+          createdBy: '$$this.createdBy',
+        },
+      },
+    },
+    ],
     [$ObjectToArray(object), { $objectToArray: object }],
     [$Range(startIndex, endIndex, { step }), { $range: [startIndex, endIndex, step] }],
     [$Range(startIndex, endIndex), { $range: [startIndex, endIndex] }],
     [$Reduce(array, initialValue, apply), { $reduce: { input: array, initialValue, in: apply } }],
+    [$Reduce(`$${field}`, initialValue, apply), { $reduce: { input: '$list', initialValue, in: apply } }],
     [$ReverseArray(array), { $reverseArray: array }],
     [$Size(array), { $size: array }],
     [$Slice(array, numberOfElement, { position }), { $slice: [array, position, numberOfElement] }],
