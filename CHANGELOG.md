@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-8](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.0-7...v4.0.0-8) (2024-09-01)
+
+
+### Bug Fixes
+
+* **operators:** rework some arguments ([96a0e9b](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/96a0e9b17fa6eb92c49228163f52d9a38dabfd4f))
+
 ## [4.0.0-7](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.0-6...v4.0.0-7) (2024-08-31)
 
 ## [4.0.0-6](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.0-5...v4.0.0-6) (2024-08-31)
