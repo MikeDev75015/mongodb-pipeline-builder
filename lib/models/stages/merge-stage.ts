@@ -1,4 +1,18 @@
+import { ObjectExpression, StringExpression } from '../core/expression';
+import { MayBeArray } from '../core/may-be-array';
 import { PipelineStage } from '../core/pipeline-stage';
+
+type MergeInto = string | { db: string, coll: string };
+
+/**
+ * Possible values for WhenMatched
+ */
+type WhenMatchedType = 'replace' | 'keepExisting' | 'merge' | 'fail';
+
+/**
+ * Possible values for WhenNotMatchedType
+ */
+type WhenNotMatchedType = 'insert' | 'discard' | 'fail';
 
 /**
  * Merge Stage Interface
@@ -26,7 +40,7 @@ export type MergeStage = {
    *
    * The output collection can be a sharded collection.
    */
-  into: any;
+  into: MergeInto;
   /**
    * Optional. Field or fields that act as a unique identifier for a document. The identifier determines if a results
    * document matches an already existing document in the output collection. Specify either:
@@ -68,7 +82,24 @@ export type MergeStage = {
    * If the existing output collection is a sharded collection, the on identifier defaults to all the shard key fields
    * and the _id field. If specifying a different on identifier, the on must contain all the shard key fields.
    */
-  on?: string | string[];
+  on?: MayBeArray<string>;
+  /**
+   * Optional. Specifies variables accessible for use in the whenMatched pipeline
+   *
+   * Specify a document with the variable name and value expression:
+   *
+   * { <var_1>: <expression>, ..., <var_n>: <expression> }
+   *
+   * If unspecified, defaults to { new: "$$ROOT" }; i.e. the whenMatched pipeline can access the $$new variable.
+   *
+   * NOTE
+   *
+   * Starting in MongoDB 4.2.2, the $$new variable is reserved, and cannot be overridden.
+   *
+   * To access the let variables in the whenMatched pipeline, use the double dollar signs ($$) prefix and variable
+   * name $$<variable>.
+   */
+  let?: ObjectExpression<StringExpression>;
   /**
    * Optional. The behavior of $merge if a result document and an existing document in the collection have the same
    * value for the specified on field(s).
@@ -153,23 +184,6 @@ export type MergeStage = {
    */
   whenMatched?: WhenMatchedType | PipelineStage[];
   /**
-   * Optional. Specifies variables accessible for use in the whenMatched pipeline
-   *
-   * Specify a document with the variable name and value expression:
-   *
-   * { <var_1>: <expression>, ..., <var_n>: <expression> }
-   *
-   * If unspecified, defaults to { new: "$$ROOT" }; i.e. the whenMatched pipeline can access the $$new variable.
-   *
-   * NOTE
-   *
-   * Starting in MongoDB 4.2.2, the $$new variable is reserved, and cannot be overridden.
-   *
-   * To access the let variables in the whenMatched pipeline, use the double dollar signs ($$) prefix and variable
-   * name $$<variable>.
-   */
-  let?: { [key: string]: any; };
-  /**
    * Optional. The behavior of $merge if a result document does not match an existing document in the out collection.
    *
    * You can specify one of the pre-defined action strings:
@@ -191,12 +205,4 @@ export type MergeStage = {
   whenNotMatched?: WhenNotMatchedType;
 };
 
-/**
- * Possible values for WhenMatched
- */
-export declare type WhenMatchedType = 'replace' | 'keepExisting' | 'merge' | 'fail' | 'pipeline';
-
-/**
- * Possible values for WhenNotMatchedType
- */
-export declare type WhenNotMatchedType = 'insert' | 'discard' | 'fail';
+export type MergeStageOptional = Partial<Omit<MergeStage, 'into'>>;

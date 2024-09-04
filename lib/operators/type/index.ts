@@ -8,7 +8,7 @@ import { NumericIdentifier, StringIdentifier } from '../../models/core/identifie
  * Converts a value to a specified type.
  * @param input can be any valid expression.
  * @param to can be any valid expression that resolves to one of the following numeric or string identifiers.
- * @param optional Optional. Additional arguments can be any valid expression.
+ * @param optional Optionals. Additional arguments can be any valid expression.
  * @constructor
  */
 export const $Convert = (

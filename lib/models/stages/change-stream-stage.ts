@@ -42,16 +42,16 @@ export type ChangeStreamStage = {
    */
   fullDocumentBeforeChange?: 'off' | 'whenAvailable' | 'required';
   /**
+   * Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or
+   * startAtOperationTime fields.
+   */
+  resumeAfter?: number;
+  /**
    * Specifies whether to include additional change events, such as such as DDL and index operations.
    *
    * New in version 6.0.
    */
   showExpandedEvents?: boolean;
-  /**
-   * Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or
-   * startAtOperationTime fields.
-   */
-  resumeAfter?: number;
   /**
    * Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or
    * startAtOperationTime fields.

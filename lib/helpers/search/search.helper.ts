@@ -1,12 +1,12 @@
-import { AtlasSearchStage, SearchOperator } from '../../models/stages/atlas-search-stage';
+import { SearchStage } from '../../models';
+import { SearchStageFields, SearchStageOperators } from '../../models/stages/search-stage';
 
 export const SearchHelper = (
-  operator: SearchOperator,
-  operatorOptions: { [key: string]: any },
-  optional: AtlasSearchStage = {},
+  operator: SearchStageOperators,
+  optional: SearchStageFields = {},
 ) => (
   {
-    [operator]: operatorOptions,
+    ...operator,
     ...optional,
-  } as AtlasSearchStage
+  } as SearchStage
 );

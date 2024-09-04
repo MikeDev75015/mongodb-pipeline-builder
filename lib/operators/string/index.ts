@@ -31,7 +31,7 @@ export const $Concat = (...expressions: StringExpression[]) => (
  *   an error.
  * @param substringExpression Can be any valid expression as long as it resolves to a string. For more information on
  * expressions, see Expression Operators.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $IndexOfBytes = (
@@ -81,7 +81,7 @@ export const $IndexOfBytes = (
  * error.
  * @param substringExpression Can be any valid expression as long as it resolves to a string. For more information on
  * expressions, see Expression Operators.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $IndexOfCP = (
@@ -126,7 +126,7 @@ export const $IndexOfCP = (
  * Removes whitespace or the specified characters from the beginning of a string.
  * @param input The string to trim. The argument can be any valid expression that resolves to a string. For more
  * information on expressions, see Expression Operators.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Ltrim = (
@@ -330,7 +330,7 @@ export const $ReplaceAll = (
  * Removes whitespace or the specified characters from the end of a string.
  * @param input The string to trim. The argument can be any valid expression that resolves to a string. For more
  * information on expressions, see Expression Operators.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Rtrim = (
@@ -500,7 +500,7 @@ export const $ToString = (expression: Expression) => ({ $toString: expression })
  * Removes whitespace characters, including null, or the specified characters from the beginning and end of a string.
  * @param input The string to trim. The argument can be any valid expression that resolves to a string. For more
  * information on expressions, see Expression Operators.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Trim = (

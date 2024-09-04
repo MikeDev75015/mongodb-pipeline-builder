@@ -1,3 +1,6 @@
+import { NumericExpression, ObjectExpression, StringExpression } from '../core/expression';
+import { FilePath } from '../core/file-path';
+
 /**
  * Bucket Stage Interface
  */
@@ -9,7 +12,7 @@ export type BucketStage = {
    * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or
    * expression to a value that falls within one of the ranges specified by the boundaries.
    */
-  groupBy: any;
+  groupBy: FilePath;
   /**
    * An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent
    * pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must
@@ -20,7 +23,7 @@ export type BucketStage = {
    *
    * [ 10, NumberLong(20), NumberInt(30) ]
    */
-  boundaries: any[];
+  boundaries: NumericExpression[];
   /**
    * Optional. A literal that specifies the _id of an additional bucket that contains all documents whose groupBy
    * expression result does not fall into a bucket specified by boundaries.
@@ -33,7 +36,7 @@ export type BucketStage = {
    *
    * The default value can be of a different type than the entries in boundaries.
    */
-  default?: string | number;
+  default?: StringExpression;
   /**
    * Optional. A document that specifies the fields to include in the output documents in addition to the _id field.
    * To specify the field to include, you must use accumulator expressions.
@@ -50,7 +53,7 @@ export type BucketStage = {
    * If you specify an output document, only the fields specified in the document are returned; i.e. the count field
    * is not returned unless it is explicitly included in the output document.
    */
-  output?: {
-    [key: string]: { [key: string]: any };
-  };
+  output?: ObjectExpression;
 };
+
+export type BucketStageOptional = Partial<Omit<BucketStage, 'groupBy' | 'boundaries'>>;

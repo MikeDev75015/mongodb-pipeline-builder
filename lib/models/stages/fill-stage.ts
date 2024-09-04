@@ -1,3 +1,4 @@
+import { Expression, ObjectExpression, StringExpression } from '../core/expression';
 import { SortStage } from './sort-stage';
 
 export type FillStage = {
@@ -14,7 +15,7 @@ export type FillStage = {
    * $fill
    *  uses one partition for the entire collection.
    */
-  partitionBy?: any;
+  partitionBy?: ObjectExpression;
   /**
    * Specifies an array of fields as the compound key to group the documents. In the
    * $fill
@@ -28,7 +29,7 @@ export type FillStage = {
    * $fill
    *  uses one partition for the entire collection.
    */
-  partitionByFields?: string[];
+  partitionByFields?: StringExpression[];
   /**
    * Required if
    * method
@@ -54,6 +55,8 @@ export type FillStage = {
    * for last observation carried forward.
    */
   output: {
-    [key: string]: { value: any } | { method: 'linear' | 'locf' };
+    [field: string]: { value: Expression } | { method: 'linear' | 'locf' };
   };
 };
+
+export type FillStageOptional = Partial<Omit<FillStage, 'output'>>;

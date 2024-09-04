@@ -1,25 +1,24 @@
-import { STAGE_PAYLOAD_VALIDATORS_AVAILABLE, NON_DUPLICABLE_STAGE_LIST } from './constants';
+import { NON_DUPLICABLE_STAGE_LIST, STAGE_PAYLOAD_VALIDATORS_AVAILABLE } from './constants';
 import { IsValidName } from './decorators';
 import { PipelineError } from './errors';
-import { SampleSizeHelper } from './helpers';
 import {
   AddFieldsStage,
-  AtlasSearchStage,
+  AddFieldStage,
   BucketAutoStage,
   BucketStage,
-  ChangeStreamSplitLargeEventStage,
   ChangeStreamStage,
   CollStatsStage,
   CurrentOpStage,
   DebuggedAction,
   DensifyStage,
-  DocumentsStage,
+  DocumentStage,
   FacetStage,
   FillStage,
   GeoNearStage,
   GraphLookupStage,
   GroupStage,
   IndexStatsStage,
+  LimitStage,
   ListSampledQueriesStage,
   ListSearchIndexesStage,
   ListSessionsStage,
@@ -35,6 +34,9 @@ import {
   RedactStage,
   ReplaceRootStage,
   ReplaceWithStage,
+  SampleStage,
+  SearchMetaStage,
+  SearchStage,
   SetStage,
   SetWindowFieldsStage,
   ShardedDataDistributionStage,
@@ -112,6 +114,8 @@ export class PipelineBuilder {
     this.saveActionToDebugHistoryList('constructor', { pipelineName }, { debug, logs });
   }
 
+  // basics
+
   /**
    * Returns the pipeline name
    * @returns {string}
@@ -119,27 +123,6 @@ export class PipelineBuilder {
   get name(): string {
     return this.pipelineName;
   }
-
-  // basics
-
-  /**
-   * Allows the user to insert their own stage into the pipeline
-   * @param {PipelineStage} stage
-   * @returns {this}
-   */
-  public readonly insertStage = (stage: { [key: string]: any }): this => {
-    this.saveActionToDebugHistoryList('insertStage', stage);
-
-    const stageError = this.isValidStage(stage);
-
-    if (stageError) {
-      this.forceLog('warn', stageError.message);
-    }
-
-    this.stageList.push({ ...stage, disableValidation: true });
-
-    return this;
-  };
 
   /**
    * Return the constructed pipeline
@@ -196,7 +179,7 @@ export class PipelineBuilder {
     return this;
   };
 
-  // stages
+  // custom stages
 
   /**
    * Adds the pipeline stages needed to paginate the results
@@ -237,6 +220,21 @@ export class PipelineBuilder {
   };
 
   /**
+   * Allows the user to insert their own stage into the pipeline
+   * @param {PipelineStage} stage
+   * @returns {this}
+   */
+  public readonly Insert = (stage: { [key: string]: any }): this => {
+    this.saveActionToDebugHistoryList('insertStage', stage);
+
+    this.stageList.push({ ...stage, disableValidation: true });
+
+    return this;
+  };
+
+  // stages
+
+  /**
    * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input
    * documents and newly added fields.
    *
@@ -247,12 +245,12 @@ export class PipelineBuilder {
    * @returns {this}
    * @constructor
    */
-  public readonly AddFields = (...values: AddFieldsStage[]): this => {
+  public readonly AddFields = (...values: AddFieldStage[]): this => {
     this.saveActionToDebugHistoryList('AddFields', values);
 
     return this.addStage(
       '$addFields',
-      this.mergeObjectListToOneObject(values, 'AddFields'),
+      this.mergeObjectListToOneObject(values, 'AddFields') as AddFieldsStage,
     );
   };
 
@@ -304,14 +302,13 @@ export class PipelineBuilder {
    * requires full document pre- or post-images, and generates large events that exceed 16 MB, use
    * $changeStreamSplitLargeEvent.
    *
-   * @param {ChangeStreamSplitLargeEventStage} value
    * @returns {this}
    * @constructor
    */
-  public readonly ChangeStreamSplitLargeEvent = (value: ChangeStreamSplitLargeEventStage): this => {
-    this.saveActionToDebugHistoryList('ChangeStreamSplitLargeEvent', value);
+  public readonly ChangeStreamSplitLargeEvent = (): this => {
+    this.saveActionToDebugHistoryList('ChangeStreamSplitLargeEvent', '{}');
 
-    return this.addStage('$changeStreamSplitLargeEvent', value);
+    return this.addStage('$changeStreamSplitLargeEvent', {});
   };
 
   /**
@@ -380,14 +377,14 @@ export class PipelineBuilder {
    *
    * Returns literal documents from input values.
    *
-   * @param {DocumentsStage} value
    * @returns {this}
    * @constructor
+   * @param values
    */
-  public readonly Documents = (value: DocumentsStage): this => {
-    this.saveActionToDebugHistoryList('Documents', value);
+  public readonly Documents = (...values: DocumentStage[]): this => {
+    this.saveActionToDebugHistoryList('Documents', values);
 
-    return this.addStage('$documents', value);
+    return this.addStage('$documents', values);
   };
 
   /**
@@ -471,14 +468,13 @@ export class PipelineBuilder {
 
   /**
    * Returns statistics regarding the use of each index for the collection.
-   * @param {IndexStatsStage} value
    * @returns {this}
    * @constructor
    */
-  public readonly IndexStats = (value: IndexStatsStage): this => {
-    this.saveActionToDebugHistoryList('IndexStats', value);
+  public readonly IndexStats = (): this => {
+    this.saveActionToDebugHistoryList('IndexStats', '{}');
 
-    return this.addStage('$indexStats', value);
+    return this.addStage('$indexStats', {} as IndexStatsStage);
   };
 
   /**
@@ -488,7 +484,7 @@ export class PipelineBuilder {
    * @returns {this}
    * @constructor
    */
-  public readonly Limit = (value: number): this => {
+  public readonly Limit = (value: LimitStage): this => {
     this.saveActionToDebugHistoryList('Limit', value);
 
     return this.addStage('$limit', value);
@@ -621,26 +617,29 @@ export class PipelineBuilder {
   /**
    * Returns plan cache information for a collection.
    *
-   * @param {PlanCacheStatsStage} value
    * @returns {this}
    * @constructor
    */
-  public readonly PlanCacheStats = (value: PlanCacheStatsStage): this => {
-    this.saveActionToDebugHistoryList('PlanCacheStats', value);
+  public readonly PlanCacheStats = (): this => {
+    this.saveActionToDebugHistoryList('PlanCacheStats', '{}');
 
-    return this.addStage('$planCacheStats', value);
+    return this.addStage('$planCacheStats', {} as PlanCacheStatsStage);
   };
 
   /**
    * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can
    * be existing fields from the input documents or newly computed fields.
    *
-   * @param {ProjectStage} value
+   * @param values The fields to include or exclude from the output documents.
    * @returns {this}
    * @constructor
    */
-  public readonly Project = (value: ProjectStage): this => {
-    this.saveActionToDebugHistoryList('Project', value);
+  public readonly Project = (...values: ProjectStage[]): this => {
+    this.saveActionToDebugHistoryList('Project', values);
+
+    const value = values.length > 1
+      ? this.mergeObjectListToOneObject(values, 'Project') as ProjectStage
+      : values[0];
 
     return this.addStage('$project', value);
   };
@@ -699,10 +698,10 @@ export class PipelineBuilder {
    * @returns {this}
    * @constructor
    */
-  public readonly Sample = (value: number): this => {
+  public readonly Sample = (value: SampleStage): this => {
     this.saveActionToDebugHistoryList('Sample', value);
 
-    return this.addStage('$sample', SampleSizeHelper(value));
+    return this.addStage('$sample', value);
   };
 
   /**
@@ -711,11 +710,11 @@ export class PipelineBuilder {
    *
    * @link https://docs.atlas.mongodb.com/reference/atlas-search/operators/
    *
-   * @param {AtlasSearchStage} value
+   * @param {SearchStage} value
    * @returns {this}
    * @constructor
    */
-  public readonly Search = (value: AtlasSearchStage): this => {
+  public readonly Search = (value: SearchStage): this => {
     this.saveActionToDebugHistoryList('Search', value);
 
     return this.addStage('$search', value);
@@ -725,11 +724,11 @@ export class PipelineBuilder {
    * searchMeta returns different types of metadata result documents for Atlas Search queries on the field or fields in
    * an Atlas collection. The fields must be covered by an Atlas Search index
    *
-   * @param {AtlasSearchStage} value
+   * @param {SearchMetaStage} value
    * @returns {this}
    * @constructor
    */
-  public readonly SearchMeta = (value: AtlasSearchStage): this => {
+  public readonly SearchMeta = (value: SearchMetaStage): this => {
     this.saveActionToDebugHistoryList('SearchMeta', value);
 
     return this.addStage('$searchMeta', value);
@@ -1060,7 +1059,7 @@ export class PipelineBuilder {
     const invalidValueList = list.filter(v => {
       const isArray = Array.isArray(v);
       const isEmptyObject = !Object.keys(v).length;
-      const hasInvalidValue = !Object.values(v)[0];
+      const hasInvalidValue = Object.values(v)[0] === undefined;
       return isArray || isEmptyObject || hasInvalidValue;
     });
 

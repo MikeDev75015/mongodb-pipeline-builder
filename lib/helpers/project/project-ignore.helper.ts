@@ -1,3 +1,5 @@
+import { ProjectStage } from '../../models';
+
 /**
  * Returns expected project stage Ignore Object
  * @param properties
@@ -10,5 +12,5 @@ export const ProjectIgnoreHelper = (...properties: string[]) => {
       return acc;
     },
     {} as { [index: string]: any },
-  );
+  ) as ProjectStage;
 };

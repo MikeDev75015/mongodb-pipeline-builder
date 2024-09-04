@@ -21,7 +21,7 @@ describe('currentOp helpers', () => {
       [CurrentOpHelper(payloadList[4]), payloadList[4]],
       [CurrentOpHelper(payloadList[5]), payloadList[5]],
     ])('%o should return %o', (
-      operation: any,
+      operation: CurrentOpStage,
       expected: CurrentOpStage,
     ) => {
       expect(operation).toEqual(expected);
