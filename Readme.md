@@ -211,7 +211,7 @@ ___
 #  GetResult method (No pagination)
 
 ```typescript
-GetResult<T = any>(): Promise<GetResultResponse<T>>
+GetResult<T>(): Promise<GetResultResponse<T>>
 ```
 
 <p style="font-size: 15px;">
@@ -269,7 +269,7 @@ result.GetElement(99); // will return undefined
 #  GetPagingResult method (Pagination)
 
 ```typescript
-GetPagingResult<T = any>(): Promise<GetPagingResultResponse<T>>
+GetPagingResult<T>(): Promise<GetPagingResultResponse<T>>
 ```
 
 <p style="font-size: 15px;">
@@ -315,12 +315,12 @@ ___
 
 `// builder = new PipelineBuilder('example');`
 
-## PAGING STAGE
-#### For use with the GetPagingResult method
+## CUSTOM STAGES
 
-### Paging(elementsPerPage: number, page = 1)
+### Paging(elementsPerPage, page)
 
-  *The Paging stage automatically adds 3 native stages used to paginate documents ($skip, $limit and $count).*
+  *The Paging stage automatically adds 3 native stages used to paginate documents ($skip, $limit and $count).
+  <br>Page is optional and defaults to 1.*
 
 ```typescript
 builder.Paging(5, 2).build();
@@ -336,139 +336,128 @@ builder.Paging(5, 2).build();
 ]
 ```
 
+### InsertStage(stage)
+
+  *The InsertStage stage allows you to insert a stage without validation.
+  <br>Usefully when you need to insert a stage that is not yet implemented
+  or when the value fails validation but for some reason you want to keep it.*
+
+```typescript
+builder.InsertStage({ '$myCustomStage': { myField: 'myValue' } }).build();
+
+// pipeline
+[ { '$myCustomStage': { myField: 'myValue' } } ]
+```
+
 
 ## [MONGODB STAGES](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/)
-#### For use with the GetResult method
 
-### [AddFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/)(...values: AddFieldsStage[])
-#### Helper: `Field`
+### [AddFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/)(...values)
+#### Helper: `Field(name, value)`
 ```typescript
-builder.AddFields(Field('foo', 'value1'), Field('bar', 'value2')).build();
+builder.AddFields(
+  Field('foo', 'value1'),
+  Field('bar', 'value2'),
+).build();
 
 // pipeline
-[ { '$addFields': { foo: 'value1', bar: 'value2' } } ]
+[ { $addFields: { foo: 'value1', bar: 'value2' } } ]
 ```
 
-### [Bucket](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/)(value: BucketStage)
-#### Helper: `BucketGroupByHelper`
+### [Bucket](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/)(value)
+#### Helper: `BucketHelper(groupBy, boundaries, optional)`
 ```typescript
-builder.Bucket(BucketGroupByHelper('$age', [6, 13, 18])).build();
+builder.Bucket(BucketHelper('$age', [6, 13, 18])).build();
 
 // pipeline
-[
-  {
-    '$bucket': {
-      groupBy: '$age',
-      boundaries: [ 6, 13, 18 ],
-      output: { count: { '$sum': 1 } }
-    }
-  }
-]
+[ { $bucket: { groupBy: '$age', boundaries: [ 6, 13, 18 ] } } ]
 ```
 
-### [BucketAuto](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/)(value: BucketAutoStage)
-#### Helper: `BucketAutoGroupByHelper`
+### [BucketAuto](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/)(value)
+#### Helper: `BucketAutoHelper(groupBy, buckets, optional)`
 ```typescript
-builder.BucketAuto(BucketAutoGroupByHelper('$age', 5)).build();
+builder.BucketAuto(BucketAutoHelper('$age', 5)).build();
 
 // pipeline
-[
-  {
-    '$bucketAuto': { groupBy: '$age', buckets: 5, output: { count: { '$sum': 1 } } }
-  }
-]
+[ { $bucketAuto: { groupBy: '$age', buckets: 5 } } ]
 ```
 
-### [ChangeStream](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/)(value: ChangeStreamStage)
+### [ChangeStream](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/)(value)
+#### Helper: `ChangeStreamHelper(optional)`
 ```typescript
-builder.ChangeStream({ allChangesForCluster: true, fullDocument: 'required' }).build();
+builder.ChangeStream(ChangeStreamHelper()).build();
 
 // pipeline
-[
-  {
-    '$changeStream': { allChangesForCluster: true, fullDocument: 'required' }
-  }
-]
+[ { $changeStream: {} } ]
 ```
 
-### [ChangeStreamSplitLargeEvent](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/)(value: ChangeStreamSplitLargeEventStage)
+### [ChangeStreamSplitLargeEvent](https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/)()
 ```typescript
-builder.ChangeStreamSplitLargeEvent({}).build();
+builder.ChangeStreamSplitLargeEvent().build();
 
 // pipeline
-[ { '$changeStreamSplitLargeEvent': {} } ]
+[ { $changeStreamSplitLargeEvent: {} } ]
 ```
 
-### [CollStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/)(value: CollStatsStage)
+### [CollStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/)(value)
+#### Helper: `CollStatsHelper(optional)`
 ```typescript
-builder.CollStats({ latencyStats: { histograms: true } }).build();
+builder.CollStats(CollStatsHelper()).build();
 
 // pipeline
-[
-  { '$collStats': { latencyStats: { histograms: true } } }
-]
+[ { $collStats: {} } ]
 ```
 
-### [Count](https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/)(value: string)
+### [Count](https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/)(value)
 ```typescript
 builder.Count('counter').build();
 
 // pipeline
-[ { '$count': 'counter' } ]
+[ { $count: 'counter' } ]
 ```
 
-### [CurrentOp](https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/)(value: CurrentOpStage)
-#### Helper: `CurrentOpHelper`
+### [CurrentOp](https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/)(value)
+#### Helper: `CurrentOpHelper(optional)`
 ```typescript
-builder.CurrentOp(CurrentOpHelper({ allUsers: true, idleConnections: true })).build();
+builder.CurrentOp(CurrentOpHelper()).build();
+
+// pipeline
+[ { $currentOp: {} } ]
+```
+
+### [Densify](https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/)(value, optional)
+#### Helper: `DensifyHelper(field, range, optional)`
+```typescript
+builder.Densify(
+    DensifyHelper(
+      'altitude',
+      { bounds: 'full', step: 200 },
+      { partitionByFields: [ 'variety' ] }
+    ),
+).build();
 
 // pipeline
 [
   {
-    '$currentOp': {
-      allUsers: true,
-      idleConnections: true,
-      idleCursors: false,
-      idleSessions: true,
-      localOps: false,
-      backtrace: false
-    }
-  }
-]
-```
-
-### [Densify](https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/)(value: DensifyStage)
-```typescript
-builder.Densify({
-  field: "altitude",
-  partitionByFields: [ "variety" ],
-  range: { bounds: "full", step: 200 }
-}).build();
-
-// pipeline
-[
-  {
-    '$densify': {
+    $densify: {
       field: 'altitude',
-      partitionByFields: [ 'variety' ],
       range: { bounds: 'full', step: 200 }
+      partitionByFields: [ 'variety' ],
     }
   }
 ]
 ```
 
-### [Documents](https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/)(value: DocumentsStage)
+### [Documents](https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/)(...values)
 ```typescript
-builder.Documents([{ doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 }]).build();
+builder.Documents({ doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 }).build();
 
 // pipeline
-[
-  { '$documents': [ { doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 } ] }
-]
+[ { $documents: [ { doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 } ] } ]
 ```
 
-### [Facet](https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/)(...values: FacetStage[])
-#### Helper: `Field`
+### [Facet](https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/)(...values)
+#### Helper: `Field(name, pipeline)`
 ```typescript
 builder.Facet(
   Field('pipeline1', [{ $match: { tag: 'first' }}]),
@@ -479,7 +468,7 @@ builder.Facet(
 // pipeline
 [
   {
-    '$facet': {
+    $facet: {
       pipeline1: [ { '$match': { tag: 'first' } } ],
       pipeline2: [ { '$match': { tag: 'second' } } ],
       pipeline3: [ { '$match': { tag: 'third' } } ]
@@ -488,21 +477,21 @@ builder.Facet(
 ]
 ```
 
-### [Fill](https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/)(value: FillStage)
+### [Fill](https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/)(value)
+#### Helper: `FillHelper(output, optional)`
 ```typescript
-builder.Fill({
-  output:
-    {
-      "bootsSold": { value: 0 },
-      "sandalsSold": { value: 0 },
-      "sneakersSold": { value: 0 }
-    }
-}).build();
+builder.Fill(
+  FillHelper({
+    bootsSold: { value: 0 },
+    sandalsSold: { value: 0 },
+    sneakersSold: { value: 0 },
+  }),
+).build();
 
 // pipeline
 [
   {
-    '$fill': {
+    $fill: {
       output: {
         bootsSold: { value: 0 },
         sandalsSold: { value: 0 },
@@ -513,25 +502,25 @@ builder.Fill({
 ]
 ```
 
-### [GeoNear](https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/)(value: GeoNearStage)
-#### Helper: `GeoNearHelper`
+### [GeoNear](https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/)(value)
+#### Helper: `GeoNearHelper(near, distanceField, optional)`
 ```typescript
 builder.GeoNear(
-  GeoNearHelper({ type: "Point", coordinates: [ -73.99279 , 40.719296 ] }, 'dist.calculated')
+  GeoNearHelper({ type: "Point", coordinates: [ -73.99279 , 40.719296 ] }, 'calculated')
 ).build();
 
 // pipeline
 [
   {
-    '$geoNear': {
+    $geoNear: {
       near: { type: 'Point', coordinates: [ -73.99279, 40.719296 ] },
-      distanceField: 'dist.calculated'
+      distanceField: 'calculated'
     }
   }
 ]
 ```
 
-### [GraphLookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/)(value: GraphLookupStage)
+### [GraphLookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/)(value)
 ```typescript
 builder.GraphLookup({
   from: 'employees', startWith: '$reportsTo', connectFromField: 'reportsTo', connectToField: 'name', as: 'reportingHierarchy',
@@ -540,7 +529,7 @@ builder.GraphLookup({
 // pipeline
 [
   {
-    '$graphLookup': {
+    $graphLookup: {
       from: 'employees',
       startWith: '$reportsTo',
       connectFromField: 'reportsTo',
@@ -551,184 +540,182 @@ builder.GraphLookup({
 ]
 ```
 
-### [Group](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)(value: GroupStage)
+### [Group](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)(value)
 ```typescript
 builder.Group({ _id: null, count: { $count: { } } }).build();
 
 // pipeline
 [
-  { '$group': { _id: null, count: { '$count': {} } } }
+  { $group: { _id: null, count: { '$count': {} } } }
 ]
 ```
 
-### [IndexStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/)(value: IndexStatsStage)
+### [IndexStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/)()
 ```typescript
-builder.IndexStats({}).build();
+builder.IndexStats().build();
 
 // pipeline
-[ { '$indexStats': {} } ]
+[ { $indexStats: {} } ]
 ```
 
-### [Limit](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)(value: number)
+### [Limit](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)(value)
 ```typescript
 builder.Limit(10).build();
 
 // pipeline
-[ { '$limit': 10 } ]
+[ { $limit: 10 } ]
 ```
 
-### [ListLocalSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/)(value: ListSessionsStage)
+### [ListLocalSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/)(value)
 ```typescript
 builder.ListLocalSessions({ allUsers: true }).build();
 
 // pipeline
-[ { '$listLocalSessions': { allUsers: true } } ]
+[ { $listLocalSessions: { allUsers: true } } ]
 ```
 
-### [ListSampledQueries](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/)(value: ListSampledQueriesStage)
+### [ListSampledQueries](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/)(value)
 ```typescript
 builder.ListSampledQueries({ namespace: "social.post" }).build();
 
 // pipeline
-[ { '$listSampledQueries': { namespace: 'social.post' } } ]
+[ { $listSampledQueries: { namespace: 'social.post' } } ]
 ```
 
-### [ListSearchIndexes](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/)(value: ListSearchIndexesStage)
+### [ListSearchIndexes](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/)(value)
 ```typescript
 builder.ListSearchIndexes({ name: 'searchIndex01' }).build();
 
 // pipeline
-[ { '$listSearchIndexes': { name: 'searchIndex01' } } ]
+[ { $listSearchIndexes: { name: 'searchIndex01' } } ]
 ```
 
-### [ListSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/)(value: ListSessionsStage)
+### [ListSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/)(value)
 ```typescript
 builder.ListSessions({ allUsers: true }).build();
 
 // pipeline
-[ { '$listSessions': { allUsers: true } } ]
+[ { $listSessions: { allUsers: true } } ]
 ```
 
-### [Lookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/)(value: LookupStage)
-#### Helper: `LookupConditionHelper`
+### [Lookup](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/)(value)
+#### Helper: `LookupConditionHelper(from, as, optional)`
 ```typescript
-builder.Lookup(LookupConditionHelper('users', 'users', {
-  pipeline: builder2.Match(
-    $Expression($GreaterThanEqual('$age', '$$age_min')),
-  ).build(),
-  project: ProjectOnlyHelper('name', 'age', 'city'),
-  sourceList: ['age_min'],
-})).build();
+builder.Lookup(LookupConditionHelper('users', 'users')).build();
 
 // pipeline
-[
-  {
-    '$lookup': {
-      from: 'users',
-      as: 'users',
-      let: { age_min: '$age_min' },
-      pipeline: [
-        {
-          '$match': { '$expr': { '$gte': [ '$age', '$$age_min' ] } }
-        },
-        { '$project': { _id: 0, name: 1, age: 1, city: 1 } }
-      ]
-    }
-  }
-]
+[ { $lookup: { from: 'users', as: 'users' } } ]
 ```
-#### Helper: `LookupEqualityHelper`
+#### Helper: `LookupEqualityHelper(from, as, localField, foreignField)`
 ```typescript
 builder.Lookup(
-  LookupEqualityHelper('users', 'user', 'id', 'userId')
+  LookupEqualityHelper('users', 'users', 'userId', 'id')
 ).build();
 
 // pipeline
 [
   {
-    '$lookup': {
+    $lookup: {
       from: 'users',
-      localField: 'id',
-      foreignField: 'userId',
-      as: 'user'
+      localField: 'userId',
+      foreignField: 'id',
+      as: 'users'
     }
   }
 ]
 ```
 
-### [Match](https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/)(value: MatchStage)
-#### Helper: `Field`
+### [Match](https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/)(value)
+#### Helper: `Field(name, value)`
 ```typescript
 builder.Match(Field('age', 18)).build();
 
 // pipeline
-[ { '$match': { age: 18 } } ]
+[ { $match: { age: 18 } } ]
 ```
 #### Operator: `$Expression`
 ```typescript
 builder.Match($Expression($GreaterThanEqual('$age', 18))).build();
 
 // pipeline
-[
-  {
-    '$match': { '$expr': { '$gte': [ '$age', 18 ] } }
-  }
-]
+[ { $match: { '$expr': { '$gte': [ '$age', 18 ] } } } ]
 ```
 
-### [Merge](https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/)(value: MergeStage)
-#### Helper: `MergeIntoHelper`
+### [Merge](https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/)(value)
+#### Helper: `MergeHelper(into, optional)`
 ```typescript
-builder.Merge(MergeIntoHelper('newCollection')).build();
+builder.Merge(MergeHelper('newCollection')).build();
+
+// pipeline
+[ { $merge: { into: 'newCollection' } } ]
+```
+
+### [Out](https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/)(value)
+#### Helper: `OutHelper(collection, optional)`
+```typescript
+builder.Out(OutHelper('users')).build();
+
+// pipeline
+[ { $out: 'users' } ]
+```
+
+### [PlanCacheStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/)()
+```typescript
+builder.PlanCacheStats().build();
+
+// pipeline
+[ { $planCacheStats: {} } ]
+```
+
+### [Project](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)(...values)
+#### Helper: `ProjectHelper(field, value)`
+```typescript
+builder.Project(
+  ProjectHelper('age', '$user.age'),
+  ProjectHelper(
+    'nickname',
+    {
+      $cond: {
+        if: { $eq: [ '', '$user.nickname' ] },
+        then: '$$REMOVE',
+        else: '$user.nickname',
+      },
+    },
+  ),
+).build();
 
 // pipeline
 [
   {
-    '$merge': {
-      into: 'newCollection',
-      on: '_id',
-      whenMatched: 'merge',
-      whenNotMatched: 'insert',
-      let: { new: '$$ROOT' }
+    $project: {
+      age: '$user.age',
+      nickname: {
+        $cond: {
+          if: { $eq: [ '', '$user.nickname' ] },
+          then: '$$REMOVE',
+          else: '$user.nickname'
+        }
+      }
     }
   }
 ]
 ```
-
-### [Out](https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/)(value: OutStage)
-#### Helper: `OutDbCollHelper`
-```typescript
-builder.Out(OutDbCollHelper('users', 'db1')).build();
-
-// pipeline
-[ { '$out': { db: 'db1', coll: 'users' } } ]
-```
-
-### [PlanCacheStats](https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/)(value: PlanCacheStatsStage)
-```typescript
-builder.PlanCacheStats({}).build();
-
-// pipeline
-[ { '$planCacheStats': {} } ]
-```
-
-### [Project](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)(value: ProjectStage)
-#### Helper: `ProjectIgnoreHelper`
+#### Helper: `ProjectIgnoreHelper(...fields)`
 ```typescript
 builder.Project(ProjectIgnoreHelper('password', 'refreshToken')).build();
 
 // pipeline
-[ { '$project': { password: 0, refreshToken: 0 } } ]
+[ { $project: { password: 0, refreshToken: 0 } } ]
 ```
-#### Helper: `ProjectOnlyHelper`
+#### Helper: `ProjectOnlyHelper(...fields)`
 ```typescript
 builder.Project(ProjectOnlyHelper('password', 'refreshToken')).build();
 
 // pipeline
-[ { '$project': { _id: 0, password: 1, refreshToken: 1 } } ]
+[ { $project: { _id: 0, password: 1, refreshToken: 1 } } ]
 ```
 
-### [Redact](https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/)(value: RedactStage)
+### [Redact](https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/)(value)
 ```typescript
 builder.Redact(
   $Condition(
@@ -752,7 +739,7 @@ builder.Redact(
 ]
 ```
 
-### [ReplaceRoot](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/)(value: ReplaceRootStage)
+### [ReplaceRoot](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/)(value)
 ```typescript
 builder.ReplaceRoot({
   newRoot: { full_name: { $concat : [ "$first_name", " ", "$last_name" ] } }
@@ -770,7 +757,7 @@ builder.ReplaceRoot({
 ]
 ```
 
-### [ReplaceWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/)(value: ReplaceWithStage)
+### [ReplaceWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/)(value)
 ```typescript
 builder.ReplaceWith('$name').build();
 
@@ -778,61 +765,69 @@ builder.ReplaceWith('$name').build();
 [ { '$replaceWith': '$name' } ]
 ```
 
-### [Sample](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)(value: number)
+### [Sample](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)(value)
+#### Helper: `SampleHelper(size)`
 ```typescript
-builder.Sample(6).build();
+builder.Sample(SampleHelper(6)).build();
 
 // pipeline
 [ { '$sample': { size: 6 } } ]
 ```
 
-### [Search](https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/)(value: AtlasSearchStage)
-#### Helper: `SearchHelper`
+### [Search](https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/)(value)
+#### Helper: `SearchHelper(operator | collector, optional)`
 ```typescript
-builder.Search(SearchHelper('near', {
-  'path': 'released',
-  'origin': '2011-09-01T00:00:00.000+00:00',
-  'pivot': 7776000000,
-}, { returnStoredSource: true, scoreDetails: true })).build();
+builder.Search(
+  SearchHelper({
+    near: { path: 'released', origin: date, pivot: 7776000000 },
+  }),
+).build();
 
 // pipeline
 [
   {
     '$search': {
-      near: {
-        path: 'released',
-        origin: '2011-09-01T00:00:00.000+00:00',
-        pivot: 7776000000
-      },
-      returnStoredSource: true,
-      scoreDetails: true
-    }
+      near: { path: 'released', origin: date, pivot: 7776000000 },
+    },
   }
 ]
 ```
 
-### [SearchMeta](https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/)(value: AtlasSearchStage)
-#### Helper: `SearchHelper`
+### [SearchMeta](https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/)(value)
+#### Helper: `SearchMetaHelper(collector, optional)`
 ```typescript
-builder.SearchMeta(SearchHelper('range', {
-  "path": "year",
-  "gte": 1998,
-  "lt": 1999
-}, { count: { type: 'total' } })).build();
+builder.SearchMeta(
+  SearchMetaHelper({
+    facet: {
+      operator: {
+        near: { path: 'released', origin: date, pivot: 7776000000 },
+      },
+      facets: {
+        test: { type: 'number', path: 'released', boundaries: [0, 100] },
+      },
+    },
+  })
+).build();
 
 // pipeline
 [
   {
     '$searchMeta': {
-      range: { path: 'year', gte: 1998, lt: 1999 },
-      count: { type: 'total' }
+      facet: {
+        operator: {
+          near: { path: 'released', origin: date, pivot: 7776000000 },
+        },
+        facets: {
+          test: { type: 'number', path: 'released', boundaries: [0, 100] },
+        },
+      },
     }
   }
 ]
 ```
 
-### [Set](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)(...values: SetStage[])
-#### Helper: `Field`
+### [Set](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)(...values)
+#### Helper: `Field(name, value)`
 ```typescript
 builder.Set(Field('first', true), Field('second', 2)).build();
 
@@ -840,7 +835,7 @@ builder.Set(Field('first', true), Field('second', 2)).build();
 [ { '$set': { first: true, second: 2 } } ]
 ```
 
-### [SetWindowFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/)(value: SetWindowFieldsStage)
+### [SetWindowFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/)(value)
 ```typescript
 builder.SetWindowFields({
   partitionBy: "$state",
@@ -870,7 +865,7 @@ builder.SetWindowFields({
 ]
 ```
 
-### [ShardedDataDistribution](https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/)(value: ShardedDataDistributionStage)
+### [ShardedDataDistribution](https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/)(value)
 ```typescript
 builder.ShardedDataDistribution({}).build();
 
@@ -878,7 +873,7 @@ builder.ShardedDataDistribution({}).build();
 [ { '$shardedDataDistribution': {} } ]
 ```
 
-### [Skip](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)(value: number)
+### [Skip](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)(value)
 ```typescript
 builder.Skip(100).build();
 
@@ -886,8 +881,8 @@ builder.Skip(100).build();
 [ { '$skip': 100 } ]
 ```
 
-### [Sort](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)(...values: SortStage[])
-#### Helper: `Field`
+### [Sort](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)(...values)
+#### Helper: `Field(name, value)`
 ```typescript
 builder.Sort(
   Field('first', -1),
@@ -903,7 +898,7 @@ builder.Sort(
 ]
 ```
 
-### [SortByCount](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/)(value: SortByCountStage)
+### [SortByCount](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/)(value)
 ```typescript
 builder.SortByCount('$employee').build();
 // pipeline
@@ -911,28 +906,48 @@ builder.SortByCount('$employee').build();
 [ { '$sortByCount': '$employee' } ]
 ```
 
-### [UnionWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/)(value: UnionWithStage)
-#### Helper: `UnionWithCollectionHelper`
+### [UnionWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/)(value)
+#### Helper: `UnionWithHelper(collection, pipeline)`
 ```typescript
 builder.UnionWith(
-  UnionWithCollectionHelper(
-    'cities',
-    builder2.Project(ProjectOnlyHelper('name', 'country')).build()
-  )
+  UnionWithHelper('cars'),
 ).build();
 
 // pipeline
 [
   {
-    '$unionWith': {
-      coll: 'cities',
-      pipeline: [ { '$project': { _id: 0, name: 1, country: 1 } } ]
-    }
+    '$unionWith': { coll: 'cars' }
+  }
+]
+```
+```typescript
+builder.UnionWith(
+  UnionWithHelper(
+    undefined,
+    [{ $document: [{ ref: 1 }, { ref: 2 }, { ref: 3 }],  }]),
+).build();
+
+// pipeline
+[
+  {
+    '$unionWith': { pipeline: [ { '$document': [ { ref: 1 }, { ref: 2 }, { ref: 3 } ] } ] }
+  }
+]
+```
+```typescript
+builder.UnionWith(
+  UnionWithHelper('cars', [{ $match: { color: 'red' } }]),
+).build();
+
+// pipeline
+[
+  {
+    '$unionWith': { coll: 'cars', pipeline: [ { '$match': { color: 'red' } } ] }
   }
 ]
 ```
 
-### [Unset](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/)(...values: UnsetStage)
+### [Unset](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/)(...values)
 ```typescript
 builder.Unset('users', 'roles').build();
 
@@ -940,7 +955,7 @@ builder.Unset('users', 'roles').build();
 [ { '$unset': [ 'users', 'roles' ] } ]
 ```
 
-### [Unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)(value: UnwindStage)
+### [Unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)(value)
 ```typescript
 builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).build();
 

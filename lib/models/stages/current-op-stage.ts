@@ -1,3 +1,5 @@
+import { BooleanExpression } from '../core/expression';
+
 /**
  * CurrentOp Interface
  */
@@ -16,14 +18,14 @@ export type CurrentOpStage = {
    *
    * Defaults to false.
    */
-  allUsers?: boolean;
+  allUsers?: BooleanExpression;
   /**
    * If set to false, $currentOp will only report active operations. If set to true, all operations including idle
    * connections will be returned.
    *
    * Defaults to false.
    */
-  idleConnections?: boolean;
+  idleConnections?: BooleanExpression;
   /**
    * If set to true, $currentOp will report on cursors that are “idle”; i.e. open but not currently active in a
    * getMore operation.
@@ -35,7 +37,7 @@ export type CurrentOpStage = {
    *
    * Defaults to false.
    */
-  idleCursors?: boolean;
+  idleCursors?: BooleanExpression;
   /**
    * If set to true, in addition to active/dormant operations, $currentOp will report on:
    *
@@ -57,7 +59,7 @@ export type CurrentOpStage = {
    *
    * Defaults to true.
    */
-  idleSessions?: boolean;
+  idleSessions?: BooleanExpression;
   /**
    * If set to true for an aggregation running on mongos, $currentOp reports only those operations running locally on
    * that mongos.
@@ -68,7 +70,7 @@ export type CurrentOpStage = {
    *
    * Defaults to false.
    */
-  localOps?: boolean;
+  localOps?: BooleanExpression;
   /**
    * Determines whether callstack information is returned as part of the waitingForLatch output field.
    *
@@ -79,5 +81,5 @@ export type CurrentOpStage = {
    *
    * Defaults to false.
    */
-  backtrace?: boolean;
+  backtrace?: BooleanExpression;
 };

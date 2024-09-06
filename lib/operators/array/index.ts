@@ -318,7 +318,7 @@ export const $Slice = (
  * field, $zip returns null. If any of the inputs arrays does not resolve to an array or null nor refers to a missing
  * field, $zip returns an error.
  * array. The default value is false: the shortest array length determines the number of arrays in the output array.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Zip = (

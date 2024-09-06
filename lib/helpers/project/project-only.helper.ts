@@ -1,3 +1,5 @@
+import { ProjectStage } from '../../models';
+
 /**
  * Returns expected project stage Only Object
  * @param properties
@@ -16,5 +18,5 @@ export const ProjectOnlyHelper = (...properties: string[]) => {
         properties.includes('_id') ? {} : { _id: 0 }
       ),
     } as { [index: string]: any },
-  );
+  ) as ProjectStage;
 };

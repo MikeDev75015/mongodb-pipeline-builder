@@ -1,3 +1,9 @@
+import { NumericExpression, ObjectExpression } from '../core/expression';
+import { FilePath } from '../core/file-path';
+
+type GranularityValues = 'R5' | 'R10' | 'R20' | 'R40' | 'R80' | '1-2-5' | 'E6' | 'E12' | 'E24' | 'E48' |
+  'E96' | 'E192' | 'POWERSOF2';
+
 /**
  * BucketAuto Stage Interface
  */
@@ -6,11 +12,11 @@ export type BucketAutoStage = {
    * An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and
    * enclose it in quotes.
    */
-  groupBy: any;
+  groupBy: FilePath;
   /**
    * A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
    */
-  buckets: number;
+  buckets: NumericExpression;
   /**
    * Optional. A document that specifies the fields to include in the output documents in addition to the _id field.
    * To specify the field to include, you must use accumulator expressions:
@@ -32,9 +38,7 @@ export type BucketAutoStage = {
    *
    * }
    */
-  output?: {
-    [key: string]: any;
-  };
+  output?: ObjectExpression;
   /**
    * Optional. A string that specifies the preferred number series to use to ensure that the calculated boundary edges
    * end on preferred round numbers or their powers of 10.
@@ -60,5 +64,4 @@ export type BucketAutoStage = {
   granularity?: GranularityValues;
 };
 
-export type GranularityValues = 'R5' | 'R10' | 'R20' | 'R40' | 'R80' | '1-2-5' | 'E6' | 'E12' | 'E24' | 'E48' |
-  'E96' | 'E192' | 'POWERSOF2';
+export type BucketAutoStageOptional = Partial<Omit<BucketAutoStage, 'groupBy' | 'buckets'>>;

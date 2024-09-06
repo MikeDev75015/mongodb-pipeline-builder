@@ -1,5 +1,6 @@
 import { Timezone } from './date-unit';
 import { FilePath } from './file-path';
+import { GeoJSON } from './geo-json';
 import { OperatorExpression } from './pipeline-operator';
 import { SystemVariable } from './pipeline-system-variables';
 
@@ -7,13 +8,13 @@ export type StringExpression = FilePath | OperatorExpression | string;
 
 export type NumericExpression = FilePath | OperatorExpression | number;
 
-export type ArrayExpression = FilePath | OperatorExpression | any[];
+export type ArrayExpression<T = any> = FilePath | OperatorExpression | T[];
 
 export type BooleanExpression = FilePath | OperatorExpression | boolean;
 
 export type DateExpression = FilePath | OperatorExpression | NumericExpression | Date;
 
-export type ObjectExpression = FilePath | OperatorExpression | { [p: string]: any } | object;
+export type ObjectExpression<T = any> = FilePath | OperatorExpression | { [p: string]: T } | object;
 
 export type FunctionExpression = FilePath | OperatorExpression | ((...args: any[]) => any);
 
@@ -25,6 +26,8 @@ export type RegExpExpression =
   | `/${string}/${'i' | 'm' | 'x' | 's'}`;
 
 export type RegExpOptionsExpression = `${'i' | 'm' | 'x' | 's'}`;
+
+export type GeoJSONExpression = FilePath | OperatorExpression | GeoJSON;
 
 export type Expression =
   FilePath

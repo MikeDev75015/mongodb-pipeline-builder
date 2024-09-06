@@ -1,1 +1,5 @@
-export type DocumentsStage = string | { [key: string]: any }[];
+import { ObjectExpression } from '../core/expression';
+
+export type DocumentStage = ObjectExpression;
+
+export type DocumentsStage = DocumentStage[];

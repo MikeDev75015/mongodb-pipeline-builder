@@ -48,7 +48,7 @@ export const $IfNull = (replaceWith: Expression, ...values: Expression[]) => (
  * then
  * Can be any valid expression.
  * The branches array must contain at least one branch document.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Switch = (

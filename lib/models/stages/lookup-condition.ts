@@ -1,4 +1,5 @@
-import { PipelineStage } from '../index';
+import { ObjectExpression } from '../core/expression';
+import { FilePath, PipelineStage, ProjectStage } from '../index';
 
 /**
  * Lookup Condition Payload Interface
@@ -33,13 +34,13 @@ export type LookupCondition = {
    *
    * Other (non-$match) stages in the pipeline do not require an $expr operator to access the variables.
    */
-  let?: { [index: string]: string };
+  let?: ObjectExpression<FilePath>;
   /**
    * The project takes a document that can specify the inclusion of fields, the suppression of the _id field, the
    * addition of new fields, and the resetting of the values of existing fields. Alternatively, you may specify the
    * exclusion of fields.
    */
-  project?: { [index: string]: any };
+  project?: ProjectStage;
   /**
    * Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the
    * joined collection. To return all documents, specify an empty pipeline [].
@@ -77,3 +78,4 @@ export type LookupCondition = {
   as: string
 };
 
+export type LookupConditionOptional = Partial<Omit<LookupCondition, 'from' | 'as'>>;

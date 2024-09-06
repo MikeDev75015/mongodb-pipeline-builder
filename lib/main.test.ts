@@ -1,5 +1,5 @@
 /* tslint:disable:no-string-literal */
-import { PipelineBuilder } from './';
+import { Field, PipelineBuilder } from './';
 import { PipelineError } from './errors';
 import { CurrentOpStage, PipelineStage } from './models';
 
@@ -55,7 +55,6 @@ describe('should create a new pipeline builder object', () => {
     });
 
     describe('Paging()', () => {
-
       it(
         'should return a new pipeline with a $facet step that contains 2 pipelines, one for paginated documents with 10 elements per page and another for the total count',
         () => {
@@ -163,7 +162,6 @@ describe('should create a new pipeline builder object', () => {
     });
 
     describe('addStage()', () => {
-
       it('should not add the stage to the pipeline if its value is invalid', () => {
         expect(() => pipelineBuilderWithDebug['addStage']('$match', undefined))
         .toThrowError(new PipelineError('The $match stage value is not valid.'));
@@ -191,8 +189,8 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'bucket',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .Bucket({ groupBy: '$name', boundaries: ['a', 'l', 'z'] }),
-          { groupBy: '$name', boundaries: ['a', 'l', 'z'] },
+          .Bucket({ groupBy: '$name', boundaries: [1, 2, 3] }),
+          { groupBy: '$name', boundaries: [1, 2, 3] },
         ],
         [
           'should add a stage to the pipeline', 'bucketAuto',
@@ -207,7 +205,7 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'changeStreamSplitLargeEvent',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .ChangeStreamSplitLargeEvent({}), {},
+          .ChangeStreamSplitLargeEvent(), {},
         ],
         [
           'should add a stage to the pipeline', 'collStats',
@@ -236,7 +234,7 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'documents',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .Documents([{ output1: [] }]), [{ output1: [] }],
+          .Documents({ output1: [] }, { output2: [] }), [{ output1: [] }, { output2: [] }],
         ],
         [
           'should add a stage to the pipeline', 'facet',
@@ -256,19 +254,19 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'geoNear',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .GeoNear({ near: [20, 5], distanceField: 'distance' }),
-          { near: [20, 5], distanceField: 'distance' },
+          .GeoNear({ near: { type: 'Point', coordinates: [20, 5] }, distanceField: 'distance' }),
+          { near: { type: 'Point', coordinates: [20, 5] }, distanceField: 'distance' },
         ],
         [
           'should add a stage to the pipeline', 'graphLookup',
           new PipelineBuilder('debug', { debug: true, logs: true })
           .GraphLookup(
             {
-              from: 'tests', startWith: [15, 30, 45], connectFromField: 'testId', connectToField: 'id',
+              from: 'tests', startWith: ['15', '30', '45'], connectFromField: 'testId', connectToField: 'id',
               as: 'pts',
             },
           ), {
-          from: 'tests', startWith: [15, 30, 45], connectFromField: 'testId', connectToField: 'id',
+          from: 'tests', startWith: ['15', '30', '45'], connectFromField: 'testId', connectToField: 'id',
           as: 'pts',
         },
         ],
@@ -281,7 +279,7 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'indexStats',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .IndexStats({ tests: 'unit' }), { tests: 'unit' },
+          .IndexStats(), {},
         ],
         [
           'should add a stage to the pipeline', 'limit',
@@ -331,12 +329,17 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'planCacheStats',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .PlanCacheStats({ tests: 'unit' }), { tests: 'unit' },
+          .PlanCacheStats(), {},
         ],
         [
           'should add a stage to the pipeline', 'project',
           new PipelineBuilder('debug', { debug: true, logs: true })
           .Project({ tests: 1 }), { tests: 1 },
+        ],
+        [
+          'should add a stage to the pipeline', 'project',
+          new PipelineBuilder('debug', { debug: true, logs: true })
+          .Project({ tests: 1 }, { units: 0 }), { tests: 1, units: 0 },
         ],
         [
           'should add a stage to the pipeline',
@@ -358,17 +361,29 @@ describe('should create a new pipeline builder object', () => {
         [
           'should add a stage to the pipeline', 'sample',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .Sample(3), { size: 3 },
+          .Sample({ size: 3 }), { size: 3 },
         ],
         [
           'should add a stage to the pipeline', 'search',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .Search({ returnStoredSource: true }), { returnStoredSource: true },
+          .Search({ queryString: { query: 'test', defaultPath: '' } }),
+          { queryString: { query: 'test', defaultPath: '' } },
         ],
         [
           'should add a stage to the pipeline', 'searchMeta',
           new PipelineBuilder('debug', { debug: true, logs: true })
-          .SearchMeta({ returnStoredSource: true }), { returnStoredSource: true },
+          .SearchMeta({
+            facet: {
+              operator: { queryString: { query: 'test', defaultPath: '' } },
+              facets: {},
+            },
+          }),
+          {
+            facet: {
+              operator: { queryString: { query: 'test', defaultPath: '' } },
+              facets: {},
+            },
+          },
         ],
         [
           'should add a stage to the pipeline', 'set',
@@ -516,17 +531,16 @@ describe('should create a new pipeline builder object', () => {
       });
     });
 
-    describe('insertStage', () => {
-      const customStage = { $match: { name: 'toto' } };
+    describe('Insert', () => {
+      const matchStage = { $match: { name: 'toto' } };
       const unknownStage = { $test: 'toto' };
 
       it('should add user custom stage, disable validation and build', () => {
-        pipelineBuilderWithoutDebug.insertStage(customStage);
-        pipelineBuilderWithoutDebug.insertStage(unknownStage);
+        pipelineBuilderWithoutDebug.Match(Field('name', 'toto')).Insert(unknownStage);
 
         expect(pipelineBuilderWithoutDebug['stageList'])
-        .toEqual([{ ...customStage, disableValidation: true }, { ...unknownStage, disableValidation: true }]);
-        expect(pipelineBuilderWithoutDebug.build()).toEqual([customStage, unknownStage]);
+        .toEqual([matchStage, { ...unknownStage, disableValidation: true }]);
+        expect(pipelineBuilderWithoutDebug.build()).toEqual([matchStage, unknownStage]);
       });
     });
 

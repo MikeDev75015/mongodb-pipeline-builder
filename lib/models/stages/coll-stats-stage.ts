@@ -1,3 +1,5 @@
+import { BooleanExpression, NumericExpression } from '../core/expression';
+
 /**
  * CollStats Stage Interface
  */
@@ -7,7 +9,7 @@ export type CollStatsStage = {
    *
    * latencyStats.histograms  Adds latency histogram information to the embedded documents in latencyStats if true.
    */
-  latencyStats?: { histograms: boolean; };
+  latencyStats?: { histograms?: BooleanExpression; };
   /**
    * Adds storage statistics to the return document.
    *
@@ -23,7 +25,7 @@ export type CollStatsStage = {
    * The scale factor does not affect those sizes that specify the unit of measurement in the field name, such as
    * "bytes currently in the cache".
    */
-  storageStats?: { scale: number; };
+  storageStats?: { scale?: NumericExpression; };
   /**
    * Adds the total number of documents in the collection to the return document.
    *
@@ -32,9 +34,9 @@ export type CollStatsStage = {
    * The count is based on the collection’s metadata, which provides a fast but sometimes inaccurate count for
    * sharded clusters.
    */
-  count?: any;
+  count?: NumericExpression;
   /**
    * Adds query execution statistics to the return document.
    */
-  queryExecStats?: any;
+  queryExecStats?: {};
 };

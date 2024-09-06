@@ -18,13 +18,13 @@ describe('ConditionStage', () => {
       {
         project: { _id: 0, test1: 1, test2: 1, test3: 1 },
         pipeline: [{ $match: { $expr: { $eq: ['$type', '$$testSource'] } } }],
-        sourceList: ['testSource'],
+        let: { testSource: '$testSource' },
       },
     )).toEqual({
       as: 'as',
       from: 'from',
       let: {
-        'testSource': '$testSource',
+        testSource: '$testSource',
       },
       pipeline: [
         { $match: { $expr: { $eq: ['$type', '$$testSource'] } } },
@@ -37,9 +37,15 @@ describe('ConditionStage', () => {
     expect(LookupConditionHelper(
       'from',
       'as',
+      {
+        project: { _id: 0, test1: 0, test2: 0, test3: 0 },
+      },
     )).toEqual({
       as: 'as',
       from: 'from',
+      pipeline: [
+        { $project: { _id: 0, test1: 0, test2: 0, test3: 0 } },
+      ],
     });
   });
 });

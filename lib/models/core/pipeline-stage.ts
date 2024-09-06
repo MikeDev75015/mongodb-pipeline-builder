@@ -12,11 +12,11 @@ import {
   OutStage,
   ReplaceRootStage,
   SampleStage,
+  SearchMetaStage,
   UnionWithStage,
   UnwindStage,
 } from '../';
 import { AddFieldsStage } from '../stages/add-fields-stage';
-import { AtlasSearchStage } from '../stages/atlas-search-stage';
 import { ChangeStreamSplitLargeEventStage } from '../stages/change-stream-split-large-event-stage';
 import { ChangeStreamStage } from '../stages/change-stream-stage';
 import { DensifyStage } from '../stages/densify-stage';
@@ -31,6 +31,7 @@ import { PlanCacheStatsStage } from '../stages/plan-cache-stats-stage';
 import { ProjectStage } from '../stages/project-stage';
 import { RedactStage } from '../stages/redact-stage';
 import { ReplaceWithStage } from '../stages/replace-with-stage';
+import { SearchStage } from '../stages/search-stage';
 import { SetStage } from '../stages/set-stage';
 import { SetWindowFieldsStage } from '../stages/set-window-fields-stage';
 import { ShardedDataDistributionStage } from '../stages/sharded-data-distribution-stage';
@@ -244,12 +245,12 @@ export type PipelineStage = {
    * Performs a full-text search of the field or fields in an Atlas collection.
    * $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
    */
-  $search?: AtlasSearchStage;
+  $search?: SearchStage;
   /**
    * searchMeta returns different types of metadata result documents for Atlas Search queries on the field or fields in
    * an Atlas collection. The fields must be covered by an Atlas Search index
    */
-  $searchMeta?: AtlasSearchStage;
+  $searchMeta?: SearchMetaStage;
   /**
    * Adds new fields to documents. Similar to $project, $set reshapes each document in the stream; specifically, by
    * adding new fields to output documents that contain both the existing fields from the input documents and the

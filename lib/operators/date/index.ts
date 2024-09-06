@@ -19,7 +19,7 @@ import {
  * @param amount The number of units added to the startDate. The amount is an expression that resolves to an integer or
  *   long. The amount can also resolve to an integral decimal or a double if that value can be converted to a long
  *   without loss of precision.
- * @param optional Optional.
+ * @param optional Optionals.
  */
 export const $DateAdd = (
   startDate: Expression | Date,
@@ -51,7 +51,7 @@ export const $DateAdd = (
  * @param endDate The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp,
  *   or an ObjectID.
  * @param unit The time measurement unit between the startDate and endDate.
- * @param optional Optional.
+ * @param optional Optionals.
  */
 export const $DateDifference = (
   startDate: Expression | Date,
@@ -262,7 +262,7 @@ export const $DateFromIsoWeekParts = (
  *
  * NOTE
  * If specifying the timezone option to the operator, do not include time zone information in the dateString.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $DateFromString = (
@@ -360,7 +360,7 @@ export const $DateSubtract = (
  *
  * @param date The input date for which to return parts. <dateExpression> can be any expression that resolves to a
  *   Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  */
 export const $DateToParts = (
   date: DateExpression,
@@ -386,7 +386,7 @@ export const $DateToParts = (
  *
  * @param date The date to convert to string. <dateExpression> must be a valid expression that resolves to a Date, a
  *   Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  */
 export const $DateToString = (
   date: DateExpression,
@@ -419,7 +419,7 @@ export const $DateToString = (
  * @param unit The unit of time, specified as an expression that must resolve to one of these strings:
  * year, quarter, week, month, day, hour, minute or second. Together, binSize and unit specify the time period used in
  *   the $dateTrunc calculation.
- * @param optional Optional.
+ * @param optional Optionals.
  */
 export const $DateTrunc = (
   date: DateExpression,
@@ -456,7 +456,7 @@ export const $DateTrunc = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $DayOfMonth = (
@@ -480,7 +480,7 @@ export const $DayOfMonth = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $DayOfWeek = (
@@ -504,7 +504,7 @@ export const $DayOfWeek = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $DayOfYear = (
@@ -528,7 +528,7 @@ export const $DayOfYear = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Hour = (
@@ -552,7 +552,7 @@ export const $Hour = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $IsoDayOfWeek = (
@@ -577,7 +577,7 @@ export const $IsoDayOfWeek = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $IsoWeek = (
@@ -602,7 +602,7 @@ export const $IsoWeek = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $IsoWeekYear = (
@@ -626,7 +626,7 @@ export const $IsoWeekYear = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Millisecond = (
@@ -650,7 +650,7 @@ export const $Millisecond = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Minute = (
@@ -674,7 +674,7 @@ export const $Minute = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Month = (
@@ -698,7 +698,7 @@ export const $Month = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Second = (
@@ -731,7 +731,7 @@ export const $ToDate = (expression: Expression) => ({ $toDate: expression });
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Week = (
@@ -755,7 +755,7 @@ export const $Week = (
  *
  * @param date The date to which the operator is applied. <dateExpression> must be a valid expression that resolves to
  *   a Date, a Timestamp, or an ObjectID.
- * @param optional Optional.
+ * @param optional Optionals.
  * @constructor
  */
 export const $Year = (

@@ -13,14 +13,7 @@ import { CurrentOpStage } from '../../models';
  * $currentOp also enables you to perform arbitrary transformations of the results as the documents pass through the
  * pipeline.
  * @constructor
- * @param optional Optional. If you do not specify any parameters, CurrentOp will use the default values.
+ * @param optional Optionals. If you do not specify any parameters, CurrentOp will use the default values.
  * All default to false, except idleSessions, which defaults to true.
  */
-export const CurrentOpHelper = (optional: {
-  allUsers?: boolean;
-  idleConnections?: boolean;
-  idleCursors?: boolean;
-  idleSessions?: boolean;
-  localOps?: boolean;
-  backtrace?: boolean;
-} = {}) => optional as CurrentOpStage;
+export const CurrentOpHelper = (optional: CurrentOpStage = {}) => optional;

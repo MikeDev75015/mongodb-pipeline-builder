@@ -1,3 +1,7 @@
+import { Expression, NumericExpression, StringExpression } from '../core/expression';
+
+type RangeUnit = 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
+
 type DensifyRange = {
   /**
    * The amount to increment the
@@ -10,7 +14,7 @@ type DensifyRange = {
    * range.unit
    *  is specified, step must be an integer. Otherwise, step can be any numeric value.
    */
-  step: number;
+  step: NumericExpression;
   /**
    * Required if field is a date.
    *
@@ -39,7 +43,7 @@ type DensifyRange = {
    *
    * year
    */
-  unit?: any;
+  unit?: RangeUnit;
   /**
    * If bounds is an array:
    *
@@ -64,7 +68,7 @@ type DensifyRange = {
    *  adds documents to each partition, similar to if you had run a full range densification on each partition
    * individually.
    */
-  bounds: 'full' | 'partition' | ('lower bound' | 'upper bound')[];
+  bounds: 'full' | 'partition' | [Expression, Expression];
 };
 
 export type DensifyStage = {
@@ -75,7 +79,7 @@ export type DensifyStage = {
    *
    * To specify a <field> in an embedded document or in an array, use dot notation.
    */
-  field: string;
+  field: StringExpression;
   /**
    * The set of fields to act as the compound key to group the documents. In the
    * $densify
@@ -85,9 +89,11 @@ export type DensifyStage = {
    * $densify
    *  uses one partition for the entire collection.
    */
-  partitionByFields?: string[];
+  partitionByFields?: StringExpression[];
   /**
    * An object that specifies how the data is densified.
    */
   range: DensifyRange
 };
+
+export type DensifyStageOptional = Partial<Omit<DensifyStage, 'field' | 'range'>>;

@@ -23,7 +23,7 @@ export function isEmptyObject(obj: object) {
  *
  * @param {object} obj - The object to check.
  */
-export function isNotEmptyObject(obj: object) {
-    return Object.keys(obj).length > 0;
+export function isNotEmptyObject(obj?: object) {
+    return Object.keys(obj ?? {}).length > 0;
 }
 

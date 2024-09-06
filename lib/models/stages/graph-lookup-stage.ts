@@ -1,3 +1,6 @@
+import { NumericExpression, ObjectExpression, StringExpression } from '../core/expression';
+import { MayBeArray } from '../core/may-be-array';
+
 /**
  * GraphLookup Stage Interface
  */
@@ -12,12 +15,12 @@ export type GraphLookupStage = {
    * Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally,
    * startWith may be array of values, each of which is individually followed through the traversal process.
    */
-  startWith: any;
+  startWith: MayBeArray<StringExpression>;
   /**
    * Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in
    * the collection. If the value is an array, each element is individually followed through the traversal process.
    */
-  connectFromField: string;
+  connectFromField: MayBeArray<StringExpression>;
   /**
    * Field name in other documents against which to match the value of the field specified by the connectFromField
    * parameter.
@@ -33,7 +36,7 @@ export type GraphLookupStage = {
   /**
    * Optional. Non-negative integral number specifying the maximum recursion depth.
    */
-  maxDepth?: number;
+  maxDepth?: NumericExpression;
   /**
    * Optional. Name of the field to add to each traversed document in the search path. The value of this field is the
    * recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first
@@ -53,5 +56,5 @@ export type GraphLookupStage = {
    * will not work in this context to find documents in which the lastName value is different from the lastName value
    * of the input document, because "$lastName" will act as a string literal, not a field path.
    */
-  restrictSearchWithMatch?: any;
+  restrictSearchWithMatch?: ObjectExpression;
 };
