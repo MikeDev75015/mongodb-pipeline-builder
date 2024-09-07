@@ -1,14 +1,14 @@
 import {
-    $Concat, $IndexOfBytes,
-    $IndexOfCP,
-    $Ltrim, $RegexFind,
-    $RegexFindAll, $RegexMatch, $ReplaceAll, $ReplaceOne,
-    $Rtrim, $Split,
-    $StrCaseCmp, $StrLenBytes,
-    $StrLenCP,
-    $Substr,
-    $SubstrBytes, $SubstrCP, $ToLower, $ToString,
-    $ToUpper, $Trim
+  $Concat, $IndexOfBytes,
+  $IndexOfCP,
+  $Ltrim, $RegexFind,
+  $RegexFindAll, $RegexMatch, $ReplaceAll, $ReplaceOne,
+  $Rtrim, $Split,
+  $StrCaseCmp, $StrLenBytes,
+  $StrLenCP,
+  $Substr,
+  $SubstrBytes, $SubstrCP, $ToLower, $ToString,
+  $ToUpper, $Trim
 } from "./index";
 
 const expressions: any[] = [];
@@ -32,17 +32,21 @@ const expression2 = '';
 const regex = / /g;
 
 describe('string operators', () => {
-    test.each([
+  test.each([
     [$Concat(...expressions), { $concat: expressions }],
     [$IndexOfBytes(stringExpression, substringExpression, { startIndex, endIndex }), { $indexOfBytes: [stringExpression, substringExpression, startIndex, endIndex ] }],
+    [$IndexOfBytes(stringExpression, substringExpression), { $indexOfBytes: [stringExpression, substringExpression ] }],
     [$IndexOfCP(stringExpression, substringExpression, { startIndex, endIndex }), { $indexOfCP: [stringExpression, substringExpression, startIndex, endIndex ] }],
+    [$IndexOfCP(stringExpression, substringExpression), { $indexOfCP: [stringExpression, substringExpression ] }],
     [$Ltrim(input, { chars }), { $ltrim: { input,  chars } }],
+    [$Ltrim(input), { $ltrim: { input } }],
     [$RegexFind(input, regex), { $regexFind: { input , regex } }],
     [$RegexFindAll(input, regex), { $regexFindAll: { input , regex } }],
     [$RegexMatch(input, regex), { $regexMatch: { input, regex } }],
     [$ReplaceOne(input, find, replacement), { $replaceOne: { input, find, replacement } }],
     [$ReplaceAll(input, find, replacement), { $replaceAll: { input, find, replacement } }],
     [$Rtrim(input, { chars }), { $rtrim: { input,  chars } }],
+    [$Rtrim(input), { $rtrim: { input } }],
     [$Split(stringExpression, delimiter), { $split: [stringExpression, delimiter ] }],
     [$StrLenBytes(stringExpression), { $strLenBytes: stringExpression }],
     [$StrLenCP(stringExpression), { $strLenCP: stringExpression }],
@@ -53,12 +57,13 @@ describe('string operators', () => {
     [$ToLower(expression), { $toLower: expression }],
     [$ToString(expression), { $toString: expression }],
     [$Trim(input, { chars }), { $trim: { input,  chars } }],
+    [$Trim(input), { $trim: { input } }],
     [$ToUpper(expression), { $toUpper: expression }],
-    ])('should %s', (
-        operation: any,
-        expected: any
-    ) => {
-        expect(operation).toEqual(expected);
-    });
+  ])('should %s', (
+    operation: any,
+    expected: any
+  ) => {
+    expect(operation).toEqual(expected);
+  });
 });
 

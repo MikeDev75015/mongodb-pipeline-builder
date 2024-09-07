@@ -12,6 +12,7 @@ describe('conditional operators', () => {
   test.each([
     [$Condition(booleanExpression, trueCase, falseCase), { $cond: [booleanExpression, trueCase, falseCase] }],
     [$IfNull(replaceWith, ...values), { $ifNull: [...values, replaceWith] }],
+    [$Switch(branchList), { $switch: { branches: branchList } }],
     [$Switch(branchList, { defaultCase }), { $switch: { branches: branchList, default: defaultCase } }],
   ])('should %s', (
     operation: any,

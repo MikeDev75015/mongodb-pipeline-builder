@@ -47,7 +47,6 @@ describe('custom aggregation operators', () => {
         accumulateCode,
         accumulateArgs,
         mergeCode,
-        { finalize: finalizeCode },
       ),
       {
         $accumulator: {
@@ -55,7 +54,6 @@ describe('custom aggregation operators', () => {
           accumulate: accumulateCode,
           accumulateArgs,
           merge: mergeCode,
-          finalize: finalizeCode,
           lang: 'js',
         },
       },

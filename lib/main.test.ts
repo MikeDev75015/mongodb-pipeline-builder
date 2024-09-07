@@ -575,5 +575,31 @@ describe('should create a new pipeline builder object', () => {
         ));
       });
     });
+
+    describe('forceLog', () => {
+      let previousLogState: boolean;
+      let spyBuilderLog: jasmine.Spy;
+
+      beforeEach(() => {
+        previousLogState = pipelineBuilderWithoutDebug['builderOptions'].logs;
+        spyBuilderLog = spyOn<any>(pipelineBuilderWithoutDebug, 'log');
+      });
+
+      it('should force the log of warn type', () => {
+        pipelineBuilderWithoutDebug['forceLog']('warn', 'test');
+
+        expect(spyBuilderLog).toHaveBeenCalledTimes(1);
+        expect(spyBuilderLog).toHaveBeenCalledWith('warn', 'test');
+        expect(pipelineBuilderWithoutDebug['builderOptions'].logs).toStrictEqual(previousLogState);
+      });
+
+      it('should force the log of error type', () => {
+        pipelineBuilderWithoutDebug['forceLog']('error', 'test');
+
+        expect(spyBuilderLog).toHaveBeenCalledTimes(1);
+        expect(spyBuilderLog).toHaveBeenCalledWith('error', 'test');
+        expect(pipelineBuilderWithoutDebug['builderOptions'].logs).toStrictEqual(previousLogState);
+      });
+    });
   });
 });
