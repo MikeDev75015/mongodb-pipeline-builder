@@ -1,4 +1,4 @@
-<div style="text-align: center; width: 100%;">
+++<div style="text-align: center; width: 100%;">
 
 <div style="display: inline-block">
 
@@ -83,41 +83,33 @@ All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeE
 ---
 
 
-> **Breaking changes** between **v3** and **v4**
-> * Renaming `getPipeline()` with `build()`
-> * Added new stages: ChangeStream, ChangeStreamSplitLargeEvent, Densify, Documents, Fill, ListLocalSessions, ListSampledQueries, ListSearchIndexes, SearchMeta, SetWindowFields and ShardedDataDistribution
-> * Added the possibility to insert stages without validation
-> * Checking for non-duplicable stages
+### **News and Breaking changes** between **v3** and **v4**
 
--  **Helpers**
- 
-   > Replacing the `Payload` suffix with `Helper` suffix
-   > 
-   > Prefixed with the name of the pipeline stage where they should be used
+#### **PipelineBuilder:**
+ * Renaming `getPipeline()` with `build()`
+ * Added new stages: ChangeStream, ChangeStreamSplitLargeEvent, Densify, Documents, Fill, ListLocalSessions, ListSampledQueries, ListSearchIndexes, SearchMeta, SetWindowFields and ShardedDataDistribution.
+ * Added the possibility to insert stages without validation.
+ * Checking for non-duplicable stages.
 
+#### **Helpers:**
+ * Replacing the `Payload` suffix with `Helper` suffix
+ * Prefixed with the name of the pipeline stage where they should be used
 
--  **Operators**
-
-   > Prefixed with the **$** symbol
-   > 
-   > Rename `MapOperator` to `$Map`
+#### **Operators:**
+ * Prefixed with the **$** symbol
+ * Rename `MapOperator` to `$Map`
 
 
-- **GetResult**
+#### **GetResult:**
+ * To be used if no Paging stage is set
+ * Removing GetDocs method arguments
+ * Added new GetElement method to the response object
 
-  > To be used only if no Paging stage is set
-  > 
-  > Added new GetElement method to the response object
-  > 
-  > Removing GetDocs method arguments
+#### **GetPagingResult:**
+ * To be used exclusively with Paging stage.
 
 
-- **GetPagingResult**
-
-  > To be used exclusively with Paging stage.
-
-  
-*Welcome generics! `GetResult<Type>` and `GetPagingResult<Type>` now offer the ability to type responses*
+*Welcome generics! `GetResult<Type>` and `GetPagingResult<Type>` now offer the ability to type responses.*
 
 ---
 
@@ -235,7 +227,7 @@ This method returns a `GetResultResponse` object that contains 3 methods:<br>
 ```typescript
 const result = await GetResult<DocType>( target, pipeline ); 
 result.GetDocs(); // () => DocType[]
-result.GetElement(); // () => DocType
+result.GetElement(index | 'last'); // () => DocType | undefined
 result.GetCount(); // () => number
 ```
 
@@ -243,7 +235,7 @@ result.GetCount(); // () => number
 ```typescript
 GetResult<DocType>( target, pipeline ).then( result => {
     result.GetDocs(); // () => DocType[]
-    result.GetElement(); // () => DocType
+    result.GetElement(index | 'last'); // () => DocType | undefined
     result.GetCount(); // () => number
 } );
 ```
@@ -328,7 +320,7 @@ builder.Paging(5, 2).build();
 // pipeline
 [
   {
-    '$facet': {
+    $facet: {
       docs: [ { '$skip': 5 }, { '$limit': 5 } ],
       count: [ { '$count': 'totalElements' } ]
     }
@@ -346,7 +338,7 @@ builder.Paging(5, 2).build();
 builder.InsertStage({ '$myCustomStage': { myField: 'myValue' } }).build();
 
 // pipeline
-[ { '$myCustomStage': { myField: 'myValue' } } ]
+[ { $myCustomStage: { myField: 'myValue' } } ]
 ```
 
 
@@ -425,7 +417,7 @@ builder.CurrentOp(CurrentOpHelper()).build();
 [ { $currentOp: {} } ]
 ```
 
-### [Densify](https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/)(value, optional)
+### [Densify](https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/)(value)
 #### Helper: `DensifyHelper(field, range, optional)`
 ```typescript
 builder.Densify(
@@ -728,7 +720,7 @@ builder.Redact(
 // pipeline
 [
   {
-    '$redact': {
+    $redact: {
       '$cond': [
         { '$gt': [ { '$size': { '$setIntersection': [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] },
         '$$DESCEND',
@@ -748,7 +740,7 @@ builder.ReplaceRoot({
 // pipeline
 [
   {
-    '$replaceRoot': {
+    $replaceRoot: {
       newRoot: {
         full_name: { '$concat': [ '$first_name', ' ', '$last_name' ] }
       }
@@ -762,7 +754,7 @@ builder.ReplaceRoot({
 builder.ReplaceWith('$name').build();
 
 // pipeline
-[ { '$replaceWith': '$name' } ]
+[ { $replaceWith: '$name' } ]
 ```
 
 ### [Sample](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)(value)
@@ -771,7 +763,7 @@ builder.ReplaceWith('$name').build();
 builder.Sample(SampleHelper(6)).build();
 
 // pipeline
-[ { '$sample': { size: 6 } } ]
+[ { $sample: { size: 6 } } ]
 ```
 
 ### [Search](https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/)(value)
@@ -786,7 +778,7 @@ builder.Search(
 // pipeline
 [
   {
-    '$search': {
+    $search: {
       near: { path: 'released', origin: date, pivot: 7776000000 },
     },
   }
@@ -812,7 +804,7 @@ builder.SearchMeta(
 // pipeline
 [
   {
-    '$searchMeta': {
+    $searchMeta: {
       facet: {
         operator: {
           near: { path: 'released', origin: date, pivot: 7776000000 },
@@ -832,7 +824,7 @@ builder.SearchMeta(
 builder.Set(Field('first', true), Field('second', 2)).build();
 
 // pipeline
-[ { '$set': { first: true, second: 2 } } ]
+[ { $set: { first: true, second: 2 } } ]
 ```
 
 ### [SetWindowFields](https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/)(value)
@@ -851,7 +843,7 @@ builder.SetWindowFields({
 // pipeline
 [
   {
-    '$setWindowFields': {
+    $setWindowFields: {
       partitionBy: '$state',
       sortBy: { orderDate: 1 },
       output: {
@@ -870,7 +862,7 @@ builder.SetWindowFields({
 builder.ShardedDataDistribution({}).build();
 
 // pipeline
-[ { '$shardedDataDistribution': {} } ]
+[ { $shardedDataDistribution: {} } ]
 ```
 
 ### [Skip](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)(value)
@@ -878,7 +870,7 @@ builder.ShardedDataDistribution({}).build();
 builder.Skip(100).build();
 
 // pipeline
-[ { '$skip': 100 } ]
+[ { $skip: 100 } ]
 ```
 
 ### [Sort](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)(...values)
@@ -893,7 +885,7 @@ builder.Sort(
 // pipeline
 [
   {
-    '$sort': { first: -1, second: 1, third: { '$meta': 'textScore' } }
+    $sort: { first: -1, second: 1, third: { '$meta': 'textScore' } }
   }
 ]
 ```
@@ -903,7 +895,7 @@ builder.Sort(
 builder.SortByCount('$employee').build();
 // pipeline
 
-[ { '$sortByCount': '$employee' } ]
+[ { $sortByCount: '$employee' } ]
 ```
 
 ### [UnionWith](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/)(value)
@@ -916,7 +908,7 @@ builder.UnionWith(
 // pipeline
 [
   {
-    '$unionWith': { coll: 'cars' }
+    $unionWith: { coll: 'cars' }
   }
 ]
 ```
@@ -930,7 +922,7 @@ builder.UnionWith(
 // pipeline
 [
   {
-    '$unionWith': { pipeline: [ { '$document': [ { ref: 1 }, { ref: 2 }, { ref: 3 } ] } ] }
+    $unionWith: { pipeline: [ { '$document': [ { ref: 1 }, { ref: 2 }, { ref: 3 } ] } ] }
   }
 ]
 ```
@@ -942,7 +934,7 @@ builder.UnionWith(
 // pipeline
 [
   {
-    '$unionWith': { coll: 'cars', pipeline: [ { '$match': { color: 'red' } } ] }
+    $unionWith: { coll: 'cars', pipeline: [ { '$match': { color: 'red' } } ] }
   }
 ]
 ```
@@ -952,7 +944,7 @@ builder.UnionWith(
 builder.Unset('users', 'roles').build();
 
 // pipeline
-[ { '$unset': [ 'users', 'roles' ] } ]
+[ { $unset: [ 'users', 'roles' ] } ]
 ```
 
 ### [Unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)(value)
@@ -960,7 +952,7 @@ builder.Unset('users', 'roles').build();
 builder.Unwind({ path: '$sizes', preserveNullAndEmptyArrays: true }).build();
 
 // pipeline
-[ { '$unwind': { path: '$sizes', preserveNullAndEmptyArrays: true } } ]
+[ { $unwind: { path: '$sizes', preserveNullAndEmptyArrays: true } } ]
 ```
 
 ___
