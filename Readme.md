@@ -87,8 +87,8 @@ All stages except the Out, Merge, GeoNear, ChangeStream, ChangeStreamSplitLargeE
 
 #### **PipelineBuilder:**
  * Renaming `getPipeline()` with `build()`
- * Added new stages: ChangeStream, ChangeStreamSplitLargeEvent, Densify, Documents, Fill, ListLocalSessions, ListSampledQueries, ListSearchIndexes, SearchMeta, SetWindowFields and ShardedDataDistribution.
- * Added the possibility to insert stages without validation.
+ * Added new stages: `ChangeStream`, `ChangeStreamSplitLargeEvent`, `Densify`, `Documents`, `Fill`, `ListLocalSessions`, `ListSampledQueries`, `ListSearchIndexes`, `SearchMeta`, `SetWindowFields` and `ShardedDataDistribution`.
+ * Added the possibility to insert stages without validation with new `Insert` stage.
  * Checking for non-duplicable stages.
 
 #### **Helpers:**
@@ -328,14 +328,14 @@ builder.Paging(5, 2).build();
 ]
 ```
 
-### InsertStage(stage)
+### Insert(stage)
 
-  *The InsertStage stage allows you to insert a stage without validation.
+  *The Insert stage allows you to insert a stage without validation.
   <br>Usefully when you need to insert a stage that is not yet implemented
   or when the value fails validation but for some reason you want to keep it.*
 
 ```typescript
-builder.InsertStage({ '$myCustomStage': { myField: 'myValue' } }).build();
+builder.Insert({ '$myCustomStage': { myField: 'myValue' } }).build();
 
 // pipeline
 [ { $myCustomStage: { myField: 'myValue' } } ]
@@ -442,10 +442,10 @@ builder.Densify(
 
 ### [Documents](https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/)(...values)
 ```typescript
-builder.Documents({ doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 }).build();
+builder.Documents({ docId: 1 }, { docId: 2 }, { docId: 3 }).build();
 
 // pipeline
-[ { $documents: [ { doc1Id: 1 }, { doc2Id: 2 }, { doc3Id: 3 } ] } ]
+[ { $documents: [ { docId: 1 }, { docId: 2 }, { docId: 3 } ] } ]
 ```
 
 ### [Facet](https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/)(...values)
