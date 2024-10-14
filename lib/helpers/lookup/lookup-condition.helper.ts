@@ -1,4 +1,4 @@
-import { LookupCondition, PipelineStage } from '../../models';
+import { LookupCondition, LookupStage, PipelineStage } from '../../models';
 import { LookupConditionOptional } from '../../models/stages/lookup-condition';
 import { isNotEmptyObject } from '../utils/utils';
 
@@ -26,5 +26,5 @@ export const LookupConditionHelper = (
     as,
     ...(isNotEmptyObject(optional.let as object) ? { let: optional.let } : {}),
     ...(pipeline.length ? { pipeline } : {}),
-  } as LookupCondition;
+  } as LookupStage;
 };

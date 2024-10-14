@@ -1,4 +1,4 @@
-import { LookupEquality } from '../../models';
+import { LookupStage } from '../../models';
 
 /**
  * Equality Match
@@ -27,5 +27,5 @@ export const LookupEqualityHelper = (from: string, as: string, localField: strin
     localField,
     foreignField,
     as,
-  } as LookupEquality
+  } as LookupStage
 );
