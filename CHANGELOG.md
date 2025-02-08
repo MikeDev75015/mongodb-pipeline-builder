@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.1...v4.0.2) (2025-02-08)
+
+
+### Bug Fixes
+
+* **paging:** handle empty count when no elements match the request ([ed5c92e](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/ed5c92eb74daaac713febce19d0a749eea355cd0))
+
 ### [4.0.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.0...v4.0.1) (2024-10-14)
 
 ## [4.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.0-9...v4.0.0) (2024-09-07)
