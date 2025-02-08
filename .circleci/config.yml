@@ -4,6 +4,12 @@ orbs:
   slack: circleci/slack@4.3.0
   jq: circleci/jq@2.2.0
 
+executors:
+  node:
+    docker:
+      - image: cimg/node:20.18.1
+    resource_class: medium
+
 aliases:
   - &restore-cache
     restore_cache:
@@ -125,9 +131,7 @@ commands:
 
 jobs:
   build:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     steps:
       - checkout
       - *update-npm-version
@@ -144,9 +148,7 @@ jobs:
           template: basic_fail_1
 
   unit_tests:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: medium
+    executor: node
     parallelism: 14
     steps:
       - checkout
@@ -170,9 +172,7 @@ jobs:
           template: basic_fail_1
 
   prepare-version:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     parameters:
       branch:
         type: string
@@ -191,9 +191,7 @@ jobs:
           template: basic_fail_1
 
   publish-package:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     parameters:
       branch:
         type: string
@@ -212,9 +210,7 @@ jobs:
           template: basic_fail_1
 
   clean-repository:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     parameters:
       branch:
         type: string
@@ -229,9 +225,7 @@ jobs:
           template: basic_fail_1
 
   final-repository-operations:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     parameters:
       branch:
         type: string
@@ -247,9 +241,7 @@ jobs:
           template: basic_fail_1
 
   notify-success-job:
-    docker:
-      - image: cimg/node:20.5.0
-    resource_class: small
+    executor: node
     steps:
       - slack/notify:
           event: always
