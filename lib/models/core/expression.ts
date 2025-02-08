@@ -10,7 +10,7 @@ export type NumericExpression = FilePath | OperatorExpression | number;
 
 export type ArrayExpression<T = any> = FilePath | OperatorExpression | T[];
 
-export type BooleanExpression = FilePath | OperatorExpression | boolean;
+export type BooleanExpression = FilePath | OperatorExpression | object | boolean;
 
 export type DateExpression = FilePath | OperatorExpression | NumericExpression | Date;
 
