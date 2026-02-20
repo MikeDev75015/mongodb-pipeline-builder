@@ -7,7 +7,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:20.18.1
+      - image: cimg/node:24.4.0
     resource_class: medium
 
 aliases:
@@ -253,7 +253,9 @@ workflows:
       not: << pipeline.git.tag >>
     jobs:
       - build:
-          context: SLACK
+          context:
+            - SLACK
+            - GIT
           filters:
             branches:
               ignore:
@@ -265,6 +267,7 @@ workflows:
           context:
             - SONARCLOUD
             - SLACK
+            - GIT
           filters:
             branches:
               ignore:
