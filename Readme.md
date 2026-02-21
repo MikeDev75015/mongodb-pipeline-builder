@@ -134,13 +134,12 @@ const pipeline = new PipelineBuilder('users-with-profiles')
 
 - **[Pipeline Stages](./docs/api/stages.md)** - All MongoDB aggregation stages
 - **[Operators](./docs/api/operators.md)** - Aggregation operators ($match, $group, etc.)
-- **[Helpers](./docs/api/helpers.md)** - Utility functions for common patterns
+- **[Helpers](./docs/api/helpers.md)** - Utility functions and stage helpers (Field, ProjectHelper, LookupHelper, etc.)
 
 ### Examples & Tutorials
 
 - **[Pagination Examples](./docs/examples/pagination.md)** - Implementing pagination patterns
 - **[Lookup & Join Examples](./docs/examples/lookups.md)** - Working with multiple collections
-- **[Complex Aggregations](./docs/examples/aggregations.md)** - Advanced aggregation patterns
 
 ---
 

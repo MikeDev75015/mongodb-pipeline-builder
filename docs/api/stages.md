@@ -1568,7 +1568,7 @@ CurrentOpHelper({
 
 - [Getting Started](../getting-started.md)
 - [Operators Reference](./operators.md)
-- [Helpers Reference](./helpers.md)
+- [**Helpers Reference**](./helpers.md) - Documentation complète de tous les helpers disponibles
 - [Pagination Examples](../examples/pagination.md)
 - [Lookup Examples](../examples/lookups.md)
 
