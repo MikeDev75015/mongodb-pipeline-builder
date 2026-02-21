@@ -2653,7 +2653,7 @@ Field('activeItems', $Filter('$items', 'item', $Equal('$$item.active', true)))
 
 - [Getting Started](../getting-started.md)
 - [Pipeline Stages](./stages.md)
-- [Helpers Reference](./helpers.md) _(coming soon)_
+- [Helpers Reference](./helpers.md)
 - [Pagination Examples](../examples/pagination.md)
 - [Lookup Examples](../examples/lookups.md)
 
