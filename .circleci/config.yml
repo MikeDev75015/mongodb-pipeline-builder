@@ -151,7 +151,8 @@ jobs:
     executor: node
     parallelism: 14
     steps:
-      - checkout
+      - checkout:
+          fetch-depth: 0
       - *restore-cache
       - *install-deps
       - run:
