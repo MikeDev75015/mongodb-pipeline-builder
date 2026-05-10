@@ -160,6 +160,8 @@ const pipeline = new PipelineBuilder('users-with-profiles')
 #### Operators
 - 🏷️ All operators prefixed with `$` (e.g., `$Add`, `$Match`)
 - 🔄 `MapOperator` → `$Map`
+- 🆕 **New Aggregation Operators (MongoDB 7.0+):** `$Median`, `$Percentile`, `$Top`, `$TopN`
+- 🆕 **New Object Operators (MongoDB 5.0+):** `$GetField`, `$SetField`
 
 #### Result Methods
 - 🎯 `GetResult<T>()` - For non-paginated queries
@@ -374,7 +376,7 @@ All MongoDB aggregation stages are supported. See [complete reference](./docs/ap
 
 ### Operators
 
-100+ MongoDB operators supported. See [complete reference](./docs/api/operators.md).
+156+ MongoDB operators supported. See [complete reference](./docs/api/operators.md).
 
 **Common Operators:**
 - Comparison: `$Equal`, `$GreaterThan`, `$LessThan`
@@ -383,7 +385,8 @@ All MongoDB aggregation stages are supported. See [complete reference](./docs/ap
 - Array: `$Size`, `$Filter`, `$Map`, `$ArrayElementAt`
 - String: `$Concat`, `$ToLower`, `$ToUpper`, `$Split`
 - Date: `$DateAdd`, `$DateSubtract`, `$DateDifference`
-- Aggregation: `$Sum`, `$Average`, `$Min`, `$Max`
+- Aggregation: `$Sum`, `$Average`, `$Min`, `$Max`, `$Median`, `$Percentile`, `$Top`, `$TopN`
+- Object: `$GetField`, `$SetField`, `$MergeObjects`
 
 ### Helpers
 
@@ -451,6 +454,23 @@ const pipeline = new PipelineBuilder('sales-by-category')
   .build();
 ```
 
+### Example 5: Statistical Analysis (MongoDB 7.0+)
+```typescript
+import { $Median, $Percentile, $Top, $TopN } from 'mongodb-pipeline-builder/operators';
+
+const pipeline = new PipelineBuilder('price-stats')
+  .Match($Expression($Equal('$year', 2024)))
+  .Group({
+    _id: '$category',
+    medianPrice: $Median('$price'),
+    p95Price: $Percentile('$price', [0.95]),
+    topProduct: $Top({ sales: -1 }, '$productName'),
+    top3Products: $TopN(3, { sales: -1 }, '$productName', '$price')
+  })
+  .Sort({ _id: 1 })
+  .build();
+```
+
 ---
 
 ## ❓ FAQ
@@ -487,6 +507,20 @@ Yes! Works with:
 <summary><strong>Are all MongoDB stages supported?</strong></summary>
 
 Yes! All stages through MongoDB 7.0+ including `$densify`, `$fill`, `$setWindowFields`, `$searchMeta`, and more.
+</details>
+
+<details>
+<summary><strong>What new operators were added in recent versions?</strong></summary>
+
+MongoDB 7.0+ introduced several statistical operators:
+- **`$Median`** - Calculates the median of values (MongoDB 7.2+)
+- **`$Percentile`** - Calculates percentiles (MongoDB 7.2+)
+- **`$Top`** - Returns the top element in a group (MongoDB 7.0+)
+- **`$TopN`** - Returns the top N elements in a group (MongoDB 7.0+)
+- **`$GetField`** - Retrieves a field value dynamically (MongoDB 5.0+)
+- **`$SetField`** - Sets a field value dynamically (MongoDB 5.0+)
+
+See [Example 5](#example-5-statistical-analysis-mongodb-70) for usage.
 </details>
 
 <details>
