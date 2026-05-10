@@ -58,7 +58,11 @@
     "rootDir": "lib",
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.ts",
+      "!**/*.test.ts",
+      "!**/index.ts",
+      "!**/models/**",
+      "!**/keywords.ts"
     ],
     "testRegex": ".test.ts$",
     "coverageDirectory": "../coverage",
@@ -72,7 +76,15 @@
     "testEnvironment": "node",
     "reporters": [
       "default"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "jestSonar": {
     "reportPath": "reports/sonar"
