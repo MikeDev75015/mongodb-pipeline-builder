@@ -86,6 +86,8 @@ export type PipelineOperator =
   | '$percentile'
   | '$pow'
   | '$push'
+  | '$top'
+  | '$topN'
   | '$radiansToDegrees'
   | '$rand'
   | '$range'
@@ -264,24 +266,26 @@ export type OperatorExpression = {
   $substrCP?: any;
   $subtract?: any;
   $sum?: any;
-  $switch?: any;
-  $tan?: any;
-  $tanh?: any;
-  $toBool?: any;
-  $toDate?: any;
-  $toDecimal?: any;
-  $toDouble?: any;
-  $toInt?: any;
-  $toLong?: any;
-  $toLower?: any;
-  $toObjectId?: any;
-  $toString?: any;
-  $toUpper?: any;
-  $trim?: any;
-  $trunc?: any;
-  $type?: any;
-  $week?: any;
-  $year?: any;
-  $zip?: any;
+   $switch?: any;
+   $tan?: any;
+   $tanh?: any;
+   $toBool?: any;
+   $toDate?: any;
+   $toDecimal?: any;
+   $toDouble?: any;
+   $toInt?: any;
+   $toLong?: any;
+   $toLower?: any;
+   $toObjectId?: any;
+   $toString?: any;
+   $toUpper?: any;
+   $top?: any;
+   $topN?: any;
+   $trim?: any;
+   $trunc?: any;
+   $type?: any;
+   $week?: any;
+   $year?: any;
+   $zip?: any;
 };
 
