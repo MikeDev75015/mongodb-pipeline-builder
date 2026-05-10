@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v5.0.0...v5.0.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* **deprecation:** update ListSessions deprecation message to reference future major version ([55ab45b](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/55ab45be17226fd726a7362d2e4ffa5258c368cb))
+
 ## [5.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.2.0...v5.0.0) (2026-05-10)
 
 ### Features
