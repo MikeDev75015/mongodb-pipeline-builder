@@ -529,8 +529,8 @@ export class PipelineBuilder {
   };
 
   /**
-   * @deprecated Use ListLocalSessions() instead. This method is an alias for $listSessions and will be removed in v5.0.
-   * Prefer ListLocalSessions() which use the $listLocalSessions stage that lists sessions cached in memory.
+   * @deprecated Use ListLocalSessions() instead. This method is an alias for $listSessions and will be removed in a future major version.
+   * Prefer ListLocalSessions() which uses the $listLocalSessions stage that lists sessions cached in memory.
    *
    * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
    * @param {ListSessionsStage} value
