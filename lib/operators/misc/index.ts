@@ -1,5 +1,5 @@
 // $Literal Expression Operator
-import { Expression, FunctionExpression, NumericExpression, ObjectExpression } from '../../models/core/expression';
+import { Expression, FunctionExpression, NumericExpression, ObjectExpression, StringExpression } from '../../models/core/expression';
 
 /**
  * Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For
@@ -103,4 +103,55 @@ export const $CovarianceSamp = (
   numericExpression2: NumericExpression,
 ) => (
   { $covarianceSamp: [numericExpression1, numericExpression2] }
+);
+/**
+ * Returns the value of a field within a document.
+ * $getField is an alias for dot notation when the field name is a string.
+ * @param field The field path to retrieve (string or expression resolving to string)
+ * @param optional Optional input document, defaults to $$ROOT
+ * @constructor
+ */
+export const $GetField = (
+  field: StringExpression,
+  optional: {
+    /**
+     * Optional. A document or an expression that resolves to a document
+     * that contains the field specified by the field path. Defaults to $$ROOT
+     */
+    input?: ObjectExpression;
+  } = {},
+) => (
+  {
+    $getField: {
+      field,
+      ...(optional.input ? { input: optional.input } : {}),
+    },
+  }
+);
+/**
+ * Adds, updates, or removes a specified field in a document.
+ * $setField is an alias for complex field operations where the field name is a string or expression.
+ * @param field The field path to set
+ * @param value The value to assign to the field
+ * @param optional Optional input document, defaults to $$ROOT
+ * @constructor
+ */
+export const $SetField = (
+  field: StringExpression,
+  value: Expression,
+  optional: {
+    /**
+     * Optional. A document or an expression that resolves to a document
+     * that will have the specified field added, updated or removed. Defaults to $$ROOT
+     */
+    input?: ObjectExpression;
+  } = {},
+) => (
+  {
+    $setField: {
+      field,
+      value,
+      ...(optional.input ? { input: optional.input } : {}),
+    },
+  }
 );
