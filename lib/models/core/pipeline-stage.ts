@@ -180,11 +180,12 @@ export type PipelineStage = {
    */
   $listSearchIndexes?: ListSearchIndexesStage; //////////////////////////////////////////////////////////////////////
   /**
+   * @deprecated Use $listLocalSessions instead. This is an alias and will be removed in v5.0.
    * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
    */
   $listSessions?: ListSessionsStage;
   /**
-   * Performs a left outer join to another collection in the same database to filter in documents from the “joined”
+   * Performs a left outer join to another collection in the same database to filter in documents from the "joined"
    * collection for processing.
    */
   $lookup?: LookupStage;
