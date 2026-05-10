@@ -45,7 +45,11 @@ describe('accumulator operators', () => {
      [$Sum(...expressions), { $sum: expressions }],
      [$Median(expression), { $median: [expression] }],
      [$Median([expression]), { $median: [expression] }],
+     [$Median(expression, 'approximate'), { $median: [expression], method: 'approximate' }],
+     [$Median([expression], 'exact'), { $median: [expression], method: 'exact' }],
      [$Percentile(expression, [0.5, 0.9]), { $percentile: { input: [expression], p: [0.5, 0.9] } }],
+     [$Percentile([expression], [0.5, 0.9], 'approximate'), { $percentile: { input: [expression], p: [0.5, 0.9], method: 'approximate' } }],
+     [$Percentile(expression, [0.5], 'exact'), { $percentile: { input: [expression], p: [0.5], method: 'exact' } }],
      [$Top(topExpression.sortBy, ...topExpression.output), { $top: topExpression }],
      [
        $TopN(topNExpression.n, topNExpression.sortBy, topNExpression.output),
