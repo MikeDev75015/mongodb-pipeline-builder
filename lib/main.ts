@@ -1,6 +1,7 @@
 import { NON_DUPLICABLE_STAGE_LIST, STAGE_PAYLOAD_VALIDATORS_AVAILABLE } from './constants';
 import { IsValidName } from './decorators';
 import { PipelineError } from './errors';
+import { deprecatedMethodWarning } from './warnings';
 import {
   AddFieldsStage,
   AddFieldStage,
@@ -528,12 +529,16 @@ export class PipelineBuilder {
   };
 
   /**
+   * @deprecated Use ListLocalSessions() instead. This method is an alias for $listSessions and will be removed in v5.0.
+   * Prefer ListLocalSessions() which use the $listLocalSessions stage that lists sessions cached in memory.
+   *
    * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
    * @param {ListSessionsStage} value
    * @returns {this}
    * @constructor
    */
   public readonly ListSessions = (value: ListSessionsStage): this => {
+    deprecatedMethodWarning('ListSessions', 'ListLocalSessions');
     this.saveActionToDebugHistoryList('ListSessions', value);
 
     return this.addStage('$listSessions', value);

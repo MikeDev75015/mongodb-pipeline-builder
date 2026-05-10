@@ -155,3 +155,72 @@ export const $StdDevSamp = (...expressions: ArrayExpression[]) => (
 export const $Sum = (...expressions: NumericExpression[]) => (
   { $sum: expressions.length === 1 ? expressions[0] : expressions }
 );
+
+/**
+ * Returns the median of numeric values. Can be used with or without weight specifications.
+ * Available in $group, $setWindowFields, and other stages starting MongoDB 7.2
+ * @param expressions numeric expressions
+ * @param methodOption Optional: 'approximate' or 'exact' method
+ * @constructor
+ */
+export const $Median = (
+  expressions: NumericExpression | NumericExpression[],
+  methodOption?: 'approximate' | 'exact'
+) => {
+  const baseOp = {
+    $median: Array.isArray(expressions) ? expressions : [expressions],
+  };
+  return methodOption ? { ...baseOp, method: methodOption } : baseOp;
+};
+
+/**
+ * Returns the percentile of numeric values. Can be used in $group and $setWindowFields stages.
+ * Available starting MongoDB 7.2
+ * @param expressions numeric expressions to compute percentile of
+ * @param percentiles array of percentiles (0.0 to 1.0)
+ * @param methodOption 'approximate' or 'exact' method
+ * @constructor
+ */
+export const $Percentile = (
+  expressions: NumericExpression | NumericExpression[],
+  percentiles: NumericExpression[],
+  methodOption?: 'approximate' | 'exact'
+) => (
+  {
+    $percentile: {
+      input: Array.isArray(expressions) ? expressions : [expressions],
+      p: percentiles,
+      ...(methodOption ? { method: methodOption } : {}),
+    },
+  }
+);
+
+/**
+ * Returns the top element within a group according to the specified sort order.
+ * Available in $group, $bucket, $bucketAuto, and $setWindowFields stages.
+ * @param sortBy Specifies the order of results
+ * @param output Represents the output for each element in the group
+ * @constructor
+ */
+export const $Top = (
+  sortBy: SortBy,
+  ...output: StringExpression[]
+) => (
+  { $top: { sortBy, output } }
+);
+
+/**
+ * Returns an aggregation of the top n elements within a group according to the specified sort order.
+ * If the group contains fewer than n elements, $topN returns all elements in the group.
+ * @param n limits the number of results per group
+ * @param sortBy specifies the order of results
+ * @param output represents the output for each element in the group
+ * @constructor
+ */
+export const $TopN = (
+  n: NumericExpression | { [key: string]: any },
+  sortBy: SortBy,
+  ...output: StringExpression[]
+) => (
+  { $topN: { output, sortBy, n } }
+);

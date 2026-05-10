@@ -1234,13 +1234,19 @@ builder.CurrentOp(CurrentOpHelper({
 
 ---
 
-### ListSessions(value)
+### ListSessions(value) <span style="color: red;">**DEPRECATED**</span>
 
-**Purpose:** List all active sessions.  
+**⚠️ Deprecated:** Use `ListLocalSessions()` instead. This method is an alias and will be removed in v5.0.
+
+**Purpose:** List all active sessions (alias for $listSessions).  
 **Docs:** [$listSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/)
 
 ```typescript
+// ❌ Deprecated - will log a warning
 builder.ListSessions({ allUsers: true }).build();
+
+// ✅ Use this instead
+builder.ListLocalSessions({ allUsers: true }).build();
 ```
 
 ---

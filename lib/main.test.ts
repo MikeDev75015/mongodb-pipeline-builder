@@ -601,5 +601,30 @@ describe('should create a new pipeline builder object', () => {
         expect(pipelineBuilderWithoutDebug['builderOptions'].logs).toStrictEqual(previousLogState);
       });
     });
+
+    describe('Deprecated Methods', () => {
+      let spyConsoleWarn: jasmine.Spy;
+
+      beforeEach(() => {
+        spyConsoleWarn = spyOn(console, 'warn');
+      });
+
+      it('should call deprecation warning when ListSessions is invoked', () => {
+        pipelineBuilderWithoutDebug.ListSessions({});
+
+        expect(spyConsoleWarn).toHaveBeenCalledTimes(1);
+        expect(spyConsoleWarn).toHaveBeenCalledWith(
+          'Warning: The ListSessions method is deprecated and will be removed in the future version, please use ListLocalSessions instead.',
+        );
+      });
+
+      it('should create correct $listSessions stage despite deprecation', () => {
+        const pipeline = pipelineBuilderWithoutDebug
+          .ListSessions({ allUsers: true })
+          .build();
+
+        expect(pipeline[0]).toEqual({ $listSessions: { allUsers: true } });
+      });
+    });
   });
 });

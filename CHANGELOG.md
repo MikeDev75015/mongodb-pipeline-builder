@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.2.0...v5.0.0) (2026-05-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deprecation:** ListSessions() method is now deprecated and will be removed in the next major version (v5.0). Please use ListLocalSessions() instead.
+
+### Features
+
+* **operators:** add object field operators - $GetField, $SetField ([1936257](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/1936257006cda76a76f540b90bc40ff96fe7ae72))
+* **operators:** add statistical accumulators - $Median, $Percentile, $Top, $TopN ([5a12040](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/5a1204011973d306be9e37dc8e0f7f6a022cd899))
+
+
+* **deprecation:** deprecate ListSessions() method in favor of ListLocalSessions() ([dc1a40e](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/dc1a40e7bf99d7c62647fb9b7b08b1f57de0955d))
+
 ## [4.2.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v4.0.4...v4.2.0) (2026-02-21)
 
 
