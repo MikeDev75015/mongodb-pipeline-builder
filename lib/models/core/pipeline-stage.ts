@@ -180,7 +180,7 @@ export type PipelineStage = {
    */
   $listSearchIndexes?: ListSearchIndexesStage; //////////////////////////////////////////////////////////////////////
   /**
-   * @deprecated Use $listLocalSessions instead. This is an alias and will be removed in v5.0.
+   * @deprecated Use $listLocalSessions instead. This is an alias and will be removed in a future major version.
    * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
    */
   $listSessions?: ListSessionsStage;
