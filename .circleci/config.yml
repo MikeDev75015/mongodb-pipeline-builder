@@ -1,13 +1,13 @@
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@2.0.0
+  sonarcloud: sonarsource/sonarcloud@4.0.0
   slack: circleci/slack@4.3.0
   jq: circleci/jq@2.2.0
 
 executors:
   node:
     docker:
-      - image: cimg/node:24.4.0
+      - image: cimg/node:24.21.0
     resource_class: medium
 
 aliases:
@@ -27,10 +27,6 @@ aliases:
     run:
       name: Build
       command: npm run build
-  - &update-npm-version
-    run:
-      name: Update NPM version
-      command: 'sudo npm install -g npm@latest'
 
 commands:
   git-create-branch-follow-tag:
@@ -134,7 +130,6 @@ jobs:
     executor: node
     steps:
       - checkout
-      - *update-npm-version
       - *restore-cache
       - *install-deps
       - *save-cache
