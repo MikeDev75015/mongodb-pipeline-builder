@@ -44,13 +44,16 @@ describe('should create a new pipeline builder object', () => {
 
     describe('logDebuggedActions()', () => {
       it('should log actions stored in the history list', () => {
-        const spyDebug = spyOn(console, 'debug');
-        const spyConsoleDir = spyOn(console, 'dir');
+        const spyDebug = jest.spyOn(console, 'debug').mockImplementation(() => undefined);
+        const spyConsoleDir = jest.spyOn(console, 'dir').mockImplementation(() => undefined);
 
         pipelineBuilderWithDebug.logDebuggedActions();
 
         expect(spyDebug).toHaveBeenCalledTimes(2);
         expect(spyConsoleDir).toHaveBeenCalledTimes(1);
+
+        spyDebug.mockRestore();
+        spyConsoleDir.mockRestore();
       });
     });
 
@@ -110,7 +113,7 @@ describe('should create a new pipeline builder object', () => {
           () => pipelineBuilderWithDebug
             ['addStage']('$match', { tests: 'unit' })
           .Paging(0),
-        ).toThrowError(new PipelineError('You must specify at least 1 element per page.'));
+        ).toThrow(new PipelineError('You must specify at least 1 element per page.'));
       });
 
       it('should throw a new PipelineError if the requested page does not exist', () => {
@@ -118,7 +121,7 @@ describe('should create a new pipeline builder object', () => {
           () => pipelineBuilderWithDebug
             ['addStage']('$match', { tests: 'unit' })
           .Paging(10, 0),
-        ).toThrowError(new PipelineError('The page 0 does not exist.'));
+        ).toThrow(new PipelineError('The page 0 does not exist.'));
       });
 
       it('should throw a new PipelineError if a Paging stage has already been added', () => {
@@ -126,7 +129,7 @@ describe('should create a new pipeline builder object', () => {
           () => pipelineBuilderWithDebug
           .Paging(10, 1)
           .Paging(3, 2),
-        ).toThrowError(new PipelineError('A Paging stage has already been added.'));
+        ).toThrow(new PipelineError('A Paging stage has already been added.'));
       });
 
       it('should throw a new PipelineError if a Skip stage has already been added', () => {
@@ -135,7 +138,7 @@ describe('should create a new pipeline builder object', () => {
           .Skip(10)
           .Paging(3),
         )
-        .toThrowError(new PipelineError(
+        .toThrow(new PipelineError(
           'A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
       });
 
@@ -145,7 +148,7 @@ describe('should create a new pipeline builder object', () => {
           .Limit(10)
           .Paging(1),
         )
-        .toThrowError(new PipelineError(
+        .toThrow(new PipelineError(
           'A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
       });
 
@@ -155,7 +158,7 @@ describe('should create a new pipeline builder object', () => {
           .Count('total')
           .Paging(3, 8),
         )
-        .toThrowError(new PipelineError(
+        .toThrow(new PipelineError(
           'A Paging stage cannot be added if a Skip, Limit, or Count stage is already in the pipeline.'));
       });
 
@@ -164,12 +167,12 @@ describe('should create a new pipeline builder object', () => {
     describe('addStage()', () => {
       it('should not add the stage to the pipeline if its value is invalid', () => {
         expect(() => pipelineBuilderWithDebug['addStage']('$match', undefined))
-        .toThrowError(new PipelineError('The $match stage value is not valid.'));
+        .toThrow(new PipelineError('The $match stage value is not valid.'));
       });
 
       it('should not add the stage to the pipeline if its payload is invalid', () => {
         expect(() => pipelineBuilderWithDebug.Lookup({ from: 'tests', as: 'unit', localField: 'expect' }))
-        .toThrowError(new PipelineError(
+        .toThrow(new PipelineError(
           'Invalid $lookup stage value. The foreignField property is required when localfield is specified.'));
       });
 
@@ -469,7 +472,7 @@ describe('should create a new pipeline builder object', () => {
       it('should throw an error message list if invalid stage is found', () => {
         // tslint:disable-next-line:no-string-literal
         expect(() => pipelineBuilderWithDebug['verifyPipelineValidity'](pipelineWithErrors))
-        .toThrowError(new PipelineError(
+        .toThrow(new PipelineError(
           '1) Invalid $count stage value. The value must be a non-empty string.\n2) Invalid $sort stage value. One or more values are not valid. date...',
         ));
       });
@@ -492,14 +495,14 @@ describe('should create a new pipeline builder object', () => {
     it('should throw a PipelineError if the stage value is invalid', () => {
       expect(
         () => pipelineBuilderWithoutDebug.Match({}).build(),
-      ).toThrowError(new PipelineError('Invalid $match stage value. The payload is not valid.'));
+      ).toThrow(new PipelineError('Invalid $match stage value. The payload is not valid.'));
     });
 
     it('should throw a PipelineError if the stage payload is invalid', () => {
       expect(
         () => pipelineBuilderWithoutDebug.Lookup({ from: 'test', as: 'unit', localField: 'toto' }).build(),
       )
-      .toThrowError(new PipelineError(
+      .toThrow(new PipelineError(
         'Invalid $lookup stage value. The foreignField property is required when localfield is specified.'));
     });
 
@@ -508,7 +511,7 @@ describe('should create a new pipeline builder object', () => {
       () => {
         expect(() => pipelineBuilderWithoutDebug.AddFields(
           ['{ tests: \'unit\' }'],
-        )).toThrowError(new PipelineError('The AddFields stage value is not valid.'));
+        )).toThrow(new PipelineError('The AddFields stage value is not valid.'));
       },
     );
 
@@ -517,17 +520,20 @@ describe('should create a new pipeline builder object', () => {
       () => {
         expect(() => pipelineBuilderWithoutDebug.AddFields(
           [{ tests: 'unit' }], { test: 'unit' }, {}, [{}],
-        )).toThrowError(new PipelineError('3 fields of the AddFields stage are not valid.'));
+        )).toThrow(new PipelineError('3 fields of the AddFields stage are not valid.'));
       },
     );
 
     describe('build', () => {
       it('should not log debugged actions if debug is false and debug action list is empty', () => {
-        const spyLogDebuggedActions = spyOn(pipelineBuilderWithoutDebug, 'logDebuggedActions');
+        const spyLogDebuggedActions = jest.spyOn(pipelineBuilderWithoutDebug, 'logDebuggedActions')
+          .mockImplementation(() => undefined);
         pipelineBuilderWithoutDebug['stageList'].push({ $skip: 5 });
         pipelineBuilderWithoutDebug.build();
 
         expect(spyLogDebuggedActions).not.toHaveBeenCalled();
+
+        spyLogDebuggedActions.mockRestore();
       });
     });
 
@@ -578,11 +584,15 @@ describe('should create a new pipeline builder object', () => {
 
     describe('forceLog', () => {
       let previousLogState: boolean;
-      let spyBuilderLog: jasmine.Spy;
+      let spyBuilderLog: jest.SpyInstance;
 
       beforeEach(() => {
         previousLogState = pipelineBuilderWithoutDebug['builderOptions'].logs;
-        spyBuilderLog = spyOn<any>(pipelineBuilderWithoutDebug, 'log');
+        spyBuilderLog = jest.spyOn<any, any>(pipelineBuilderWithoutDebug, 'log').mockImplementation(() => undefined);
+      });
+
+      afterEach(() => {
+        spyBuilderLog.mockRestore();
       });
 
       it('should force the log of warn type', () => {
@@ -603,10 +613,14 @@ describe('should create a new pipeline builder object', () => {
     });
 
     describe('Deprecated Methods', () => {
-      let spyConsoleWarn: jasmine.Spy;
+      let spyConsoleWarn: jest.SpyInstance;
 
       beforeEach(() => {
-        spyConsoleWarn = spyOn(console, 'warn');
+        spyConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      });
+
+      afterEach(() => {
+        spyConsoleWarn.mockRestore();
       });
 
       it('should call deprecation warning when ListSessions is invoked', () => {

@@ -72,7 +72,6 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./dist",
-    "baseUrl": "./dist",
     "strict": true,
     "removeComments": true,
     "preserveConstEnums": true,

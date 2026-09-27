@@ -1,36 +1,32 @@
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@2.0.0
+  sonarcloud: sonarsource/sonarcloud@4.0.0
   slack: circleci/slack@4.3.0
   jq: circleci/jq@2.2.0
 
 executors:
   node:
     docker:
-      - image: cimg/node:24.4.0
+      - image: cimg/node:24.21.0
     resource_class: medium
 
 aliases:
   - &restore-cache
     restore_cache:
-      key: dependency-cache-{{ checksum "package.json" }}
+      key: npm-cache-{{ checksum "package-lock.json" }}
   - &save-cache
     save_cache:
-      key: dependency-cache-{{ checksum "package.json" }}
+      key: npm-cache-{{ checksum "package-lock.json" }}
       paths:
-        - ./node_modules
+        - ~/.npm
   - &install-deps
     run:
       name: Install dependencies
-      command: npm install
+      command: npm ci
   - &build-package
     run:
       name: Build
       command: npm run build
-  - &update-npm-version
-    run:
-      name: Update NPM version
-      command: 'sudo npm install -g npm@latest'
 
 commands:
   git-create-branch-follow-tag:
@@ -134,7 +130,6 @@ jobs:
     executor: node
     steps:
       - checkout
-      - *update-npm-version
       - *restore-cache
       - *install-deps
       - *save-cache
@@ -149,7 +144,6 @@ jobs:
 
   unit_tests:
     executor: node
-    parallelism: 14
     steps:
       - checkout
       - run:
@@ -157,9 +151,6 @@ jobs:
           command: git fetch --unshallow --all || git fetch --all
       - *restore-cache
       - *install-deps
-      - run:
-          name: Unit tests to run
-          command: echo $(circleci tests glob "lib/**/*.test.ts")
       - run:
           name: Create reports folder
           command: mkdir -p reports/sonar

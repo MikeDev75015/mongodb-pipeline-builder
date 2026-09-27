@@ -31,37 +31,37 @@ describe('decorators', () => {
   describe('IsValidName', () => {
 
     it('should throw errors if an option key is unknown', () => {
-      expect(() => new TestDecorator2('unit')).toThrowError(
+      expect(() => new TestDecorator2('unit')).toThrow(
         new PipelineError('1. Unknown test decorator option key.'),
       );
     });
 
     it('should throw errors if the pipeline name is empty', () => {
-      expect(() => new TestDecorator('')).toThrowError(
+      expect(() => new TestDecorator('')).toThrow(
         new PipelineError('1. The pipeline name cannot be an empty string.'),
       );
     });
 
     it('should throw errors if the pipeline name is lower than min length', async () => {
-      expect(() => new TestDecorator('too')).toThrowError(
+      expect(() => new TestDecorator('too')).toThrow(
         new PipelineError('1. The pipeline name must have at least 4 character(s).'),
       );
     });
 
     it('should throw errors if the pipeline name is bigger than max length', async () => {
-      expect(() => new TestDecorator('maxi-pipeline-name')).toThrowError(
+      expect(() => new TestDecorator('maxi-pipeline-name')).toThrow(
         new PipelineError('1. The pipeline name must have a maximum of 8 character(s).'),
       );
     });
 
     it('should throw errors if the pipeline name contain spaces', async () => {
-      expect(() => new TestDecorator('sp ace')).toThrowError(
+      expect(() => new TestDecorator('sp ace')).toThrow(
         new PipelineError('1. The pipeline name cannot contain spaces.'),
       );
     });
 
     it('should throw errors if the pipeline name contain special char(s)', async () => {
-      expect(() => new TestDecorator('$test')).toThrowError(
+      expect(() => new TestDecorator('$test')).toThrow(
         new PipelineError('1. The pipeline name cannot contain any special character(s) except "-" or "_".'),
       );
     });

@@ -80,14 +80,14 @@ describe('GetResult', () => {
     async (_: string, target: any, pipeline: PipelineStage[], errorMessage: string) => {
       await expect(() => GetResult(target, pipeline))
       .rejects
-      .toThrowError(new PipelineError(errorMessage));
+      .toThrow(new PipelineError(errorMessage));
     },
   );
 
   it('should throw a pipeline error if it is a paging result', async () => {
     await expect(() => GetResult(targetPagingAggregationMock, [{ $match: {} }]))
     .rejects
-    .toThrowError(new PipelineError(
+    .toThrow(new PipelineError(
       'An error was encountered while executing the GetResult method:\n - Application not possible, use the GetPagingResult method.'));
   });
 
