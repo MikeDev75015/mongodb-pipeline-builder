@@ -5,7 +5,7 @@ describe('unionWith helpers', () => {
   it('should throw an error if no coll or pipeline is provided', () => {
     expect(
       () => UnionWithHelper(undefined),
-    ).toThrowError('UnionWithHelper: you must specify either coll or pipeline');
+    ).toThrow('UnionWithHelper: you must specify either coll or pipeline');
   });
 
   test.each([

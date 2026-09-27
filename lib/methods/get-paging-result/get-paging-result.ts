@@ -36,7 +36,7 @@ export const GetPagingResult = async <T = any>(
       GetTotalPageNumber: (): number => getTotalPageNumber(count, pipeline),
     } as GetPagingResultResponse<T>;
 
-  } catch (e) {
+  } catch (e: any) {
     throw new PipelineError(`An error was encountered while executing the GetPagingResult method:\n - ${e.message}`);
   }
 };

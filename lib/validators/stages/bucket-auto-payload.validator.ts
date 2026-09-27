@@ -16,7 +16,7 @@ export const bucketAutoPayloadValidator = (payload: BucketAutoStage) => {
         return 'The groupBy property is required.';
     } else if (payload.buckets === undefined) {
         return 'The buckets property is required.';
-    } else if (payload.buckets < 1) {
+    } else if ((payload.buckets as number) < 1) {
         return 'The buckets value is not valid. You must specify a positive 32-bit integer.';
     } else if (payload.granularity && !granularityValueList.includes(payload.granularity)) {
         return `The granularity value is not valid. You must specify one of these possible values: ${granularityValueList.join(' | ')}.`;
