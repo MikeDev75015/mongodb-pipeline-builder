@@ -10,4 +10,3 @@ documentation
 test-report.xml
 tests
 save
-RUN.ts-node.tests.cmd
