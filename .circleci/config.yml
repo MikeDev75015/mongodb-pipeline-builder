@@ -13,16 +13,16 @@ executors:
 aliases:
   - &restore-cache
     restore_cache:
-      key: dependency-cache-{{ checksum "package.json" }}
+      key: npm-cache-{{ checksum "package-lock.json" }}
   - &save-cache
     save_cache:
-      key: dependency-cache-{{ checksum "package.json" }}
+      key: npm-cache-{{ checksum "package-lock.json" }}
       paths:
-        - ./node_modules
+        - ~/.npm
   - &install-deps
     run:
       name: Install dependencies
-      command: npm install
+      command: npm ci
   - &build-package
     run:
       name: Build
@@ -149,7 +149,6 @@ jobs:
 
   unit_tests:
     executor: node
-    parallelism: 14
     steps:
       - checkout
       - run:
@@ -157,9 +156,6 @@ jobs:
           command: git fetch --unshallow --all || git fetch --all
       - *restore-cache
       - *install-deps
-      - run:
-          name: Unit tests to run
-          command: echo $(circleci tests glob "lib/**/*.test.ts")
       - run:
           name: Create reports folder
           command: mkdir -p reports/sonar
