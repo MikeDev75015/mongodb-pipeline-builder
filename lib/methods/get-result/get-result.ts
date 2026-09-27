@@ -36,7 +36,7 @@ export const GetResult = async <T = any>(
       GetCount: () => result.length,
     } as GetResultResponse<T>;
 
-  } catch (e) {
+  } catch (e: any) {
     throw new PipelineError(`An error was encountered while executing the GetResult method:\n - ${e.message}`);
   }
 };
