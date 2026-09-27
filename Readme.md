@@ -143,7 +143,30 @@ const pipeline = new PipelineBuilder('users-with-profiles')
 
 ---
 
-## 🔥 What's New in v4
+## 🔥 What's New in v5
+
+### New Operators
+- 🆕 **Statistical Accumulators (MongoDB 7.0+):** `$Median`, `$Percentile`, `$Top`, `$TopN` — see [Example 5](#example-5-statistical-analysis-mongodb-70)
+- 🆕 **Object Field Operators (MongoDB 5.0+):** `$GetField`, `$SetField`
+
+### Deprecations
+- ⚠️ `ListSessions()` is deprecated and will be removed in a future major version — use `ListLocalSessions()` instead (a warning is emitted at runtime)
+
+### Upgrading from v4
+No API was removed in v5: existing v4 code keeps working as is. Just replace any `ListSessions()` call with `ListLocalSessions()` to get rid of the deprecation warning.
+
+```typescript
+// ❌ Deprecated
+builder.ListSessions({ allUsers: true });
+
+// ✅ Use this instead
+builder.ListLocalSessions({ allUsers: true });
+```
+
+---
+
+<details>
+<summary><strong>🗂️ What changed in v4 (upgrading from v3)</strong></summary>
 
 ### Breaking Changes
 
@@ -160,8 +183,6 @@ const pipeline = new PipelineBuilder('users-with-profiles')
 #### Operators
 - 🏷️ All operators prefixed with `$` (e.g., `$Add`, `$Match`)
 - 🔄 `MapOperator` → `$Map`
-- 🆕 **New Aggregation Operators (MongoDB 7.0+):** `$Median`, `$Percentile`, `$Top`, `$TopN`
-- 🆕 **New Object Operators (MongoDB 5.0+):** `$GetField`, `$SetField`
 
 #### Result Methods
 - 🎯 `GetResult<T>()` - For non-paginated queries
@@ -169,6 +190,10 @@ const pipeline = new PipelineBuilder('users-with-profiles')
   - 🚀 Generic type support for typed responses
 - 🎯 `GetPagingResult<T>()` - Exclusively for paginated queries
   - 🚀 Generic type support for typed responses
+
+See the full **[Migration Guide v3 → v4](./docs/migration-guide.md)**.
+
+</details>
 
 ---
 
@@ -510,7 +535,7 @@ Yes! All stages through MongoDB 7.0+ including `$densify`, `$fill`, `$setWindowF
 </details>
 
 <details>
-<summary><strong>What new operators were added in recent versions?</strong></summary>
+<summary><strong>What new operators were added in v5?</strong></summary>
 
 MongoDB 7.0+ introduced several statistical operators:
 - **`$Median`** - Calculates the median of values (MongoDB 7.2+)
