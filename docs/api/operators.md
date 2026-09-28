@@ -13,6 +13,7 @@ Complete reference for all MongoDB aggregation operators supported by Pipeline B
 - [Conditional Operators](#conditional-operators)
 - [Type Operators](#type-operators)
 - [Accumulator Operators](#accumulator-operators)
+- [Window Operators](#window-operators)
 - [Set Operators](#set-operators)
 - [Trigonometry Operators](#trigonometry-operators)
 - [Bitwise Operators](#bitwise-operators)
@@ -806,6 +807,25 @@ $Zip(['$names', '$ages'])
 
 ---
 
+### $SortArray
+
+Sort an array of values or documents (MongoDB 5.2+).
+
+```typescript
+import { $SortArray } from 'mongodb-pipeline-builder/operators';
+
+$SortArray('$scores', -1)                     // Values, descending
+$SortArray('$team', { age: -1, name: 1 })    // Documents, by fields
+```
+
+**Output:**
+```typescript
+{ $sortArray: { input: '$scores', sortBy: -1 } }
+{ $sortArray: { input: '$team', sortBy: { age: -1, name: 1 } } }
+```
+
+---
+
 ## String Operators
 
 ### $Concat
@@ -1487,6 +1507,40 @@ $IsoDayOfWeek('$date')
 
 ---
 
+### $TimestampSecond
+
+Get the seconds from a timestamp (MongoDB 5.1+).
+
+```typescript
+import { $TimestampSecond } from 'mongodb-pipeline-builder/operators';
+
+$TimestampSecond('$saleTimestamp')
+```
+
+**Output:**
+```typescript
+{ $tsSecond: '$saleTimestamp' }
+```
+
+---
+
+### $TimestampIncrement
+
+Get the incrementing ordinal from a timestamp, which distinguishes operations that happened in the same second (MongoDB 5.1+).
+
+```typescript
+import { $TimestampIncrement } from 'mongodb-pipeline-builder/operators';
+
+$TimestampIncrement('$saleTimestamp')
+```
+
+**Output:**
+```typescript
+{ $tsIncrement: '$saleTimestamp' }
+```
+
+---
+
 ## Conditional Operators
 
 ### $Condition
@@ -1984,6 +2038,232 @@ builder.Group({
 
 ---
 
+### $Median
+
+Get an approximation of the median (MongoDB 7.0+). Also usable in `SetWindowFields` and as an expression.
+
+```typescript
+import { $Median } from 'mongodb-pipeline-builder/operators';
+
+builder.Group({
+  _id: '$category',
+  medianPrice: $Median('$price')
+})
+```
+
+**Output:**
+```typescript
+{ $median: { input: '$price', method: 'approximate' } }
+```
+
+---
+
+### $Percentile
+
+Get the values of the given percentiles (MongoDB 7.0+). Also usable in `SetWindowFields` and as an expression.
+
+```typescript
+import { $Percentile } from 'mongodb-pipeline-builder/operators';
+
+builder.Group({
+  _id: '$category',
+  pricePercentiles: $Percentile('$price', [0.5, 0.95])
+})
+```
+
+**Output:**
+```typescript
+{ $percentile: { input: '$price', p: [0.5, 0.95], method: 'approximate' } }
+```
+
+---
+
+### $Top / $TopN
+
+Get the top element, or the top n elements, of a group according to a sort order.
+
+```typescript
+import { $Top, $TopN } from 'mongodb-pipeline-builder/operators';
+
+builder.Group({
+  _id: '$category',
+  bestSeller: $Top({ sales: -1 }, '$name'),
+  top3: $TopN(3, { sales: -1 }, '$name', '$sales')
+})
+```
+
+**Output:**
+```typescript
+{ $top: { sortBy: { sales: -1 }, output: ['$name'] } }
+{ $topN: { n: 3, sortBy: { sales: -1 }, output: ['$name', '$sales'] } }
+```
+
+---
+
+### $FirstN / $LastN
+
+Get the first or last n values of a group (MongoDB 5.2+). Also usable on an array.
+
+```typescript
+import { $FirstN, $LastN } from 'mongodb-pipeline-builder/operators';
+
+builder
+  .Sort({ date: 1 })
+  .Group({
+    _id: '$player',
+    firstScores: $FirstN('$score', 3),
+    lastScores: $LastN('$score', 3)
+  })
+```
+
+**Output:**
+```typescript
+{ $firstN: { input: '$score', n: 3 } }
+{ $lastN: { input: '$score', n: 3 } }
+```
+
+---
+
+### $MinN / $MaxN
+
+Get the n smallest or largest values of a group (MongoDB 5.2+). Null and missing values are ignored. Also usable on an array.
+
+```typescript
+import { $MinN, $MaxN } from 'mongodb-pipeline-builder/operators';
+
+builder.Group({
+  _id: '$game',
+  lowestScores: $MinN('$score', 3),
+  highestScores: $MaxN('$score', 3)
+})
+```
+
+**Output:**
+```typescript
+{ $minN: { input: '$score', n: 3 } }
+{ $maxN: { input: '$score', n: 3 } }
+```
+
+---
+
+## Window Operators
+
+These operators are used in the `output` of a `SetWindowFields` stage. Most of them require the `sortBy` option. Accumulators (`$Sum`, `$Average`, `$FirstN`, `$Median`...) can also be used as window operators.
+
+### $Rank / $DenseRank / $DocumentNumber
+
+Get the position of each document in its partition (MongoDB 5.0+). With ties, `$Rank` skips positions (1, 2, 2, 4), `$DenseRank` does not (1, 2, 2, 3) and `$DocumentNumber` numbers each document (1, 2, 3, 4).
+
+```typescript
+import { $Rank, $DenseRank, $DocumentNumber } from 'mongodb-pipeline-builder/operators';
+
+builder.SetWindowFields({
+  partitionBy: '$state',
+  sortBy: { quantity: -1 },
+  output: {
+    rank: $Rank(),
+    denseRank: $DenseRank(),
+    position: $DocumentNumber()
+  }
+})
+```
+
+**Output:**
+```typescript
+{ $rank: {} }
+{ $denseRank: {} }
+{ $documentNumber: {} }
+```
+
+---
+
+### $Shift
+
+Get a value from another document of the partition, e.g. the previous (-1) or next (1) one (MongoDB 5.0+).
+
+```typescript
+import { $Shift } from 'mongodb-pipeline-builder/operators';
+
+$Shift('$quantity', -1)                       // Previous document
+$Shift('$quantity', 1, { defaultValue: 0 })   // Next document, 0 if none
+```
+
+**Output:**
+```typescript
+{ $shift: { output: '$quantity', by: -1 } }
+{ $shift: { output: '$quantity', by: 1, default: 0 } }
+```
+
+---
+
+### $Derivative / $Integral
+
+Get the average rate of change, or the area under the curve, over the window (MongoDB 5.0+). `unit` is required when `sortBy` is a date.
+
+```typescript
+import { $Derivative, $Integral } from 'mongodb-pipeline-builder/operators';
+
+builder.SetWindowFields({
+  partitionBy: '$truckId',
+  sortBy: { timestamp: 1 },
+  output: {
+    speed: { ...$Derivative('$miles', { unit: 'hour' }), window: { range: [-30, 0], unit: 'second' } },
+    energy: { ...$Integral('$kilowatts', { unit: 'hour' }), window: { range: ['unbounded', 'current'], unit: 'hour' } }
+  }
+})
+```
+
+**Output:**
+```typescript
+{ $derivative: { input: '$miles', unit: 'hour' } }
+{ $integral: { input: '$kilowatts', unit: 'hour' } }
+```
+
+---
+
+### $ExponentialMovingAverage
+
+Get the exponential moving average, weighted either by a number of periods or by an alpha decay (MongoDB 5.0+).
+
+```typescript
+import { $ExponentialMovingAverage } from 'mongodb-pipeline-builder/operators';
+
+$ExponentialMovingAverage('$price', { periods: 2 })
+$ExponentialMovingAverage('$price', { alpha: 0.75 })
+```
+
+**Output:**
+```typescript
+{ $expMovingAvg: { input: '$price', N: 2 } }
+{ $expMovingAvg: { input: '$price', alpha: 0.75 } }
+```
+
+---
+
+### $LinearFill / $LastObservationCarriedForward
+
+Fill null and missing values, by linear interpolation (MongoDB 5.3+) or with the last non-null value (MongoDB 5.2+).
+
+```typescript
+import { $LinearFill, $LastObservationCarriedForward } from 'mongodb-pipeline-builder/operators';
+
+builder.SetWindowFields({
+  sortBy: { time: 1 },
+  output: {
+    interpolatedPrice: $LinearFill('$price'),
+    lastKnownPrice: $LastObservationCarriedForward('$price')
+  }
+})
+```
+
+**Output:**
+```typescript
+{ $linearFill: '$price' }
+{ $locf: '$price' }
+```
+
+---
+
 ## Set Operators
 
 Operations on arrays treated as sets.
@@ -2465,17 +2745,55 @@ $MergeObjects('$object1', '$object2', { newField: 'value' })
 
 ### $GetField
 
-Get field value by name.
+Get a field value by name, even when it contains `.` or starts with `$` (MongoDB 5.0+). The input document defaults to `$$CURRENT`.
 
 ```typescript
 import { $GetField } from 'mongodb-pipeline-builder/operators';
 
-$GetField('fieldName', '$object')
+$GetField('price.usd')
+$GetField('price.usd', { input: '$product' })
 ```
 
 **Output:**
 ```typescript
-{ $getField: { field: 'fieldName', input: '$object' } }
+{ $getField: 'price.usd' }
+{ $getField: { field: 'price.usd', input: '$product' } }
+```
+
+---
+
+### $SetField
+
+Add or update a field by name, even when it contains `.` or starts with `$` (MongoDB 5.0+). The input document defaults to `$$ROOT`.
+
+```typescript
+import { $SetField } from 'mongodb-pipeline-builder/operators';
+
+$SetField('price.usd', 45.99)
+```
+
+**Output:**
+```typescript
+{ $setField: { field: 'price.usd', input: '$$ROOT', value: 45.99 } }
+```
+
+---
+
+### $UnsetField
+
+Remove a field by name, even when it contains `.` or starts with `$` (MongoDB 5.0+). The input document defaults to `$$ROOT`.
+
+```typescript
+import { $UnsetField } from 'mongodb-pipeline-builder/operators';
+
+$UnsetField('price.usd')
+$UnsetField('price.usd', { input: '$product' })
+```
+
+**Output:**
+```typescript
+{ $unsetField: { field: 'price.usd', input: '$$ROOT' } }
+{ $unsetField: { field: 'price.usd', input: '$product' } }
 ```
 
 ---
@@ -2609,7 +2927,8 @@ const pipeline = new PipelineBuilder('complex-query')
 | **Date** | 20+ | Date manipulation, formatting |
 | **Conditional** | 3 | If-then-else logic |
 | **Type** | 10+ | Type checking, conversion |
-| **Accumulator** | 10+ | Grouping, aggregation |
+| **Accumulator** | 18+ | Grouping, aggregation, statistics |
+| **Window** | 9 | Ranking, moving averages, gap filling |
 | **Set** | 7 | Set operations on arrays |
 | **Trigonometry** | 12+ | Mathematical functions |
 | **Bitwise** | 4 | Bit operations |

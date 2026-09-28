@@ -150,3 +150,28 @@ export const $SetField = (
     },
   }
 );
+
+/**
+ * Removes a specified field in a document. $unsetField is an alias for $setField using $$REMOVE to remove fields.
+ * Useful for field names that contain periods (.) or start with a dollar sign ($). Available starting MongoDB 5.0.
+ * @param field The name of the field to remove (string or expression resolving to a string)
+ * @param optional Optional input document, defaults to $$ROOT
+ * @constructor
+ */
+export const $UnsetField = (
+  field: StringExpression,
+  optional: {
+    /**
+     * Optional. A document or an expression that resolves to a document
+     * that contains the field to remove. Defaults to $$ROOT
+     */
+    input?: ObjectExpression;
+  } = {},
+) => (
+  {
+    $unsetField: {
+      field,
+      input: optional.input ?? '$$ROOT',
+    },
+  }
+);

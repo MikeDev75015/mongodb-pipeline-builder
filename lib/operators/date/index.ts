@@ -726,6 +726,25 @@ export const $Second = (
 export const $ToDate = (expression: Expression) => ({ $toDate: expression });
 
 /**
+ * Returns the incrementing ordinal from a timestamp as a long. The incrementing ordinal distinguishes operations that
+ * happened in the same second. Available starting MongoDB 5.1.
+ * @param timestamp can be any valid expression that resolves to a timestamp.
+ * @constructor
+ */
+export const $TimestampIncrement = (timestamp: Expression) => (
+  { $tsIncrement: timestamp }
+);
+
+/**
+ * Returns the seconds from a timestamp as a long. Available starting MongoDB 5.1.
+ * @param timestamp can be any valid expression that resolves to a timestamp.
+ * @constructor
+ */
+export const $TimestampSecond = (timestamp: Expression) => (
+  { $tsSecond: timestamp }
+);
+
+/**
  * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the
  * year) and 53 (leap year).
  *

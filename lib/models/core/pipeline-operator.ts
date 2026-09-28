@@ -38,11 +38,16 @@ export type PipelineOperator =
   | '$dayOfWeek'
   | '$dayOfYear'
   | '$degreesToRadians'
+  | '$denseRank'
+  | '$derivative'
   | '$divide'
+  | '$documentNumber'
   | '$eq'
   | '$exp'
+  | '$expMovingAvg'
   | '$filter'
   | '$first'
+  | '$firstN'
   | '$floor'
   | '$function'
   | '$getField'
@@ -54,15 +59,19 @@ export type PipelineOperator =
   | '$indexOfArray'
   | '$indexOfBytes'
   | '$indexOfCP'
+  | '$integral'
   | '$isArray'
   | '$isNumber'
   | '$isoDayOfWeek'
   | '$isoWeek'
   | '$isoWeekYear'
   | '$last'
+  | '$lastN'
   | '$let'
+  | '$linearFill'
   | '$literal'
   | '$ln'
+  | '$locf'
   | '$log'
   | '$log10'
   | '$lt'
@@ -70,11 +79,13 @@ export type PipelineOperator =
   | '$ltrim'
   | '$map'
   | '$max'
+  | '$maxN'
   | '$median'
   | '$mergeObjects'
   | '$meta'
   | '$millisecond'
   | '$min'
+  | '$minN'
   | '$minute'
   | '$mod'
   | '$month'
@@ -86,6 +97,9 @@ export type PipelineOperator =
   | '$percentile'
   | '$pow'
   | '$push'
+  | '$rank'
+  | '$shift'
+  | '$sortArray'
   | '$top'
   | '$topN'
   | '$radiansToDegrees'
@@ -138,7 +152,10 @@ export type PipelineOperator =
   | '$toUpper'
   | '$trim'
   | '$trunc'
+  | '$tsIncrement'
+  | '$tsSecond'
   | '$type'
+  | '$unsetField'
   | '$week'
   | '$year'
   | '$zip';
@@ -183,11 +200,16 @@ export type OperatorExpression = {
   $dayOfWeek?: any;
   $dayOfYear?: any;
   $degreesToRadians?: any;
+  $denseRank?: any;
+  $derivative?: any;
   $divide?: any;
+  $documentNumber?: any;
   $eq?: any;
   $exp?: any;
+  $expMovingAvg?: any;
   $filter?: any;
   $first?: any;
+  $firstN?: any;
   $floor?: any;
   $function?: any;
   $getField?: any;
@@ -199,15 +221,19 @@ export type OperatorExpression = {
   $indexOfArray?: any;
   $indexOfBytes?: any;
   $indexOfCP?: any;
+  $integral?: any;
   $isArray?: any;
   $isNumber?: any;
   $isoDayOfWeek?: any;
   $isoWeek?: any;
   $isoWeekYear?: any;
   $last?: any;
+  $lastN?: any;
   $let?: any;
+  $linearFill?: any;
   $literal?: any;
   $ln?: any;
+  $locf?: any;
   $log?: any;
   $log10?: any;
   $lt?: any;
@@ -215,11 +241,13 @@ export type OperatorExpression = {
   $ltrim?: any;
   $map?: any;
   $max?: any;
+  $maxN?: any;
   $median?: any;
   $mergeObjects?: any;
   $meta?: any;
   $millisecond?: any;
   $min?: any;
+  $minN?: any;
   $minute?: any;
   $mod?: any;
   $month?: any;
@@ -234,6 +262,7 @@ export type OperatorExpression = {
   $radiansToDegrees?: any;
   $rand?: any;
   $range?: any;
+  $rank?: any;
   $reduce?: any;
   $regexFind?: any;
   $regexFindAll?: any;
@@ -250,10 +279,12 @@ export type OperatorExpression = {
   $setIntersection?: any;
   $setIsSubset?: any;
   $setUnion?: any;
+  $shift?: any;
   $sin?: any;
   $sinh?: any;
   $size?: any;
   $slice?: any;
+  $sortArray?: any;
   $split?: any;
   $sqrt?: any;
   $stdDevPop?: any;
@@ -266,6 +297,9 @@ export type OperatorExpression = {
   $substrCP?: any;
   $subtract?: any;
   $sum?: any;
+  $tsIncrement?: any;
+  $tsSecond?: any;
+  $unsetField?: any;
    $switch?: any;
    $tan?: any;
    $tanh?: any;

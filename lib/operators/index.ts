@@ -13,3 +13,4 @@ export * from './arithmetic';
 export * from './data-size';
 export * from './conditional';
 export * from './bitwise';
+export * from './window';

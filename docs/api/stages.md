@@ -637,6 +637,22 @@ builder.SetWindowFields({
 }).build();
 ```
 
+With the [window operators](./operators.md#window-operators):
+
+```typescript
+import { $Rank, $Shift, $Sum } from 'mongodb-pipeline-builder/operators';
+
+builder.SetWindowFields({
+  partitionBy: '$category',
+  sortBy: { date: 1 },
+  output: {
+    cumulativeTotal: { ...$Sum('$amount'), window: { documents: ['unbounded', 'current'] } },
+    rank: $Rank(),
+    previousAmount: $Shift('$amount', -1, { defaultValue: 0 }),
+  }
+}).build();
+```
+
 ---
 
 ## Joining Collections
@@ -1234,20 +1250,16 @@ builder.CurrentOp(CurrentOpHelper({
 
 ---
 
-### ListSessions(value) <span style="color: red;">**DEPRECATED**</span>
+### ListSessions(value)
 
-**⚠️ Deprecated:** Use `ListLocalSessions()` instead. This method is an alias and will be removed in a future major version.
-
-**Purpose:** List all active sessions (alias for $listSessions).  
+**Purpose:** List all sessions that have been active long enough to propagate to the `system.sessions` collection. Must be run on the `config.system.sessions` collection.  
 **Docs:** [$listSessions](https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/)
 
 ```typescript
-// ❌ Deprecated - will log a warning
 builder.ListSessions({ allUsers: true }).build();
-
-// ✅ Use this instead
-builder.ListLocalSessions({ allUsers: true }).build();
 ```
+
+> Not to be confused with `ListLocalSessions()`, which lists the sessions cached in memory by the current `mongod` or `mongos` instance.
 
 ---
 

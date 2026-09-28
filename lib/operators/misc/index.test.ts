@@ -10,6 +10,7 @@ import {
     $Rand,
     $SampleRate,
     $SetField,
+    $UnsetField,
 } from './';
 
 
@@ -40,6 +41,8 @@ describe('misc operators', () => {
          [$GetField('fieldName', { input: '$doc' }), { $getField: { field: 'fieldName', input: '$doc' } }],
          [$SetField('fieldName', 'value'), { $setField: { field: 'fieldName', input: '$$ROOT', value: 'value' } }],
          [$SetField('fieldName', 'value', { input: '$doc' }), { $setField: { field: 'fieldName', value: 'value', input: '$doc' } }],
+        [$UnsetField('price.usd'), { $unsetField: { field: 'price.usd', input: '$$ROOT' } }],
+        [$UnsetField('price.usd', { input: '$doc' }), { $unsetField: { field: 'price.usd', input: '$doc' } }],
     ])('should return %s', (
         operation: any,
         expected: any

@@ -1,5 +1,25 @@
 import { FilePath } from '../../models';
-import { $AddToSet, $Average, $Bottom, $BottomN, $Count, $Max, $Min, $Push, $StdDevPop, $StdDevSamp, $Sum, $Median, $Percentile, $Top, $TopN } from './';
+import {
+  $AddToSet,
+  $Average,
+  $Bottom,
+  $BottomN,
+  $Count,
+  $FirstN,
+  $LastN,
+  $Max,
+  $MaxN,
+  $Median,
+  $Min,
+  $MinN,
+  $Percentile,
+  $Push,
+  $StdDevPop,
+  $StdDevSamp,
+  $Sum,
+  $Top,
+  $TopN,
+} from './';
 
 const expression = '$toto';
 const expressions = ['$toto.age', '$tata.age'] as FilePath[];
@@ -34,8 +54,12 @@ describe('accumulator operators', () => {
       { $bottomN: { ...bottomNExpression, output: [bottomNExpression.output] } },
     ],
     [$Count(), { $count: {} }],
+    [$FirstN(expression, 3), { $firstN: { input: expression, n: 3 } }],
+    [$LastN(expression, '$limit'), { $lastN: { input: expression, n: '$limit' } }],
     [$Max(expression), { $max: expression }],
+    [$MaxN(expression, 3), { $maxN: { input: expression, n: 3 } }],
     [$Min(expression), { $min: expression }],
+    [$MinN(expression, 3), { $minN: { input: expression, n: 3 } }],
     [$Push(expression), { $push: expression }],
     [$StdDevPop(expression), { $stdDevPop: expression }],
     [$StdDevPop(expressions, expressions2), { $stdDevPop: [expressions, expressions2] }],
