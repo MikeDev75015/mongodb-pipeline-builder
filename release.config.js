@@ -18,10 +18,20 @@ module.exports = {
   plugins: [
     ['@semantic-release/commit-analyzer', { preset }],
     ['@semantic-release/release-notes-generator', { preset }],
-    ['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
+    [
+      '@semantic-release/changelog',
+      {
+        changelogFile: 'CHANGELOG.md',
+        // Must match the top of CHANGELOG.md so new entries are inserted below it
+        changelogTitle: '# Changelog\n\nAll notable changes to this project will be documented in this file.'
+          + ' See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.',
+      },
+    ],
     [
       '@semantic-release/exec',
       {
+        // @semantic-release/npm reads dist/package.json (pkgRoot) as soon as verifyConditions, before prepare runs
+        verifyConditionsCmd: 'cp -f package.json dist/',
         // Bump the root package.json / package-lock.json, then copy the files shipped with the package into dist
         prepareCmd: 'npm version ${nextRelease.version} --no-git-tag-version --allow-same-version'
           + ' && cp -f Readme.md CHANGELOG.md LICENSE package.json dist/',
@@ -36,6 +46,12 @@ module.exports = {
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
-    '@semantic-release/github',
+    [
+      '@semantic-release/github',
+      {
+        // Failures are already reported by CircleCI and Slack: don't open a GitHub issue
+        failComment: false,
+      },
+    ],
   ],
 };

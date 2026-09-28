@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ### [5.0.3](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v5.0.2...v5.0.3) (2026-09-28)
 
