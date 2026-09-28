@@ -58,7 +58,7 @@ export const $Shift = (
     /**
      * Optional. The value returned when the target document is outside the partition. Defaults to null.
      */
-    defaultValue?: Expression;
+    defaultValue?: Exclude<Expression, undefined>;
   } = {},
 ) => (
   {
