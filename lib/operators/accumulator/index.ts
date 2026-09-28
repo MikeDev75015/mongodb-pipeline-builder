@@ -157,42 +157,37 @@ export const $Sum = (...expressions: NumericExpression[]) => (
 );
 
 /**
- * Returns the median of numeric values. Can be used with or without weight specifications.
- * Available in $group, $setWindowFields, and other stages starting MongoDB 7.2
- * @param expressions numeric expressions
- * @param methodOption Optional: 'approximate' or 'exact' method
+ * Returns an approximation of the median, the 50th percentile, as a scalar value.
+ * Available in $group, $setWindowFields and as an expression in other stages starting MongoDB 7.0.
+ *
+ * In $group and $setWindowFields, the input is a single expression evaluated for each document.
+ * As an expression, the input can also be an array of values or expressions.
+ * @param input The numeric value(s) to compute the median of. Non-numeric values are ignored.
+ * @param method The calculation method. Defaults to 'approximate', the only method currently accepted by MongoDB.
  * @constructor
  */
 export const $Median = (
-  expressions: NumericExpression | NumericExpression[],
-  methodOption?: 'approximate' | 'exact'
-) => {
-  const baseOp = {
-    $median: Array.isArray(expressions) ? expressions : [expressions],
-  };
-  return methodOption ? { ...baseOp, method: methodOption } : baseOp;
-};
+  input: NumericExpression | NumericExpression[],
+  method: 'approximate' | 'exact' = 'approximate',
+) => (
+  { $median: { input, method } }
+);
 
 /**
- * Returns the percentile of numeric values. Can be used in $group and $setWindowFields stages.
- * Available starting MongoDB 7.2
- * @param expressions numeric expressions to compute percentile of
- * @param percentiles array of percentiles (0.0 to 1.0)
- * @param methodOption 'approximate' or 'exact' method
+ * Returns an array of scalar values that correspond to the specified percentile values.
+ * Available in $group, $setWindowFields and as an expression in other stages starting MongoDB 7.0.
+ * @param input The numeric value(s) to compute the percentiles of. Non-numeric values are ignored.
+ * @param percentiles The percentiles to compute, each between 0.0 and 1.0 (e.g. [0.5, 0.9] for the median and the 90th
+ *   percentile).
+ * @param method The calculation method. Defaults to 'approximate', the only method currently accepted by MongoDB.
  * @constructor
  */
 export const $Percentile = (
-  expressions: NumericExpression | NumericExpression[],
+  input: NumericExpression | NumericExpression[],
   percentiles: NumericExpression[],
-  methodOption?: 'approximate' | 'exact'
+  method: 'approximate' | 'exact' = 'approximate',
 ) => (
-  {
-    $percentile: {
-      input: Array.isArray(expressions) ? expressions : [expressions],
-      p: percentiles,
-      ...(methodOption ? { method: methodOption } : {}),
-    },
-  }
+  { $percentile: { input, p: percentiles, method } }
 );
 
 /**

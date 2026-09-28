@@ -105,10 +105,10 @@ export const $CovarianceSamp = (
   { $covarianceSamp: [numericExpression1, numericExpression2] }
 );
 /**
- * Returns the value of a field within a document.
- * $getField is an alias for dot notation when the field name is a string.
- * @param field The field path to retrieve (string or expression resolving to string)
- * @param optional Optional input document, defaults to $$ROOT
+ * Returns the value of a field within a document. Useful for field names that contain periods (.) or start with a
+ * dollar sign ($). Available starting MongoDB 5.0.
+ * @param field The name of the field to retrieve (string or expression resolving to a string)
+ * @param optional Optional input document, defaults to $$CURRENT
  * @constructor
  */
 export const $GetField = (
@@ -116,17 +116,12 @@ export const $GetField = (
   optional: {
     /**
      * Optional. A document or an expression that resolves to a document
-     * that contains the field specified by the field path. Defaults to $$ROOT
+     * that contains the field to retrieve. Defaults to $$CURRENT
      */
     input?: ObjectExpression;
   } = {},
 ) => (
-  {
-    $getField: {
-      field,
-      ...(optional.input ? { input: optional.input } : {}),
-    },
-  }
+  { $getField: optional.input ? { field, input: optional.input } : field }
 );
 /**
  * Adds, updates, or removes a specified field in a document.
@@ -150,8 +145,8 @@ export const $SetField = (
   {
     $setField: {
       field,
+      input: optional.input ?? '$$ROOT',
       value,
-      ...(optional.input ? { input: optional.input } : {}),
     },
   }
 );
