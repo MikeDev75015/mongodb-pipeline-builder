@@ -612,27 +612,17 @@ describe('should create a new pipeline builder object', () => {
       });
     });
 
-    describe('Deprecated Methods', () => {
-      let spyConsoleWarn: jest.SpyInstance;
+    describe('ListSessions', () => {
+      it('should not emit any deprecation warning', () => {
+        const spyConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-      beforeEach(() => {
-        spyConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-      });
+        pipelineBuilderWithoutDebug.ListSessions({});
 
-      afterEach(() => {
+        expect(spyConsoleWarn).not.toHaveBeenCalled();
         spyConsoleWarn.mockRestore();
       });
 
-      it('should call deprecation warning when ListSessions is invoked', () => {
-        pipelineBuilderWithoutDebug.ListSessions({});
-
-        expect(spyConsoleWarn).toHaveBeenCalledTimes(1);
-        expect(spyConsoleWarn).toHaveBeenCalledWith(
-          'Warning: The ListSessions method is deprecated and will be removed in the future version, please use ListLocalSessions instead.',
-        );
-      });
-
-      it('should create correct $listSessions stage despite deprecation', () => {
+      it('should create a $listSessions stage, distinct from $listLocalSessions', () => {
         const pipeline = pipelineBuilderWithoutDebug
           .ListSessions({ allUsers: true })
           .build();
