@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.0](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v5.0.3...v5.1.0) (2026-09-28)
+
+### Features
+
+* **operators:** add missing MongoDB 5.x operators and fix invalid operator outputs ([#96](https://github.com/MikeDev75015/mongodb-pipeline-builder/issues/96)) ([1797a1e](https://github.com/MikeDev75015/mongodb-pipeline-builder/commit/1797a1ed527543baf9638a350ebd5b2fd06f7bf1))
+
 ### [5.0.3](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v5.0.2...v5.0.3) (2026-09-28)
 
 ### [5.0.2](https://github.com/MikeDev75015/mongodb-pipeline-builder/compare/v5.0.1...v5.0.2) (2026-09-27)
