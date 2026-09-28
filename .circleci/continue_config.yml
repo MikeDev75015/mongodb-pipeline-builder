@@ -1,0 +1,111 @@
+version: 2.1
+
+orbs:
+  sonarcloud: sonarsource/sonarcloud@4.0.0
+  slack: circleci/slack@4.3.0
+
+parameters:
+  # Set by the setup workflow (.circleci/config.yml)
+  release:
+    type: boolean
+    default: false
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:24.21.0
+    resource_class: medium
+
+commands:
+  fetch-full-history:
+    description: "Fetch the full git history and tags (needed by SonarCloud and semantic-release)"
+    steps:
+      - run:
+          name: Fetch full git history and tags
+          command: |
+            if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then git fetch --unshallow -q; fi
+            git fetch --tags --force -q origin
+
+  install-deps:
+    description: "Install dependencies (npm ci also builds dist through the prepare script)"
+    steps:
+      - restore_cache:
+          key: npm-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
+jobs:
+  test:
+    executor: node
+    steps:
+      - checkout
+      - fetch-full-history
+      - install-deps
+      - run:
+          name: Create reports folder
+          command: mkdir -p reports/sonar
+      - run:
+          name: Run unit tests with reporter
+          command: npm run test:ci
+      - store_artifacts:
+          path: reports/sonar
+          destination: reports/sonar
+      - sonarcloud/scan
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  release:
+    executor: node
+    steps:
+      - checkout
+      - fetch-full-history
+      - install-deps
+      - run:
+          name: Publish the new version with semantic-release
+          command: |
+            export GIT_AUTHOR_NAME="$USER_NAME" GIT_COMMITTER_NAME="$USER_NAME"
+            export GIT_AUTHOR_EMAIL="$USER_EMAIL" GIT_COMMITTER_EMAIL="$USER_EMAIL"
+            npx semantic-release
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
+workflows:
+  # Every branch: build, unit tests and SonarCloud analysis
+  build-and-test:
+    when:
+      not: << pipeline.parameters.release >>
+    jobs:
+      - test:
+          context:
+            - SONARCLOUD
+            - SLACK
+
+  # main / beta with releasable commits: tests, manual approval, then release
+  release:
+    when: << pipeline.parameters.release >>
+    jobs:
+      - test:
+          context:
+            - SONARCLOUD
+            - SLACK
+      - approval-release:
+          type: approval
+          requires:
+            - test
+      - release:
+          context:
+            - GIT
+            - NPM
+            - SLACK
+          requires:
+            - approval-release
