@@ -8,6 +8,7 @@ import {
   NumericExpression,
   ObjectExpression,
 } from '../../models/core/expression';
+import { SortBy } from '../../models/stages/sort-stage';
 
 /**
  * Returns the element at the specified array index.
@@ -309,6 +310,16 @@ export const $Slice = (
       ),
     ],
   }
+);
+/**
+ * Sorts the elements of an array. The array can contain simple values or documents. Available starting MongoDB 5.2.
+ * @param array can be any valid expression that resolves to an array.
+ * @param sortBy the sort order: 1 (ascending) or -1 (descending) to sort simple values, or a document such as
+ *   { name: 1, age: -1 } to sort documents by their fields.
+ * @constructor
+ */
+export const $SortArray = (array: ArrayExpression, sortBy: 1 | -1 | SortBy) => (
+  { $sortArray: { input: array, sortBy } }
 );
 /**
  * Transposes an array of input arrays so that the first element of the output array would be an array containing, the

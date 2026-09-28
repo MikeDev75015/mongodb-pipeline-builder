@@ -15,6 +15,7 @@ import {
   $ReverseArray,
   $Size,
   $Slice,
+  $SortArray,
   $Zip,
 } from './';
 
@@ -91,6 +92,8 @@ describe('array operators', () => {
     [$Size(array), { $size: array }],
     [$Slice(array, numberOfElement, { position }), { $slice: [array, position, numberOfElement] }],
     [$Slice(array, numberOfElement), { $slice: [array, numberOfElement] }],
+    [$SortArray('$scores', -1), { $sortArray: { input: '$scores', sortBy: -1 } }],
+    [$SortArray('$team', { age: -1, name: 1 }), { $sortArray: { input: '$team', sortBy: { age: -1, name: 1 } } }],
     [
       $Zip(arrayOfArrays), {
       $zip: {

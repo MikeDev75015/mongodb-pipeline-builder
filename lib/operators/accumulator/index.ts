@@ -65,6 +65,32 @@ export const $Count = () => (
 );
 
 /**
+ * Returns an aggregation of the first n elements within a group. The elements returned are meaningful only if in a
+ * specified sort order. If the group contains fewer than n elements, $firstN returns all elements in the group.
+ * Also available as an array operator to return the first n elements of an array. Available starting MongoDB 5.2.
+ * @param input The value to take the first n elements from (in $group), or the array (as an array operator).
+ * @param n The number of elements to return, a positive integral expression that is either a constant or depends on
+ *   the _id value for $group.
+ * @constructor
+ */
+export const $FirstN = (input: Expression, n: NumericExpression) => (
+  { $firstN: { input, n } }
+);
+
+/**
+ * Returns an aggregation of the last n elements within a group. The elements returned are meaningful only if in a
+ * specified sort order. If the group contains fewer than n elements, $lastN returns all elements in the group.
+ * Also available as an array operator to return the last n elements of an array. Available starting MongoDB 5.2.
+ * @param input The value to take the last n elements from (in $group), or the array (as an array operator).
+ * @param n The number of elements to return, a positive integral expression that is either a constant or depends on
+ *   the _id value for $group.
+ * @constructor
+ */
+export const $LastN = (input: Expression, n: NumericExpression) => (
+  { $lastN: { input, n } }
+);
+
+/**
  * Returns the highest expression value for each group.
  * @param expression The expression can be any valid expression.
  * @constructor
@@ -74,12 +100,38 @@ export const $Max = (expression: NumericExpression | (number | NumericExpression
 );
 
 /**
+ * Returns an aggregation of the maximum value n elements within a group. If the group contains fewer than n elements,
+ * $maxN returns all elements in the group. Null and missing values are ignored.
+ * Also available as an array operator to return the n largest values of an array. Available starting MongoDB 5.2.
+ * @param input The values to take the n largest from (in $group), or the array (as an array operator).
+ * @param n The number of elements to return, a positive integral expression that is either a constant or depends on
+ *   the _id value for $group.
+ * @constructor
+ */
+export const $MaxN = (input: Expression, n: NumericExpression) => (
+  { $maxN: { input, n } }
+);
+
+/**
  * Returns the lowest expression value for each group.
  * @param expression The expression can be any valid expression.
  * @constructor
  */
 export const $Min = (expression: NumericExpression | (number | NumericExpression)[]) => (
   { $min: expression }
+);
+
+/**
+ * Returns an aggregation of the minimum value n elements within a group. If the group contains fewer than n elements,
+ * $minN returns all elements in the group. Null and missing values are ignored.
+ * Also available as an array operator to return the n smallest values of an array. Available starting MongoDB 5.2.
+ * @param input The values to take the n smallest from (in $group), or the array (as an array operator).
+ * @param n The number of elements to return, a positive integral expression that is either a constant or depends on
+ *   the _id value for $group.
+ * @constructor
+ */
+export const $MinN = (input: Expression, n: NumericExpression) => (
+  { $minN: { input, n } }
 );
 
 /**
@@ -157,42 +209,37 @@ export const $Sum = (...expressions: NumericExpression[]) => (
 );
 
 /**
- * Returns the median of numeric values. Can be used with or without weight specifications.
- * Available in $group, $setWindowFields, and other stages starting MongoDB 7.2
- * @param expressions numeric expressions
- * @param methodOption Optional: 'approximate' or 'exact' method
+ * Returns an approximation of the median, the 50th percentile, as a scalar value.
+ * Available in $group, $setWindowFields and as an expression in other stages starting MongoDB 7.0.
+ *
+ * In $group and $setWindowFields, the input is a single expression evaluated for each document.
+ * As an expression, the input can also be an array of values or expressions.
+ * @param input The numeric value(s) to compute the median of. Non-numeric values are ignored.
+ * @param method The calculation method. Defaults to 'approximate', the only method currently accepted by MongoDB.
  * @constructor
  */
 export const $Median = (
-  expressions: NumericExpression | NumericExpression[],
-  methodOption?: 'approximate' | 'exact'
-) => {
-  const baseOp = {
-    $median: Array.isArray(expressions) ? expressions : [expressions],
-  };
-  return methodOption ? { ...baseOp, method: methodOption } : baseOp;
-};
+  input: NumericExpression | NumericExpression[],
+  method: 'approximate' | 'exact' = 'approximate',
+) => (
+  { $median: { input, method } }
+);
 
 /**
- * Returns the percentile of numeric values. Can be used in $group and $setWindowFields stages.
- * Available starting MongoDB 7.2
- * @param expressions numeric expressions to compute percentile of
- * @param percentiles array of percentiles (0.0 to 1.0)
- * @param methodOption 'approximate' or 'exact' method
+ * Returns an array of scalar values that correspond to the specified percentile values.
+ * Available in $group, $setWindowFields and as an expression in other stages starting MongoDB 7.0.
+ * @param input The numeric value(s) to compute the percentiles of. Non-numeric values are ignored.
+ * @param percentiles The percentiles to compute, each between 0.0 and 1.0 (e.g. [0.5, 0.9] for the median and the 90th
+ *   percentile).
+ * @param method The calculation method. Defaults to 'approximate', the only method currently accepted by MongoDB.
  * @constructor
  */
 export const $Percentile = (
-  expressions: NumericExpression | NumericExpression[],
+  input: NumericExpression | NumericExpression[],
   percentiles: NumericExpression[],
-  methodOption?: 'approximate' | 'exact'
+  method: 'approximate' | 'exact' = 'approximate',
 ) => (
-  {
-    $percentile: {
-      input: Array.isArray(expressions) ? expressions : [expressions],
-      p: percentiles,
-      ...(methodOption ? { method: methodOption } : {}),
-    },
-  }
+  { $percentile: { input, p: percentiles, method } }
 );
 
 /**

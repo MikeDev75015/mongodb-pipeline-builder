@@ -61,7 +61,6 @@
     "collectCoverageFrom": [
       "**/*.ts",
       "!**/*.test.ts",
-      "!**/index.ts",
       "!**/models/**",
       "!**/keywords.ts"
     ],

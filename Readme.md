@@ -147,21 +147,14 @@ const pipeline = new PipelineBuilder('users-with-profiles')
 
 ### New Operators
 - 🆕 **Statistical Accumulators (MongoDB 7.0+):** `$Median`, `$Percentile`, `$Top`, `$TopN` — see [Example 5](#example-5-statistical-analysis-mongodb-70)
-- 🆕 **Object Field Operators (MongoDB 5.0+):** `$GetField`, `$SetField`
-
-### Deprecations
-- ⚠️ `ListSessions()` is deprecated and will be removed in a future major version — use `ListLocalSessions()` instead (a warning is emitted at runtime)
+- 🆕 **N Accumulators (MongoDB 5.2+):** `$FirstN`, `$LastN`, `$MinN`, `$MaxN`
+- 🆕 **Window Operators for `SetWindowFields` (MongoDB 5.0+):** `$Rank`, `$DenseRank`, `$DocumentNumber`, `$Shift`, `$Derivative`, `$Integral`, `$ExponentialMovingAverage`, `$LinearFill`, `$LastObservationCarriedForward` — see [Example 6](#example-6-window-functions-mongodb-50)
+- 🆕 **Array:** `$SortArray` (MongoDB 5.2+)
+- 🆕 **Object Field Operators (MongoDB 5.0+):** `$GetField`, `$SetField`, `$UnsetField`
+- 🆕 **Timestamp:** `$TimestampSecond`, `$TimestampIncrement` (MongoDB 5.1+)
 
 ### Upgrading from v4
-No API was removed in v5: existing v4 code keeps working as is. Just replace any `ListSessions()` call with `ListLocalSessions()` to get rid of the deprecation warning.
-
-```typescript
-// ❌ Deprecated
-builder.ListSessions({ allUsers: true });
-
-// ✅ Use this instead
-builder.ListLocalSessions({ allUsers: true });
-```
+No API was removed in v5: existing v4 code keeps working as is.
 
 ---
 
@@ -401,7 +394,7 @@ All MongoDB aggregation stages are supported. See [complete reference](./docs/ap
 
 ### Operators
 
-156+ MongoDB operators supported. See [complete reference](./docs/api/operators.md).
+170+ MongoDB operators supported. See [complete reference](./docs/api/operators.md).
 
 **Common Operators:**
 - Comparison: `$Equal`, `$GreaterThan`, `$LessThan`
@@ -410,8 +403,9 @@ All MongoDB aggregation stages are supported. See [complete reference](./docs/ap
 - Array: `$Size`, `$Filter`, `$Map`, `$ArrayElementAt`
 - String: `$Concat`, `$ToLower`, `$ToUpper`, `$Split`
 - Date: `$DateAdd`, `$DateSubtract`, `$DateDifference`
-- Aggregation: `$Sum`, `$Average`, `$Min`, `$Max`, `$Median`, `$Percentile`, `$Top`, `$TopN`
-- Object: `$GetField`, `$SetField`, `$MergeObjects`
+- Aggregation: `$Sum`, `$Average`, `$Min`, `$Max`, `$Median`, `$Percentile`, `$Top`, `$TopN`, `$FirstN`, `$LastN`, `$MinN`, `$MaxN`
+- Window: `$Rank`, `$DenseRank`, `$DocumentNumber`, `$Shift`, `$ExponentialMovingAverage`, `$LinearFill`
+- Object: `$GetField`, `$SetField`, `$UnsetField`, `$MergeObjects`
 
 ### Helpers
 
@@ -496,6 +490,24 @@ const pipeline = new PipelineBuilder('price-stats')
   .build();
 ```
 
+### Example 6: Window Functions (MongoDB 5.0+)
+```typescript
+import { $Rank, $Shift, $ExponentialMovingAverage, $Sum } from 'mongodb-pipeline-builder/operators';
+
+const pipeline = new PipelineBuilder('sales-ranking')
+  .SetWindowFields({
+    partitionBy: '$store',
+    sortBy: { date: 1 },
+    output: {
+      salesRank: $Rank(),
+      previousSales: $Shift('$sales', -1, { defaultValue: 0 }),
+      salesTrend: $ExponentialMovingAverage('$sales', { periods: 7 }),
+      runningTotal: { ...$Sum('$sales'), window: { documents: ['unbounded', 'current'] } },
+    },
+  })
+  .build();
+```
+
 ---
 
 ## ❓ FAQ
@@ -537,15 +549,14 @@ Yes! All stages through MongoDB 7.0+ including `$densify`, `$fill`, `$setWindowF
 <details>
 <summary><strong>What new operators were added in v5?</strong></summary>
 
-MongoDB 7.0+ introduced several statistical operators:
-- **`$Median`** - Calculates the median of values (MongoDB 7.2+)
-- **`$Percentile`** - Calculates percentiles (MongoDB 7.2+)
-- **`$Top`** - Returns the top element in a group (MongoDB 7.0+)
-- **`$TopN`** - Returns the top N elements in a group (MongoDB 7.0+)
-- **`$GetField`** - Retrieves a field value dynamically (MongoDB 5.0+)
-- **`$SetField`** - Sets a field value dynamically (MongoDB 5.0+)
+- **Statistics (MongoDB 7.0+):** `$Median`, `$Percentile`, `$Top`, `$TopN`
+- **N accumulators (MongoDB 5.2+):** `$FirstN`, `$LastN`, `$MinN`, `$MaxN` - first/last/smallest/largest n values of a group or an array
+- **Window operators (MongoDB 5.0+):** `$Rank`, `$DenseRank`, `$DocumentNumber`, `$Shift`, `$Derivative`, `$Integral`, `$ExponentialMovingAverage`, `$LinearFill`, `$LastObservationCarriedForward`
+- **Array (MongoDB 5.2+):** `$SortArray` - sorts an array of values or documents
+- **Object fields (MongoDB 5.0+):** `$GetField`, `$SetField`, `$UnsetField` - read, set or remove fields whose name contains `.` or starts with `$`
+- **Timestamps (MongoDB 5.1+):** `$TimestampSecond`, `$TimestampIncrement`
 
-See [Example 5](#example-5-statistical-analysis-mongodb-70) for usage.
+See [Example 5](#example-5-statistical-analysis-mongodb-70) and [Example 6](#example-6-window-functions-mongodb-50) for usage.
 </details>
 
 <details>

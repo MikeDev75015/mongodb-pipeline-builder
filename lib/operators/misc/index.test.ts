@@ -10,6 +10,7 @@ import {
     $Rand,
     $SampleRate,
     $SetField,
+    $UnsetField,
 } from './';
 
 
@@ -36,10 +37,12 @@ describe('misc operators', () => {
         [$Let(vars, functionExpression), { $let: { vars, in: functionExpression } }],
          [$CovariancePop(1, 2), { $covariancePop: [1, 2] }],
          [$CovarianceSamp(2, 1), { $covarianceSamp: [2, 1] }],
-         [$GetField('fieldName'), { $getField: { field: 'fieldName' } }],
+         [$GetField('fieldName'), { $getField: 'fieldName' }],
          [$GetField('fieldName', { input: '$doc' }), { $getField: { field: 'fieldName', input: '$doc' } }],
-         [$SetField('fieldName', 'value'), { $setField: { field: 'fieldName', value: 'value' } }],
+         [$SetField('fieldName', 'value'), { $setField: { field: 'fieldName', input: '$$ROOT', value: 'value' } }],
          [$SetField('fieldName', 'value', { input: '$doc' }), { $setField: { field: 'fieldName', value: 'value', input: '$doc' } }],
+        [$UnsetField('price.usd'), { $unsetField: { field: 'price.usd', input: '$$ROOT' } }],
+        [$UnsetField('price.usd', { input: '$doc' }), { $unsetField: { field: 'price.usd', input: '$doc' } }],
     ])('should return %s', (
         operation: any,
         expected: any

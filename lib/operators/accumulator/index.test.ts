@@ -1,5 +1,25 @@
 import { FilePath } from '../../models';
-import { $AddToSet, $Average, $Bottom, $BottomN, $Count, $Max, $Min, $Push, $StdDevPop, $StdDevSamp, $Sum, $Median, $Percentile, $Top, $TopN } from './';
+import {
+  $AddToSet,
+  $Average,
+  $Bottom,
+  $BottomN,
+  $Count,
+  $FirstN,
+  $LastN,
+  $Max,
+  $MaxN,
+  $Median,
+  $Min,
+  $MinN,
+  $Percentile,
+  $Push,
+  $StdDevPop,
+  $StdDevSamp,
+  $Sum,
+  $Top,
+  $TopN,
+} from './';
 
 const expression = '$toto';
 const expressions = ['$toto.age', '$tata.age'] as FilePath[];
@@ -34,8 +54,12 @@ describe('accumulator operators', () => {
       { $bottomN: { ...bottomNExpression, output: [bottomNExpression.output] } },
     ],
     [$Count(), { $count: {} }],
+    [$FirstN(expression, 3), { $firstN: { input: expression, n: 3 } }],
+    [$LastN(expression, '$limit'), { $lastN: { input: expression, n: '$limit' } }],
     [$Max(expression), { $max: expression }],
+    [$MaxN(expression, 3), { $maxN: { input: expression, n: 3 } }],
     [$Min(expression), { $min: expression }],
+    [$MinN(expression, 3), { $minN: { input: expression, n: 3 } }],
     [$Push(expression), { $push: expression }],
     [$StdDevPop(expression), { $stdDevPop: expression }],
     [$StdDevPop(expressions, expressions2), { $stdDevPop: [expressions, expressions2] }],
@@ -43,13 +67,11 @@ describe('accumulator operators', () => {
     [$StdDevSamp(expressions, expressions2), { $stdDevSamp: [expressions, expressions2] }],
      [$Sum(expression), { $sum: expression }],
      [$Sum(...expressions), { $sum: expressions }],
-     [$Median(expression), { $median: [expression] }],
-     [$Median([expression]), { $median: [expression] }],
-     [$Median(expression, 'approximate'), { $median: [expression], method: 'approximate' }],
-     [$Median([expression], 'exact'), { $median: [expression], method: 'exact' }],
-     [$Percentile(expression, [0.5, 0.9]), { $percentile: { input: [expression], p: [0.5, 0.9] } }],
-     [$Percentile([expression], [0.5, 0.9], 'approximate'), { $percentile: { input: [expression], p: [0.5, 0.9], method: 'approximate' } }],
-     [$Percentile(expression, [0.5], 'exact'), { $percentile: { input: [expression], p: [0.5], method: 'exact' } }],
+    [$Median(expression), { $median: { input: expression, method: 'approximate' } }],
+    [$Median([expression, '$other']), { $median: { input: [expression, '$other'], method: 'approximate' } }],
+    [$Median(expression, 'exact'), { $median: { input: expression, method: 'exact' } }],
+    [$Percentile(expression, [0.5, 0.9]), { $percentile: { input: expression, p: [0.5, 0.9], method: 'approximate' } }],
+    [$Percentile([expression], [0.5], 'exact'), { $percentile: { input: [expression], p: [0.5], method: 'exact' } }],
      [$Top(topExpression.sortBy, ...topExpression.output), { $top: topExpression }],
      [
        $TopN(topNExpression.n, topNExpression.sortBy, topNExpression.output),
